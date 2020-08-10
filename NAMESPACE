@@ -1,0 +1,7 @@
+importFrom("utils", "read.csv")
+export(dist.read.csv)
+export(attainNodes)
+export(getCluster)
+export(newConnection)
+export(newNodeID)
+export(newChunkID)

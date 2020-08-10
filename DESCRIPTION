@@ -1,0 +1,20 @@
+Package: distobj
+Type: Package
+Title: Provides a Distributed System for S3 Objects
+Version: 0.0-1
+Date: 2020-07-31
+Author: Jason Cairns [aut, cre]
+Maintainer: Jason Cairns <jcai849@aucklanduni.ac.nz>
+Authors@R: c(person("Jason", "Cairns", role = c("aut", "cre"),
+		    email = "jcai849@aucklanduni.ac.nz"))
+Description: Allows for transparent interaction with distributed objects,
+	including the import of very large distributed data files, as well as
+	the development of parallel algorithms over the distributed data for
+	rapid development and run time.
+Depends: R (>= 3.6.0)
+Imports: RSclient
+License: GPL-3
+URL: https://github.com
+BugReports: https://github.com
+OS_type: unix
+NeedsCompilation: no
