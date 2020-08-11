@@ -1,7 +1,7 @@
 dist.read.csv <- function(files) {
-	URI <- parseURI(files)
-	hosts <- URI$host; filepaths <- URI$filepath
+	fileLoc <- parseFileLoc(files)
+	hosts <- fileLoc$host; filePaths <- fileLoc$filePath
 	nodes <- attainNodes(hosts)
-	distFilePaths <- send(filepaths, nodes)
+	distFilePaths <- send(filePaths, nodes)
 	dist.do.call(read.csv, argsDist = list(distFilePaths), argsStatic = list(), assign = TRUE)
 }
