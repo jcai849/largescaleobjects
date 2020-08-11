@@ -38,6 +38,8 @@ dist.read.csv(files)
 \examples{
 \dontrun{
 	dist.read.csv(c("host1:/file/path/here.csv", 
-			"host2:/file/path/here2.csv"))}
+			"host2:/file/path/here2.csv"))
+}
+}
 \keyword{IO}% use one of  RShowDoc("KEYWORDS")
 \keyword{file}% __ONLY ONE__ keyword per line
