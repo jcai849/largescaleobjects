@@ -1,23 +1,23 @@
-\name{distobj-package}
-\alias{distobj-package}
-\alias{distobj}
+\name{distObj-package}
+\alias{distObj-package}
+\alias{distObj}
 \docType{package}
 \title{
-\packageTitle{distobj}
+\packageTitle{distObj}
 }
 \description{
-\packageDescription{distobj}
+\packageDescription{distObj}
 }
 \details{
-\packageDESCRIPTION{distobj}
-\packageIndices{distobj}
+\packageDESCRIPTION{distObj}
+\packageIndices{distObj}
 
 A comprehensive system for the creation and control of distributed objects for
 standard R usage in statistical modelling.
 }
 \author{
-\packageAuthor{distobj}
+\packageAuthor{distObj}
 
-Maintainer: \packageMaintainer{distobj}
+Maintainer: \packageMaintainer{distObj}
 }
 \keyword{ package }
