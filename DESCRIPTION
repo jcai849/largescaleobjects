@@ -13,7 +13,7 @@ Description: Allows for transparent interaction with distributed objects,
 	including the import of very large distributed data files, as well as
 	the rapid development of parallel algorithms over the distributed data
 	for fast  run time.
-Depends: R (>= 3.6.0)
+Depends: R (>= 3.4.0)
 Imports: rediscc
 License: GPL-3
 URL: https://github.com/jcai849/distObj
