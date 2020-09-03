@@ -1,0 +1,2 @@
+chunk-client	A verbose client requesting several direct chunk operations
+chunk-server	A verbose server paired with chunk-client performing the chunk requests
