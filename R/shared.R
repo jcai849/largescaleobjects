@@ -1,12 +1,24 @@
 # Generics and setters
 
-distChunk <- function(x, ...) {
-	if (missing(x)) {
-		dc <- new.env()
-		class(dc) <- "distChunk"
-		return(dc)
-	}
-	UseMethod("distChunk", x)
+do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, cID) {
+	if (!missing(cID)) {
+		v <- do.call(what, list(chunkArg))
+		cat("Assigning value", format(v), "to identifier", 
+		    format(cID), "\n")
+		assign(cID, v, envir = .GlobalEnv)
+		assign("QUEUE", c(QUEUE, cID), envir = .GlobalEnv)
+		return("RESOLVED")
+	} else do.call(what, list(chunkArg))
+}
+
+chunkRef <- function(x, ...) UseMethod("chunkRef", x)
+chunkRef.chunkID <- function(x, jID)  {
+	cr <- new.env()
+	class(cr) <- "chunkRef"
+	chunkID(cr) <- x
+	jobID(cr) <- jID
+	resolution(cr) <- "UNRESOLVED"
+	cr
 }
 
 chunkID <- function(x, ...) {
@@ -18,7 +30,9 @@ chunkID <- function(x, ...) {
 	UseMethod("chunkID", x)
 }
 
-`chunkID<-` <- function(x, value) {
+`chunkID<-` <- function(x, value) UseMethod("chunkID<-", x)
+
+`chunkID<-.chunkRef` <- function(x, value) {
 	assign("CHUNK_ID", value, x)
 	x
 }
@@ -32,7 +46,8 @@ jobID <- function(x, ...) {
 	UseMethod("jobID", x)
 }
 
-`jobID<-` <- function(x, value) {
+`jobID<-` <- function(x, value) UseMethod("jobID<-", x)
+`jobID<-.chunkRef` <- function(x, value) {
 	assign("JOB_ID", value, x)
 	x
 }
@@ -40,24 +55,7 @@ jobID <- function(x, ...) {
 chunk <- function(x, ...) UseMethod("chunk", x)
 
 dist <- function(x, ...) UseMethod("dist", x)
-
 dist.default <- stats::dist
-
-# jobID methods
-
-distChunk.jobID <- function(x, ...) {
-	dc <- distChunk()
-	jobID(dc) <- x
-	dc
-}
-
-# chunkID methods
-
-distChunk.chunkID <- function(x, ...) {
-	dc <- distChunk()
-	chunkID(dc) <- x
-	dc
-}
 
 # Initialisation
 
@@ -78,15 +76,3 @@ init <- local({
 
 distInit <- get("distInit", environment(init))
 conn <- get("conn", environment(init))
-
-do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, assign=TRUE) {
-	if (assign) {
-		cID <- chunkID()
-		v <- do.call(what, list(chunkArg))
-		cat("Assigning value", format(v), "to identifier", 
-		    format(cID), "\n")
-		assign(cID, v, envir = .GlobalEnv)
-		assign("QUEUE", c(QUEUE, cID), envir = .GlobalEnv)
-		return(cID)
-	} else do.call(what, list(chunkArg))
-}
