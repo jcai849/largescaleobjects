@@ -80,3 +80,5 @@ addChunk <- get("addChunk", environment(CHUNK_TABLE))
 rmChunk <- get("rmChunk", environment(CHUNK_TABLE))
 queues <- get("queues", environment(CHUNK_TABLE))
 chunk.chunkID <- get("chunk.chunkID", environment(CHUNK_TABLE)) 
+
+chunk.default <- chunk.chunkID
