@@ -5,8 +5,7 @@ do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, cID) {
 		v <- do.call(what, list(chunkArg))
 		cat("Assigning value", format(v), "to identifier", 
 		    format(cID), "\n")
-		assign(cID, v, envir = .GlobalEnv)
-		assign("QUEUE", c(QUEUE, cID), envir = .GlobalEnv)
+		addChunk(cID, v)
 		return("RESOLVED")
 	} else do.call(what, list(chunkArg))
 }
@@ -59,7 +58,7 @@ dist.default <- stats::dist
 
 # Initialisation
 
-init <- local({
+INIT <- local({
 	rsc <- NULL
 
 	distInit <- function(queueHost="localhost", queuePort=6379L, ...) {
@@ -74,5 +73,5 @@ init <- local({
 	}
 })
 
-distInit <- get("distInit", environment(init))
-conn <- get("conn", environment(init))
+distInit <- get("distInit", environment(INIT))
+conn <- get("conn", environment(INIT))

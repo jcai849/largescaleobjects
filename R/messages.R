@@ -31,12 +31,19 @@ op <- function(x, ...) UseMethod("op", x)
 static <- function(x, ...) UseMethod("static", x)
 fun <- function(x, ...) UseMethod("fun", x)
 
+
 msgField <- function(field) function(x, ...) x[[field]]
+
 # Requesters
-op.msg <- msgField("OP"); fun.msg <- msgField("FUN")
+op.msg <- msgField("OP")
+fun.msg <- msgField("FUN")
 static.msg <- msgField("STATIC_ARGS")
-chunk.msg <- function(x, ...) get(chunkID(msgField("CHUNK")(x)))
-jobID.msg <- msgField("JOB_ID"); dist.msg <- msgField("DIST_ARGS")
+chunkRef.msg <- msgField("CHUNK")
+jobID.msg <- msgField("JOB_ID")
+dist.msg <- msgField("DIST_ARGS")
 chunkID.msg <- msgField("CHUNK_ID");
+chunk.msg <- function(x, ...) chunk(chunkID(chunkRef(x)))
+
 # Responders
-resolution.msg <- msgField("RESOLUTION"); preview.msg <- msgField("PREVIEW")
+resolution.msg <- msgField("RESOLUTION")
+preview.msg <- msgField("PREVIEW")

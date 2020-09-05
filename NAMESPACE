@@ -18,6 +18,8 @@ export(preview)
 export(static)
 export(jobID)
 export(chunkID)
+export(queues)
+export(addChunk)
 
 export('chunkID<-')
 export('preview<-')

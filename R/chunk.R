@@ -24,7 +24,7 @@ print.chunkRef <- function(x, ...) print(preview(x))
 
 preview <- function(x, ...) UseMethod("preview", x)
 preview.chunkRef <- function(x) { resolve(x); get("PREVIEW", x) }
-preview.chunkID <- function(x, size=6L) head(get(x), n=size)
+preview.chunkID <- function(x, size=6L) head(chunk(x), n=size)
 
 `preview<-` <- function(x, value) UseMethod("preview<-", x)
 `preview<-.chunkRef` <- function(x, value) {
@@ -58,3 +58,25 @@ resolution.chunkRef <- function(x, ...) get("RESOLUTION", x)
 	assign("RESOLUTION", value, x)
 	x
 }
+
+# chunk table
+
+CHUNK_TABLE <- local({
+	ct <- new.env()
+
+	chunkTable <- function() ct
+
+	addChunk <- function(cID, val) assign(cID, val, envir = ct)
+
+	rmChunk <- function(cID) rm(list = ciD, envir = ct)
+	
+	chunk.chunkID <- function(x, ...) get(x, ct)
+
+	queues <- function() ls(ct)
+})
+
+chunkTable <- get("chunkTable", environment(CHUNK_TABLE))
+addChunk <- get("addChunk", environment(CHUNK_TABLE))
+rmChunk <- get("rmChunk", environment(CHUNK_TABLE))
+queues <- get("queues", environment(CHUNK_TABLE))
+chunk.chunkID <- get("chunk.chunkID", environment(CHUNK_TABLE)) 
