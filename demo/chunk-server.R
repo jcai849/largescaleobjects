@@ -9,24 +9,16 @@ addChunk("chunk1", chunk1)
 repeat {
 	m <- read.queue(queues())
 	switch(op(m),
-	       "ASSIGN" = tryCatch({
-		       res <- do.call.chunk(what=fun(m), 
-					    chunkArg=chunk(m), 
-					    distArgs=dist(m), 
-					    staticArgs=static(m), 
-					    cID=chunkID(m))
-		       send(RESOLUTION = res, PREVIEW = preview(chunkID(m)),
-			    to = jobID(m))
-	       },
-	       error = function(e) send(RESOLUTION = e, 
-					to=jobID(m))),
-	       "DOFUN" = tryCatch({
-		       res <- do.call.chunk(what=fun(m), 
-					    chunkArg=chunk(m), 
-					    distArgs=dist(m), 
-					    staticArgs=static(m))
-		       send(RESOLUTION = res, to = jobID(m))
-	       },
-	       error = function(e) send(RESOLUTION = e, to=jobID(m))))
+	       "ASSIGN" = do.call.chunk(what=fun(m), 
+					chunkArg=chunk(m), 
+					distArgs=dist(m), 
+					staticArgs=static(m), 
+					jID=jobID(m),
+					cID=chunkID(m)),
+	       "DOFUN" = do.call.chunk(what=fun(m), 
+				       chunkArg=chunk(m), 
+				       distArgs=dist(m), 
+				       staticArgs=static(m),
+				       jID=jobID(m)))
 }
 

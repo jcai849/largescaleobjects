@@ -19,7 +19,7 @@ CHUNK_TABLE <- local({
 	ct <- new.env()	# chunk table
 
 	chunkTable 	<- function() ct
-	rmChunk 	<- function(cID) rm(list = ciD, envir = ct)
+	rmChunk 	<- function(cID) rm(list = cID, envir = ct)
 	chunk.chunkID 	<- function(x, ...) get(x, ct)
 	queues 		<- function() ls(ct)
 	addChunk 	<- function(cID, val) {

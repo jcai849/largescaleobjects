@@ -1,5 +1,6 @@
 do.call.chunkRef <- function(what, chunkArg, distArgs=NULL, staticArgs=NULL,
 			     assign=TRUE) {
+	resolved(chunkArg) # raise error if chunk resolved as failure
 	jID <- jobID()
 	cID <- if (assign) chunkID() else NULL
 	info("Requesting to perform function", format(what), 
@@ -12,11 +13,23 @@ do.call.chunkRef <- function(what, chunkArg, distArgs=NULL, staticArgs=NULL,
 	if (assign) chunkRef(cID, jID) else resolution(read.queue(jID, clear=TRUE))
 }
 
-do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, cID) {
+do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, jID, cID) {
 	info("Requested to perform function", format(what))
 	if (!missing(cID)) {
-		v <- do.call(what, list(chunkArg))
+		v <- tryCatch({
+				res <- do.call(what, list(chunkArg))
+				send(RESOLUTION = "RESOLVED", 
+				     PREVIEW = preview(res), to = jID)
+				res},
+			error = function(e) {
+				info("Error occured:", format(e$message))
+				send(RESOLUTION = e, to = jID)
+				e})
 		addChunk(cID, v)
-		return("RESOLVED")
-	} else do.call(what, list(chunkArg))
+	} else tryCatch({
+				res <- do.call(what, list(chunkArg))
+				send(RESOLUTION = res, to = jID) }, 
+		error = function(e) {
+				info("Error occured:", format(e$message))
+				send(RESOLUTION = e, to = jID)})
 }

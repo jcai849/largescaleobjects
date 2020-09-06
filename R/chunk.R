@@ -5,9 +5,9 @@ chunkID.chunkRef 	<- envGet("CHUNK_ID")
 jobID.chunkRef 		<- envGet("JOB_ID")
 resolution.chunkRef 	<- envGet("RESOLUTION")
 
-preview.chunkRef <- function(x) {resolve(x); envGet("PREVIEW")(x)}
-
-preview.chunkID <- function(x, size=6L) head(chunk(x), n=size)
+preview.chunkRef	<- function(x) {resolve(x); envGet("PREVIEW")(x)}
+preview.chunkID 	<- function(x, size=6L) head(chunk(x), n=size)
+preview.default 	<- utils::head
 
 # Set
 envSet <- function(field) function(x, value) {
@@ -42,9 +42,9 @@ resolve.chunkRef <- function(x, ...) {
 	if (!resolved(x)) {
 		info("Chunk not yet resolved. Resolving...")
 		m <- read.queue(jobID(x), clear=TRUE)
-		if (!identical(resolution(m), "RESOLVED")) stop(resolution(m))
 		resolution(x) <- resolution(m)
 		preview(x) <- preview(m)
+		if (!identical(resolution(m), "RESOLVED")) stop(resolution(m))
 	} 
 	resolved(x)
 }
