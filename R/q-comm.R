@@ -1,5 +1,3 @@
-# messaging functions
-
 msg <- function(...) {
 	structure(list(...), class = "msg")
 }
@@ -26,24 +24,24 @@ read.queue <- function(queue, clear = FALSE, timeOut=Inf) {
 	m
 }
 
-# message field accessors
-op <- function(x, ...) UseMethod("op", x)
-static <- function(x, ...) UseMethod("static", x)
-fun <- function(x, ...) UseMethod("fun", x)
-
+# Generics
+op 	<- function(x, ...) UseMethod("op", x)
+static 	<- function(x, ...) UseMethod("static", x)
+fun 	<- function(x, ...) UseMethod("fun", x)
 
 msgField <- function(field) function(x, ...) x[[field]]
 
-# Requesters
-op.msg <- msgField("OP")
-fun.msg <- msgField("FUN")
-static.msg <- msgField("STATIC_ARGS")
-chunkRef.msg <- msgField("CHUNK")
-jobID.msg <- msgField("JOB_ID")
-dist.msg <- msgField("DIST_ARGS")
-chunkID.msg <- msgField("CHUNK_ID");
+# Requests
+op.msg 		<- msgField("OP")
+fun.msg 	<- msgField("FUN")
+static.msg 	<- msgField("STATIC_ARGS")
+chunkRef.msg 	<- msgField("CHUNK")
+jobID.msg 	<- msgField("JOB_ID")
+dist.msg 	<- msgField("DIST_ARGS")
+chunkID.msg 	<- msgField("CHUNK_ID");
+
 chunk.msg <- function(x, ...) chunk(chunkID(chunkRef(x)))
 
-# Responders
-resolution.msg <- msgField("RESOLUTION")
-preview.msg <- msgField("PREVIEW")
+# Responses
+resolution.msg	<- msgField("RESOLUTION")
+preview.msg 	<- msgField("PREVIEW")

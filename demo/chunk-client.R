@@ -4,6 +4,7 @@ library(distObj)
 # Initialise connections
 distInit()
 
+
 #invisible(readline("Type <Return> to continue"))
 # Clear any previous examples
 rediscc::redis.rm(conn(), c("chunkRef1", paste0("C", 1:10), paste0("J", 1:10), 
