@@ -2,7 +2,7 @@ library(distObj)
 
 #invisible(readline("Type <Return> to continue"))
 # Initialise connections
-distInit()
+distInit(verbose=T)
 
 
 #invisible(readline("Type <Return> to continue"))

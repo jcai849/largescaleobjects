@@ -10,17 +10,17 @@ send <- function(..., to) {
 
 write.msg <- function(m, to) {
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	cat("writing message: ", format(m), 
-	    " to queue belonging to chunk \"", to, "\"\n", sep="")
+	info("writing message:", format(m), 
+	     "to queue belonging to chunk\"", to, "\"")
 	rediscc::redis.push(conn(), to, serializedMsg)
 }
 
 read.queue <- function(queue, clear = FALSE, timeOut=Inf) {
-	cat("Awaiting message on queues: ", format(queue),  "\n", sep="")
+	info("Awaiting message on queues:", format(queue))
 	serializedMsg <- rediscc::redis.pop(conn(), queue, timeout=timeOut)
 	if (clear) rediscc::redis.rm(conn(), queue)
 	m <- unserialize(charToRaw(serializedMsg))
-	cat("Received message:", format(m), "\n")
+	info("Received message:", format(m))
 	m
 }
 

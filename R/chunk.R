@@ -22,6 +22,9 @@ envSet <- function(field) function(x, value) {
 
 # Instantiate
 chunkRef.chunkID <- function(x, jID)  {
+	info("Producing new chunk reference with",
+	     "chunk ID:", format(x), 
+	     "and job ID:", format(jID))
 	cr <- new.env()
 	class(cr) <- "chunkRef"
 	chunkID(cr) <- x
@@ -37,6 +40,7 @@ print.chunkRef 	<- function(x, ...) print(preview(x))
 
 resolve.chunkRef <- function(x, ...) {
 	if (!resolved(x)) {
+		info("Chunk not yet resolved. Resolving...")
 		m <- read.queue(jobID(x), clear=TRUE)
 		if (!identical(resolution(m), "RESOLVED")) stop(resolution(m))
 		resolution(x) <- resolution(m)

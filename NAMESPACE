@@ -20,6 +20,7 @@ export(jobID)
 export(chunkID)
 export(queues)
 export(addChunk)
+export(info)
 
 export('chunkID<-')
 export('preview<-')

@@ -16,6 +16,7 @@ dist.default 	<- stats::dist
 chunkID <- function(x, ...) {
 	if (missing(x)) {
 		cID <- paste0("C", rediscc::redis.inc(conn(), "CHUNK_ID"))
+		info("Attained Chunk ID: ", format(cID))
 		class(cID) <- "chunkID"
 		return(cID)
 	}
@@ -25,6 +26,7 @@ chunkID <- function(x, ...) {
 jobID <- function(x, ...) {
 	if (missing(x)) {
 		jID <- paste0("J", rediscc::redis.inc(conn(), "JOB_ID"))
+		info("Attained job ID: ", format(jID))
 		class(jID) <- "jobID"
 		return(jID)
 	}
