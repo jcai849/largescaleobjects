@@ -1,35 +1,40 @@
-do.call.chunkRef <- function(what, chunkArg, distArgs=NULL, staticArgs=NULL,
-			     assign=TRUE) {
-	resolved(chunkArg) # raise error if chunk resolved as failure
+do.call.chunkRef <- function(what, args, target, assign=TRUE) {
+	stopifnot(is.list(args))
+	resolved(target) # raise error if chunk resolved as failure
 	jID <- jobID()
-	cID <- if (assign) chunkID() else NULL
-	info("Requesting to perform function", format(what), 
-	     "on chunk", chunkID(chunkArg), "with", 
-	    if (assign) "assignment" else "no assignment")
-	send(OP = if (assign) "ASSIGN" else "DOFUN", FUN = what, 
-	     CHUNK = chunkArg, DIST_ARGS = distArgs, STATIC_ARGS = staticArgs,
-	     JOB_ID = jID, CHUNK_ID = cID, to = chunkID(chunkArg))
+	cID <- if (assign) chunkID()
+	info("Requested to perform function", format(what), 
+	     "with parameters", format(names(args)), 
+	     "set to", format(args), "using chunk", format(chunkID(target)),
+	     "as target,", 
+	     if (assign)  c("and assigning to chunk ID", format(cID)) else 
+		     "with value return expected")
+	if (assign)  {
+		send(FUN = what, ARGS = args,
+		     ANTE_CHUNK_ID = chunkID(target), ANTE_JOB_ID = jobID(target),
+		     POST_CHUNK_ID = cID, POST_JOB_ID = jID,
+		     to = chunkID(target))
+	} else {
+		send(FUN = what, ARGS = args,
+		     ANTE_CHUNK_ID = chunkID(target), ANTE_JOB_ID = jobID(target),
+		     POST_JOB_ID = jID, to = chunkID(target))
+	}
 	# output reference or value
-	if (assign) chunkRef(cID, jID) else resolution(read.queue(jID, clear=TRUE))
+	if (assign) chunkRef(cID, jID) else 
+		resolution(read.queue(jID, clear=TRUE))
 }
 
-do.call.chunk <- function(what, chunkArg, distArgs, staticArgs, jID, cID) {
-	info("Requested to perform function", format(what))
-	if (!missing(cID)) {
-		v <- tryCatch({
-				res <- do.call(what, list(chunkArg))
-				send(RESOLUTION = "RESOLVED", 
-				     PREVIEW = preview(res), to = jID)
-				res},
-			error = function(e) {
-				info("Error occured:", format(e$message))
-				send(RESOLUTION = e, to = jID)
-				e})
-		addChunk(cID, v)
-	} else tryCatch({
-				res <- do.call(what, list(chunkArg))
-				send(RESOLUTION = res, to = jID) }, 
-		error = function(e) {
-				info("Error occured:", format(e$message))
-				send(RESOLUTION = e, to = jID)})
+do.call.msg <- function(what, args, target, assign) {
+	stopifnot(is.list(args))
+	args <- lapply(args, refToRec, target=as.chunkRef(target))
+	info("Requested to perform function", format(what), 
+	     "with parameters", format(names(args)), 
+	     "set to", format(args), "using chunk", format(anteChunkID(target)), 
+	     "as target, ",
+	     if (assign)  c("and assigning to chunk ID", 
+			    format(postChunkID(target))) else 
+				    "and returning value")
+	do.call(what, args)
 }
+
+refToRec.chunkRef <- function(arg, target) chunk(arg)

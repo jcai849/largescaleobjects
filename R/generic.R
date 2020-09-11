@@ -4,14 +4,22 @@ preview 	<- function(x, ...) UseMethod("preview", x)
 resolution 	<- function(x, ...) UseMethod("resolution", x)
 resolve 	<- function(x, ...) UseMethod("resolve", x)
 resolved 	<- function(x, ...) UseMethod("resolved", x)
+fun		<- function(x, ...) UseMethod("fun", x)
+anteChunkID	<- function(x, ...) UseMethod("anteChunkID", x)
+anteJobID	<- function(x, ...) UseMethod("anteJobID", x)
+postChunkID	<- function(x, ...) UseMethod("postChunkID", x)
+postJobID	<- function(x, ...) UseMethod("postJobID", x)
+as.chunkRef	<- function(x, ...) UseMethod("fun", x)
+refToRec	<- function(arg, target) UseMethod("refToRec", arg)
 
 `chunkID<-` 	<- function(x, value) UseMethod("chunkID<-", x)
 `jobID<-` 	<- function(x, value) UseMethod("jobID<-", x)
 `preview<-` 	<- function(x, value) UseMethod("preview<-", x)
 `resolution<-` 	<- function(x, value) UseMethod("resolution<-", x)
 
-dist 		<- function(x, ...) UseMethod("dist", x) # masking
-dist.default 	<- stats::dist
+# masking
+args		<- function(name) UseMethod("args", name)
+args.default	<- base::args
 
 chunkID <- function(x, ...) {
 	if (missing(x)) {

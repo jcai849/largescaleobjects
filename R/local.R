@@ -21,6 +21,7 @@ CHUNK_TABLE <- local({
 	chunkTable 	<- function() ct
 	rmChunk 	<- function(cID) rm(list = cID, envir = ct)
 	chunk.chunkID 	<- function(x, ...) get(x, ct)
+	chunk.chunkRef 	<- function(x, ...) get(chunkID(x), ct)
 	queues 		<- function() ls(ct)
 	addChunk 	<- function(cID, val) {
 		info("Assigned chunk to ID:", 
@@ -42,6 +43,4 @@ addChunk 	<- getChunkTable("addChunk")
 rmChunk 	<- getChunkTable("rmChunk")
 queues 		<- getChunkTable("queues")
 chunk.chunkID 	<- getChunkTable("chunk.chunkID")
-
-# alias
-chunk.default <- chunk.chunkID
+chunk.chunkRef 	<- getChunkTable("chunk.chunkRef")

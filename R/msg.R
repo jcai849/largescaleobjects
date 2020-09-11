@@ -24,21 +24,18 @@ read.queue <- function(queue, clear = FALSE, timeOut=Inf) {
 	m
 }
 
-# Generics
-op 	<- function(x, ...) UseMethod("op", x)
-static 	<- function(x, ...) UseMethod("static", x)
-fun 	<- function(x, ...) UseMethod("fun", x)
-
+# Get
 msgField <- function(field) function(x, ...) x[[field]]
 
 # Requests
-op.msg 		<- msgField("OP")
 fun.msg 	<- msgField("FUN")
-static.msg 	<- msgField("STATIC_ARGS")
-chunkRef.msg 	<- msgField("CHUNK")
-jobID.msg 	<- msgField("JOB_ID")
-dist.msg 	<- msgField("DIST_ARGS")
-chunkID.msg 	<- msgField("CHUNK_ID");
+args.msg	<- msgField("ARGS")
+anteChunkID.msg	<- msgField("ANTE_CHUNK_ID")
+anteJobID.msg	<- msgField("ANTE_JOB_ID")
+postChunkID.msg	<- msgField("POST_CHUNK_ID")
+postJobID.msg	<- msgField("POST_JOB_ID")
+
+toAssign	<- function(x) hasName(x, "POST_CHUNK_ID")
 
 chunk.msg <- function(x, ...) chunk(chunkID(chunkRef(x)))
 
