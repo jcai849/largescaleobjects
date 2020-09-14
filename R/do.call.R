@@ -37,4 +37,9 @@ do.call.msg <- function(what, args, target, assign) {
 	do.call(what, args)
 }
 
-refToRec.chunkRef <- function(arg, target) chunk(arg)
+do.call.distObjRef <- function(what, args, assign=TRUE) {
+	target <- findTarget(args)
+	postChunks <- lapply(chunk(target), function(c) 
+			     do.call.chunkRef(what, args, c, assign=assign))
+	distObjRef(postChunks)
+}

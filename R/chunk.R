@@ -4,11 +4,12 @@ envGet <- function(field) function(x) get(field, x)
 chunkID.chunkRef 	<- envGet("CHUNK_ID")
 jobID.chunkRef 		<- envGet("JOB_ID")
 resolution.chunkRef 	<- envGet("RESOLUTION")
-
 preview.default 	<- utils::head
 preview.chunkRef	<- function(x) 
 	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
 		"Chunk not yet resolved"
+# TODO to.chunkRef
+# TODO from.chunkRef
 
 # Set
 envSet <- function(field) function(x, value) {
