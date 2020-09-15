@@ -30,8 +30,15 @@ refToRec.distObjRef <- function(arg, target) {
 #      │   └── TO
 #      └── REF
 alignment <- function(arg, target) {
-	toAlign <- list()
-	targetChunks <- chunk(target)
+	toAlign 	<- list()
+	targetChunks	<- chunk(target)
+	argFrom 	<- from(arg)
+	argTo 		<- to(arg)
+	argSize 	<- size(arg)
+	targetFrom 	<- from(target)
+	targetTo 	<- to(target)
+	targetSize 	<- size(target)
+
 	if (size(arg) >= to(target)) {
 		# get first true instance with which.max
 		whichHead <- which.max(from(arg) > from(target)) - 1 
@@ -48,4 +55,15 @@ alignment <- function(arg, target) {
 
 
 	} else stop("TODO: fill in recycling case")
+}
+
+# for temporary testing purposes only
+align <- function(argFrom, argTo, argSize, targetFrom, targetTo, targetSize) {
+	toAlign <- list()
+	headFromAbs <- targetFrom %% argSize
+	headRefNum <- which(headFromAbs < argTo)[1]
+	headFromRel <- headFromAbs - argFrom[headRefNum] + 1
+	toAlign$HEAD$REF <- headRefNum # change this from number to actual ref
+	toAlign$HEAD$FROM <- headFromRel
+	toAlign
 }
