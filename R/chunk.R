@@ -1,27 +1,3 @@
-# Get
-envGet <- function(field) function(x) get(field, x)
-
-chunkID.chunkRef 	<- envGet("CHUNK_ID")
-jobID.chunkRef 		<- envGet("JOB_ID")
-resolution.chunkRef 	<- envGet("RESOLUTION")
-preview.default 	<- utils::head
-preview.chunkRef	<- function(x) 
-	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
-		"Chunk not yet resolved"
-# TODO to.chunkRef
-# TODO from.chunkRef
-
-# Set
-envSet <- function(field) function(x, value) {
-	assign(field, value, x)
-	x
-}
-
-`chunkID<-.chunkRef` 	<- envSet("CHUNK_ID")
-`jobID<-.chunkRef` 	<- envSet("JOB_ID")
-`preview<-.chunkRef` 	<- envSet("PREVIEW")
-`resolution<-.chunkRef`	<- envSet("RESOLUTION")
-
 # Instantiate
 chunkRef.chunkID <- function(x, jID)  {
 	info("Producing new chunk reference with",
@@ -44,7 +20,31 @@ as.chunkRef.msg	<- function(x) {
 	cr
 }
 
+# Get
+
+chunkID.chunkRef 	<- envGet("CHUNK_ID")
+jobID.chunkRef 		<- envGet("JOB_ID")
+resolution.chunkRef 	<- envGet("RESOLUTION")
+preview.default 	<- utils::head
+preview.chunkRef	<- function(x) 
+	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
+		"Chunk not yet resolved"
+to.chunkRef 		<- envGet("TO")
+from.chunkRef 		<- envGet("FROM")
+size.chunkRef 		<- envGet("SIZE")
+
+# Set
+
+`chunkID<-.chunkRef` 	<- envSet("CHUNK_ID")
+`jobID<-.chunkRef` 	<- envSet("JOB_ID")
+`preview<-.chunkRef` 	<- envSet("PREVIEW")
+`resolution<-.chunkRef`	<- envSet("RESOLUTION")
+
 # Other methods
+
+emerge.chunkRef <- function(x, ...) {
+	chunk.chunkRef(x)
+}
 
 format.chunkRef	<- function(x, ...) format(preview(x))
 print.chunkRef 	<- function(x, ...) {

@@ -1,37 +1,35 @@
-# TODO findTarget
+findTarget <- function(args) args[[which(sapply(args, is.distObjRef))[1]]]
 
 refToRec.chunkRef <- function(arg, target) chunk(arg)
 
 refToRec.distObjRef <- function(arg, target) {
 	toAlign <- alignment(arg, target) 
-	headPiece <- 
-		emerge(toAlign$HEAD$REF)[do.call(seq, toAlign$HEAD$INDICES)]
-	innerPieces <- if (hasName(toAlign, "INNER")) {
-		lapply(toAlign$INNER$REF, emerge) 
-		} else NULL
-	tailPiece <- if (hasName(toAlign, "TAIL")) {
-		emerge(toAlign$TAIL$REF)[do.call(seq, toAlign$TAIL$INDICES)] 
-		} else NULL
-	do.call(c, c(headPiece, innerPieces, tailPiece))
+
+	ref <- lapply(toAlign$REF, emerge)
+	combined <- if (length(ref) == 1) 
+		ref[[1]][seq(toAlign$HEAD$FROM, toAlign$HEAD$TO)] else
+		do.call(combine, 
+			c(list(ref[[1]][seq(toAlign$HEAD$FROM, 
+					    toAlign$HEAD$TO)]), 
+			  ref[-c(1, length(ref))], 
+			  list(ref[[length(ref)]][seq(toAlign$TAIL$FROM,
+						      toAlign$TAIL$TO)])))
+	combined
 }
 
 # `alignment` returns list of form:
 #  .
 #  ├── HEAD
-#  │   ├── INDICES
-#  │   │   ├── FROM
-#  │   │   └── TO
-#  │   └── REF
-#  ├── INNER
-#  │   └── REF
+#  │   ├── FROM
+#  │   └── TO
+#  ├── REF
+#  ... with multiple references
 #  └── TAIL
-#      ├── INDICES
-#      │   ├── FROM
-#      │   └── TO
-#      └── REF
+#      ├── FROM
+#      └── TO
 alignment <- function(arg, target) {
 	toAlign 	<- list()
-	targetChunks	<- chunk(target)
+	argChunks	<- chunk(arg)
 	argFrom 	<- from(arg)
 	argTo 		<- to(arg)
 	argSize 	<- size(arg)
@@ -39,31 +37,27 @@ alignment <- function(arg, target) {
 	targetTo 	<- to(target)
 	targetSize 	<- size(target)
 
-	if (size(arg) >= to(target)) {
-		# get first true instance with which.max
-		whichHead <- which.max(from(arg) > from(target)) - 1 
-		whichTail <- which.min(from(arg) >= from(target)) - 1
-		toAlign$HEAD$REF <- targetChunks[whichHead]
-		if (whichTail-whichHead == 0) 
-			toAlign$TAIL$REF <- targetChunks[whichTail]
-		if (whichTail-whichHead == 0)
-			toAlign$INNER$REF <- targetChunks[seq(whichHead, 
-							      whichTail)]
-
-		
-		
-
-
-	} else stop("TODO: fill in recycling case")
-}
-
-# for temporary testing purposes only
-align <- function(argFrom, argTo, argSize, targetFrom, targetTo, targetSize) {
-	toAlign <- list()
 	headFromAbs <- targetFrom %% argSize
-	headRefNum <- which(headFromAbs < argTo)[1]
+	headRefNum <- which(headFromAbs <= argFrom)[1]
 	headFromRel <- headFromAbs - argFrom[headRefNum] + 1
-	toAlign$HEAD$REF <- headRefNum # change this from number to actual ref
+
+	tailToAbs <- if (targetSize > argSize)  #clip rep, force local recycling
+		headFromAbs - 1 %% argSize else targetTo %% argSize
+	tailRefNum <- which(tailToAbs <= argTo)[1]
+	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1
+
+	ref <- if (targetSize + headFromAbs > argTo[headRefNum] && 
+		   tailRefNum <= headRefNum) # modular
+		c(seq(headRefNum, length(argChunks)), seq(1, tailRefNum)) else
+			seq(headRefNum, tailRefNum)
+
+	toAlign <- list()
+	toAlign$REF <- ref
 	toAlign$HEAD$FROM <- headFromRel
+	toAlign$HEAD$TO <- if (length(ref) == 1) 
+		tailToRel else argTo[headRefNum] - argFrom[headRefNum] + 1
+	toAlign$TAIL$FROM <- 1
+	toAlign$TAIL$TO <- tailToRel
+
 	toAlign
 }

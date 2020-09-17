@@ -1,5 +1,8 @@
-# TODO to
-# TODO from
+to              <- function(x, ...) UseMethod("to", x)
+from            <- function(x, ...) UseMethod("from", x)
+combine         <- function(x, ...) UseMethod("combine", x)
+emerge          <- function(x, ...) UseMethod("emerge", x)
+size            <- function(x, ...) UseMethod("size", x)
 chunk 		<- function(x, ...) UseMethod("chunk", x)
 chunkRef 	<- function(x, ...) UseMethod("chunkRef", x)
 preview 	<- function(x, ...) UseMethod("preview", x)
@@ -15,6 +18,7 @@ as.chunkRef	<- function(x, ...) UseMethod("fun", x)
 refToRec	<- function(arg, target) UseMethod("refToRec", arg)
 
 `chunkID<-` 	<- function(x, value) UseMethod("chunkID<-", x)
+`chunk<-` 	<- function(x, value) UseMethod("chunkID", x)
 `jobID<-` 	<- function(x, value) UseMethod("jobID<-", x)
 `preview<-` 	<- function(x, value) UseMethod("preview<-", x)
 `resolution<-` 	<- function(x, value) UseMethod("resolution<-", x)
