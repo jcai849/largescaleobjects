@@ -14,7 +14,7 @@ chunkRef.chunkID <- function(x, jID)  {
 # Coerce
 
 as.chunkRef.msg	<- function(x) {
-	cr <- chunkRef(antChunkID(x), andJobID(x))
+	cr <- chunkRef(anteChunkID(x), anteJobID(x))
 	resolution(cr) <- "RESOLVED"
 	preview(cr) <- NA
 	cr
@@ -39,6 +39,9 @@ size.chunkRef 		<- envGet("SIZE")
 `jobID<-.chunkRef` 	<- envSet("JOB_ID")
 `preview<-.chunkRef` 	<- envSet("PREVIEW")
 `resolution<-.chunkRef`	<- envSet("RESOLUTION")
+`to<-.chunkRef` 	<- envSet("TO")
+`from<-.chunkRef`	<- envSet("FROM")
+`size<-.chunkRef` 	<- envSet("SIZE")
 
 # Other methods
 

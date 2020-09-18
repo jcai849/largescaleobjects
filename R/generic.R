@@ -18,10 +18,13 @@ as.chunkRef	<- function(x, ...) UseMethod("fun", x)
 refToRec	<- function(arg, target) UseMethod("refToRec", arg)
 
 `chunkID<-` 	<- function(x, value) UseMethod("chunkID<-", x)
-`chunk<-` 	<- function(x, value) UseMethod("chunkID", x)
+`chunk<-` 	<- function(x, value) UseMethod("chunk<-", x)
 `jobID<-` 	<- function(x, value) UseMethod("jobID<-", x)
 `preview<-` 	<- function(x, value) UseMethod("preview<-", x)
 `resolution<-` 	<- function(x, value) UseMethod("resolution<-", x)
+`to<-`          <- function(x, value) UseMethod("to<-", x)
+`from<-`        <- function(x, value) UseMethod("from<-", x)
+`size<-`        <- function(x, value) UseMethod("size<-", x)
 
 # masking
 args		<- function(name) UseMethod("args", name)

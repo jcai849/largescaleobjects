@@ -1,2 +1,4 @@
 chunk-client	A verbose client requesting several direct chunk operations
 chunk-server	A verbose server paired with chunk-client performing the chunk requests
+distobj-client	A verbose client requesting several distributed object operations
+distobj-server	A verbose server paired with distobj-client performing the chunk requests

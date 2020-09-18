@@ -16,9 +16,9 @@ is.distObjRef <- function(x) inherits(x, "distObjRef")
 # Get
 
 chunk.distObjRef	<- envGet("CHUNK")
-size.distObjRef 	<- envGet("SIZE")
-to.distObjRef		<- function(x) sapply(chunk(x), to)
-from.distObjRef 	<- function(x) sapply(chunk(x), from)
+size.distObjRef 	<- function(x) vapply(chunk(x), size, integer())
+to.distObjRef		<- function(x) vapply(chunk(x), to, integer())
+from.distObjRef 	<- function(x) vapply(chunk(x), from, integer())
 
 # Set
 

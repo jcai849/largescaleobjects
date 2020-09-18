@@ -14,16 +14,16 @@ preview(chunk1) <- 1:5
 resolution(chunk1) <- "RESOLVED"
 
 chunk2 <- structure(new.env(), class = "chunkRef")
-chunkID(chunk1) <- structure("chunk2", class="chunkID")
-jobID(chunk1) <- structure("job2", class="jobID")
-preview(chunk1) <- 6:10
-resolution(chunk1) <- "RESOLVED"
+chunkID(chunk2) <- structure("chunk2", class="chunkID")
+jobID(chunk2) <- structure("job2", class="jobID")
+preview(chunk2) <- 6:10
+resolution(chunk2) <- "RESOLVED"
 
 chunk3 <- structure(new.env(), class = "chunkRef")
-chunkID(chunk1) <- structure("chunk3", class="chunkID")
-jobID(chunk1) <- structure("job3", class="jobID")
-preview(chunk1) <- 11:15
-resolution(chunk1) <- "RESOLVED"
+chunkID(chunk3) <- structure("chunk3", class="chunkID")
+jobID(chunk3) <- structure("job3", class="jobID")
+preview(chunk3) <- 11:15
+resolution(chunk3) <- "RESOLVED"
 
 distObj1 <- structure(new.env(), class = "distObjRef")
 chunk(distObj1) <- list(chunk1, chunk2, chunk3)

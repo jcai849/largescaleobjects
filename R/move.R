@@ -10,14 +10,14 @@ refToRec.distObjRef <- function(arg, target) {
 	toAlign <- alignment(arg, target) 
 
 	ref <- lapply(toAlign$REF, emerge)
-	combined <- if (length(ref) == 1) 
-		ref[[1]][seq(toAlign$HEAD$FROM, toAlign$HEAD$TO)] else
-		do.call(combine, 
-			c(list(ref[[1]][seq(toAlign$HEAD$FROM, 
-					    toAlign$HEAD$TO)]), 
-			  ref[-c(1, length(ref))], 
-			  list(ref[[length(ref)]][seq(toAlign$TAIL$FROM,
-						      toAlign$TAIL$TO)])))
+	combined <- if (length(ref) == 1) {
+		ref[[1]][seq(toAlign$HEAD$FROM, toAlign$HEAD$TO)] 
+	} else do.call(combine, 
+		       c(list(ref[[1]][seq(toAlign$HEAD$FROM, 
+					   toAlign$HEAD$TO)]), 
+			 ref[-c(1, length(ref))], 
+			 list(ref[[length(ref)]][seq(toAlign$TAIL$FROM,
+						     toAlign$TAIL$TO)])))
 	combined
 }
 
@@ -27,7 +27,6 @@ refToRec.distObjRef <- function(arg, target) {
 #  │   ├── FROM
 #  │   └── TO
 #  ├── REF
-#  ... with multiple references
 #  └── TAIL
 #      ├── FROM
 #      └── TO
@@ -36,7 +35,7 @@ alignment <- function(arg, target) {
 	argChunks	<- chunk(arg)
 	argFrom 	<- from(arg)
 	argTo 		<- to(arg)
-	argSize 	<- size(arg)
+	argSize 	<- sum(size(arg))
 	targetFrom 	<- from(target)
 	targetTo 	<- to(target)
 	targetSize 	<- size(target)
@@ -56,7 +55,7 @@ alignment <- function(arg, target) {
 			seq(headRefNum, tailRefNum)
 
 	toAlign <- list()
-	toAlign$REF <- ref
+	toAlign$REF <- argChunks[ref]
 	toAlign$HEAD$FROM <- headFromRel
 	toAlign$HEAD$TO <- if (length(ref) == 1) 
 		tailToRel else argTo[headRefNum] - argFrom[headRefNum] + 1
