@@ -29,8 +29,6 @@ CHUNK_TABLE <- local({
 		assign(cID, val, envir = ct)}
 })
 
-getLocal <- function(loc) function(field) get(field, environment(loc))
-
 getInit <- getLocal(INIT)
 getChunkTable 	<- getLocal(CHUNK_TABLE)
 
