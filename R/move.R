@@ -1,4 +1,8 @@
-findTarget <- function(args) args[[which(sapply(args, is.distObjRef))[1]]]
+findTarget <- function(args) {
+	dist <- vapply(args, is.distObjRef, logical())
+	longest <- args[dist][[which.max(lengths(args[dist]))]]
+	longest
+}
 
 refToRec.chunkRef <- function(arg, target) chunk(arg)
 
