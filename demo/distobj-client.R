@@ -26,7 +26,7 @@ preview(chunk1) <- 11:15
 resolution(chunk1) <- "RESOLVED"
 
 distObj1 <- structure(new.env(), class = "distObjRef")
-chunks(distObj1) <- list(chunk1, chunk2, chunk3)
+chunk(distObj1) <- list(chunk1, chunk2, chunk3)
 
 distObj1
 
