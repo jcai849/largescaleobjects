@@ -1,7 +1,7 @@
 findTarget <- function(args) {
-	dist <- vapply(args, is.distObjRef, logical())
-	longest <- args[dist][[which.max(lengths(args[dist]))]]
-	longest
+	dist <- vapply(args, is.distObjRef, logical(1))
+	sizes <- lengths(lapply(args[dist], chunk))
+	args[dist][[which.max(sizes)]] # longest
 }
 
 refToRec.chunkRef <- function(arg, target) chunk(arg)
@@ -31,6 +31,9 @@ refToRec.distObjRef <- function(arg, target) {
 #      ├── FROM
 #      └── TO
 alignment <- function(arg, target) {
+	stopifnot(is.distObjRef(arg),
+		  is.chunkRef(target))
+
 	toAlign 	<- list()
 	argChunks	<- chunk(arg)
 	argFrom 	<- from(arg)
@@ -42,24 +45,24 @@ alignment <- function(arg, target) {
 
 	headFromAbs <- targetFrom %% argSize
 	headRefNum <- which(headFromAbs <= argFrom)[1]
-	headFromRel <- headFromAbs - argFrom[headRefNum] + 1
+	headFromRel <- headFromAbs - argFrom[headRefNum] + 1L
 
 	tailToAbs <- if (targetSize > argSize)  #clip rep, force local recycling
-		headFromAbs - 1 %% argSize else targetTo %% argSize
+		headFromAbs - 1L %% argSize else targetTo %% argSize
 	tailRefNum <- which(tailToAbs <= argTo)[1]
-	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1
+	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1L
 
 	ref <- if (targetSize + headFromAbs > argTo[headRefNum] && 
 		   tailRefNum <= headRefNum) # modular
-		c(seq(headRefNum, length(argChunks)), seq(1, tailRefNum)) else
+		c(seq(headRefNum, length(argChunks)), seq(1L, tailRefNum)) else
 			seq(headRefNum, tailRefNum)
 
 	toAlign <- list()
-	toAlign$REF <- argChunks[ref]
 	toAlign$HEAD$FROM <- headFromRel
 	toAlign$HEAD$TO <- if (length(ref) == 1) 
-		tailToRel else argTo[headRefNum] - argFrom[headRefNum] + 1
-	toAlign$TAIL$FROM <- 1
+		tailToRel else argTo[headRefNum] - argFrom[headRefNum] + 1L
+	toAlign$REF <- argChunks[ref]
+	toAlign$TAIL$FROM <- 1L
 	toAlign$TAIL$TO <- tailToRel
 
 	toAlign

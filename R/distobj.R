@@ -11,14 +11,16 @@ distObjRef <- function(x) {
 
 # Inherit
 
-is.distObjRef <- function(x) inherits(x, "distObjRef")
+is.distObjRef <- isA("distObjRef")
 
 # Get
 
+distObjGet <- function(fun) function(x) vapply(chunk(x), fun, integer(1))
+
 chunk.distObjRef	<- envGet("CHUNK")
-size.distObjRef 	<- function(x) vapply(chunk(x), size, integer())
-to.distObjRef		<- function(x) vapply(chunk(x), to, integer())
-from.distObjRef 	<- function(x) vapply(chunk(x), from, integer())
+size.distObjRef 	<- distObjGet(size)
+to.distObjRef		<- distObjGet(to)
+from.distObjRef 	<- distObjGet(from)
 
 # Set
 

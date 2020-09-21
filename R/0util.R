@@ -4,6 +4,7 @@ envSet <- function(field) function(x, value) {
 	assign(field, value, x)
 	x
 }
+isA <- function(class) function(x) inherits(x, class)
 
 info <- function(...) {
 	op <- options(digits.secs = 6)

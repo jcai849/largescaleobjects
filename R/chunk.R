@@ -1,4 +1,5 @@
 # Instantiate
+
 chunkRef.chunkID <- function(x, jID)  {
 	info("Producing new chunk reference with",
 	     "chunk ID:", format(x), 
@@ -10,6 +11,10 @@ chunkRef.chunkID <- function(x, jID)  {
 	resolution(cr) <- "UNRESOLVED"
 	cr
 }
+
+# Inherit
+
+is.chunkRef <- isA("chunkRef")
 
 # Coerce
 
