@@ -1,7 +1,7 @@
 Package: distObj
 Type: Package
 Title: Provides a Distributed System for Statistical Modelling
-Version: 0.0-2
+Version: 0.0-3
 Date: 2020-07-31
 Author: Jason Cairns [aut, cre]
 Maintainer: Jason Cairns <jcai849@aucklanduni.ac.nz>
@@ -12,7 +12,7 @@ Authors@R: c(person("Jason", "Cairns", role = c("aut", "cre"),
 Description: Allows for transparent interaction with distributed objects,
 	including the import of very large distributed data files, as well as
 	the rapid development of parallel algorithms over the distributed data
-	for fast  run time.
+	for fast run time.
 Depends: R (>= 3.4.0)
 Imports: rediscc
 License: GPL-3
