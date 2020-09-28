@@ -43,17 +43,18 @@ alignment <- function(arg, target) {
 	targetTo 	<- to(target)
 	targetSize 	<- size(target)
 
-	headFromAbs <- targetFrom %% argSize
-	headRefNum <- which(headFromAbs <= argFrom)[1]
+	# (x-1%%y)-1 to force a 1->n cycle instead of 0->n-1 for R's 1-indexing
+	headFromAbs <- ((targetFrom-1L) %% argSize)+1L
+	headRefNum <- which(headFromAbs <= argTo)[1]
 	headFromRel <- headFromAbs - argFrom[headRefNum] + 1L
 
 	tailToAbs <- if (targetSize > argSize)  #clip rep, force local recycling
-		headFromAbs - 1L %% argSize else targetTo %% argSize
+		((headFromAbs-2L)%%argSize)+1L else ((targetTo-1L)%%argSize)+1L
 	tailRefNum <- which(tailToAbs <= argTo)[1]
 	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1L
 
-	ref <- if (targetSize + headFromAbs > argTo[headRefNum] && 
-		   tailRefNum <= headRefNum) # modular
+	ref <- if (targetSize+headFromAbs-1 > argTo[headRefNum] && 
+		   tailRefNum<=headRefNum) # modular
 		c(seq(headRefNum, length(argChunks)), seq(1L, tailRefNum)) else
 			seq(headRefNum, tailRefNum)
 
