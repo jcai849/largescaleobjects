@@ -16,15 +16,6 @@ chunkRef.chunkID <- function(x, jID)  {
 
 is.chunkRef <- isA("chunkRef")
 
-# Coerce
-
-as.chunkRef.msg	<- function(x) {
-	cr <- chunkRef(anteChunkID(x), anteJobID(x))
-	resolution(cr) <- "RESOLVED"
-	preview(cr) <- NA
-	cr
-}
-
 # Get
 
 chunkID.chunkRef 	<- envGet("CHUNK_ID")
@@ -67,6 +58,7 @@ resolve.chunkRef <- function(x, ...) {
 		m <- read.queue(jobID(x), clear=TRUE)
 		resolution(x) <- resolution(m)
 		preview(x) <- preview(m)
+		size(x) <- size(m)
 		if (identical(resolution(x), "ERROR")) stop(preview(x))
 	} 
 	resolved(x)

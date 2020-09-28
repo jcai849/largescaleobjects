@@ -30,8 +30,7 @@ msgField <- function(field) function(x, ...) x[[field]]
 # Requests
 fun.msg 	<- msgField("FUN")
 args.msg	<- msgField("ARGS")
-anteChunkID.msg	<- msgField("ANTE_CHUNK_ID")
-anteJobID.msg	<- msgField("ANTE_JOB_ID")
+target.msg	<- msgField("TARGET")
 postChunkID.msg	<- msgField("POST_CHUNK_ID")
 postJobID.msg	<- msgField("POST_JOB_ID")
 
@@ -42,3 +41,4 @@ chunk.msg <- function(x, ...) chunk(chunkID(chunkRef(x)))
 # Responses
 resolution.msg	<- msgField("RESOLUTION")
 preview.msg 	<- msgField("PREVIEW")
+size.msg 	<- msgField("SIZE")

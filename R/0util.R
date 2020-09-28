@@ -4,6 +4,7 @@ envSet <- function(field) function(x, value) {
 	assign(field, value, x)
 	x
 }
+
 isA <- function(class) function(x) inherits(x, class)
 
 info <- function(...) {
@@ -17,3 +18,22 @@ combine.default 	<- c
 combine.data.frame 	<- rbind
 size.default 		<- length
 size.data.frame 	<- nrow
+
+# Testing
+
+addTestChunk <- function(name, contents) {
+	ck <- makeTestChunk(name, contents)
+	addChunk(name, contents)
+	ck
+}
+
+makeTestChunk <- function(name, contents) {
+	ck		<- structure(new.env(), class = "chunkRef")
+	chunkID(ck)	<- structure(name, class="chunkID")
+	preview(ck)	<- contents
+	from(ck)	<- contents[1]
+	to(ck)		<- contents[length(contents)]
+	size(ck)	<- length(contents)
+	resolution(ck)	<- "RESOLVED"
+	ck
+}

@@ -15,13 +15,29 @@ is.distObjRef <- isA("distObjRef")
 
 # Get
 
-distObjGet <- function(fun) function(x) vapply(chunk(x), fun, integer(1))
+distObjDo <- function(fun, rtype) function(x) vapply(chunk(x), fun, rtype(1))
 
 chunk.distObjRef	<- envGet("CHUNK")
-size.distObjRef 	<- distObjGet(size)
-to.distObjRef		<- distObjGet(to)
-from.distObjRef 	<- distObjGet(from)
+size.distObjRef 	<- distObjDo(size, integer)
+to.distObjRef		<- distObjDo(to,   integer)
+from.distObjRef 	<- distObjDo(from, integer)
 
 # Set
 
+distObjSet <- function(fun) function(x, value) {
+	mapply(fun, chunk(x), value)
+	x
+}
+
 `chunk<-.distObjRef`	<- envSet("CHUNK")
+`to<-.distObjRef`	<- distObjSet(`to<-`)
+`from<-.distObjRef`	<- distObjSet(`from<-`)
+
+# Other methods
+
+resolve.distObjRef <- function(x) {
+	r <- distObjDo(resolve, logical)(x)
+	to(x) <- cumsum(size(x))
+	from(x) <- c(1L, to(x)+1L)[-length(chunk(x))]
+	r
+}

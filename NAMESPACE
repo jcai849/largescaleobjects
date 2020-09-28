@@ -46,6 +46,8 @@ export(to)
 S3method('chunk<-', distObjRef)
 S3method(chunk, distObjRef)
 S3method(from, distObjRef)
+S3method(refToRec, distObjRef)
+S3method(resolve, distObjRef)
 S3method(size, distObjRef)
 S3method(to, distObjRef)
 
