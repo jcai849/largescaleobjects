@@ -23,6 +23,8 @@ serveCore <- function(m, a) {
 		send(RESOLUTION = "RESOLVED", 
 		     PREVIEW 	= preview(res),
 		     SIZE 	= size(res),
+		     HOST	= host(),
+		     PORT	= port(),
 		     to 	= postJobID(m))
 	} else {
 		send(RESOLUTION	= res,

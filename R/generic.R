@@ -29,6 +29,16 @@ to              <- function(x, ...) UseMethod("to", x)
 args		<- function(name) UseMethod("args", name)
 args.default	<- base::args
 
+host <- function(x, ...) {
+	if (missing(x)) return(myHost())
+	UseMethod("host", x)
+}
+
+port <- function(x, ...) {
+	if (missing(x)) return(myPort())
+	UseMethod("port", x)
+}
+
 chunkID <- function(x, ...) {
 	if (missing(x)) {
 		cID <- paste0("C", rediscc::redis.inc(conn(), "CHUNK_ID"))

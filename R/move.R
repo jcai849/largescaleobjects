@@ -68,3 +68,29 @@ alignment <- function(arg, target) {
 
 	toAlign
 }
+
+osrvCmd <- function(s, cmd) {
+	writeBin(charToRaw(cmd), s)
+	while (!length(a <- readBin(s, raw(), 32))) {}
+	i <- which(a == as.raw(10))
+	if (!length(i)) stop("Invalid answer")
+	res <- gsub("[\r\n]+","",rawToChar(a[1:i[1]]))
+	sr <- strsplit(res, " ", TRUE)[[1]]
+	## object found
+	if (sr[1] == "OK" && length(sr) > 1) {
+		len <- as.numeric(sr[2])
+		p <- if (i[1] < length(a)) a[-(1:i[1])] else raw()
+		## read the rest of the object
+		while (length(p) < len)
+			p <- c(p, readBin(s, raw(), len - length(p)))
+		p
+	} else if (sr[1] == "OK") {
+		TRUE
+	} else stop("Answer: ", sr[1])
+}
+
+osrvGet <- function(what) {
+	s <- socketConnection(host(x), port=port(x), open="a+b")
+	v <- osrvCmd(s, paste("GET", chunkID(x), "\n", collapse=" "))
+	unserialize(v)
+}

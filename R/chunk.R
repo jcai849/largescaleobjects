@@ -21,6 +21,8 @@ is.chunkRef <- isA("chunkRef")
 chunkID.chunkRef 	<- envGet("CHUNK_ID")
 jobID.chunkRef 		<- envGet("JOB_ID")
 resolution.chunkRef 	<- envGet("RESOLUTION")
+host.chunkRef		<- envGet("HOST")
+port.chunkRef		<- envGet("PORT")
 preview.default 	<- utils::head
 preview.chunkRef	<- function(x) 
 	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
@@ -38,11 +40,17 @@ size.chunkRef 		<- envGet("SIZE")
 `to<-.chunkRef` 	<- envSet("TO")
 `from<-.chunkRef`	<- envSet("FROM")
 `size<-.chunkRef` 	<- envSet("SIZE")
+`port<-.chunkRef` 	<- envSet("PORT")
+`host<-.chunkRef` 	<- envSet("HOST")
 
 # Other methods
 
 emerge.chunkRef <- function(x, ...) {
-	chunk.chunkRef(x)
+	if (chunkID(x) %in% chunkTable()) {
+		chunk.chunkRef(x)
+	} else {
+		osrvGet(x)
+	}
 }
 
 format.chunkRef	<- function(x, ...) format(preview(x))
