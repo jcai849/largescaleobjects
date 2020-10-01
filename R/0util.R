@@ -27,7 +27,7 @@ addTestChunk <- function(name, contents) {
 	ck
 }
 
-makeTestChunk <- function(name, contents) {
+makeTestChunk <- function(name, contents, host="localhost", port=integer()) {
 	ck		<- structure(new.env(), class = "chunkRef")
 	chunkID(ck)	<- structure(name, class="chunkID")
 	preview(ck)	<- contents
@@ -35,5 +35,7 @@ makeTestChunk <- function(name, contents) {
 	to(ck)		<- contents[length(contents)]
 	size(ck)	<- length(contents)
 	resolution(ck)	<- "RESOLVED"
+	host(ck) 	<- host
+	port(ck) 	<- port
 	ck
 }
