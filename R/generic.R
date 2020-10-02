@@ -24,6 +24,8 @@ to              <- function(x, ...) UseMethod("to", x)
 `resolution<-` 	<- function(x, value) UseMethod("resolution<-", x)
 `size<-`        <- function(x, value) UseMethod("size<-", x)
 `to<-`          <- function(x, value) UseMethod("to<-", x)
+`host<-`        <- function(x, value) UseMethod("host<-", x)
+`port<-`        <- function(x, value) UseMethod("port<-", x)
 
 # masking
 args		<- function(name) UseMethod("args", name)

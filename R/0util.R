@@ -27,7 +27,8 @@ addTestChunk <- function(name, contents) {
 	ck
 }
 
-makeTestChunk <- function(name, contents, host="localhost", port=integer()) {
+makeTestChunk <- function(name, contents, 
+			  host=Sys.info()["nodename"], port=integer()) {
 	ck		<- structure(new.env(), class = "chunkRef")
 	chunkID(ck)	<- structure(name, class="chunkID")
 	preview(ck)	<- contents

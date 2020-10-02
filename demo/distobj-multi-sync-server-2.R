@@ -7,4 +7,4 @@ addChunk("chunk2", 6:10)
 addChunk("chunk4", 1:5)
 addChunk("chunk7", 1:3)
 
-server()
+server(TRUE)

@@ -4,7 +4,7 @@
 ##	distObj2: C4[N2] C5[N3] C6[N1]                                        ##
 ##	distObj3: C7[N2]                                                      ##
 ##	                                                                      ##
-##	 [ N1 ]                 [ N2 ]             [ N3 ]                     ##
+##	 [ N1:9012 ]            [ N2:9013 ]        [ N3:9014 ]                ##
 ##	+--------------------+ +----------------+ +--------------------+      ##
 ##	| C1: 1 2 3 4 5      | | C2: 6 7 8 9 10 | | C3: 11 12 13 14 15 |      ##
 ##	| C6: 11 12 13 14 15 | | C4: 1 2 3 4 5  | | C5: 6 7 8 9 10     |      ##
@@ -14,33 +14,33 @@
 ############################### Initialisation #################################
 
 library(distObj)
-distInit(verbose=T)
+distInit(verbose=T, osrvPort=9011L)
 # Clear any previous examples
-rediscc::redis.rm(conn(), c(paste0("chunk", 1:3), 
-			    paste0("C", 1:20), paste0("J", 1:20),
+rediscc::redis.rm(conn(), c(paste0("chunk", 1:20), 
+			    paste0("C", 1:100), paste0("J", 1:100),
 			    "JOB_ID", "CHUNK_ID"))
 # Create new example object
-chunk1 <- distObj:::makeTestChunk("chunk1", 1:5, port=)
+chunk1 <- distObj:::makeTestChunk("chunk1", 1:5, port=9012L)
 jobID(chunk1) <- jobID()
-chunk2 <- distObj:::makeTestChunk("chunk2", 6:10)
+chunk2 <- distObj:::makeTestChunk("chunk2", 6:10, port=9013L)
 jobID(chunk2) <- jobID()
-chunk3 <- distObj:::makeTestChunk("chunk3", 11:15)
+chunk3 <- distObj:::makeTestChunk("chunk3", 11:15, port=9014L)
 jobID(chunk3) <- jobID()
-chunk4 <- distObj:::makeTestChunk("chunk4", 1:5)
+chunk4 <- distObj:::makeTestChunk("chunk4", 1:5, port=9013L)
 jobID(chunk4) <- jobID()
-chunk5 <- distObj:::makeTestChunk("chunk5", 6:10)
+chunk5 <- distObj:::makeTestChunk("chunk5", 6:10, port=9014L)
 jobID(chunk5) <- jobID()
-chunk6 <- distObj:::makeTestChunk("chunk6", 11:15)
+chunk6 <- distObj:::makeTestChunk("chunk6", 11:15, port=9012L)
 jobID(chunk6) <- jobID()
-chunk7 <- distObj:::makeTestChunk("chunk7", 1:3)
+chunk7 <- distObj:::makeTestChunk("chunk7", 1:3, port=9013L)
 jobID(chunk7) <- jobID()
 
 distObj1 <- structure(new.env(), class = "distObjRef")
 chunk(distObj1) <- list(chunk1, chunk2, chunk3)
 distObj2 <- structure(new.env(), class = "distObjRef")
-chunk(distObj1) <- list(chunk4, chunk5, chunk6)
+chunk(distObj2) <- list(chunk4, chunk5, chunk6)
 distObj3 <- structure(new.env(), class = "distObjRef")
-chunk(distObj1) <- list(chunk7)
+chunk(distObj3) <- list(chunk7)
 
 ################################################################################
 

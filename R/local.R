@@ -5,14 +5,14 @@ INIT <- local({
 	p <- character()	# port
 
 	distInit <- function(redisHost="localhost", redisPort=6379L, 
-			     osrvHost=Sys.info()$nodename, osrvPort=9012L,
+			     osrvHost=Sys.info()["nodename"], osrvPort=9012L,
 			     verbose=FALSE, ...) {
 		v <<- verbose
 		h <<- osrvHost
 		p <<- osrvPort
 		# Place for starting up server nodes
 		info("Connecting to Redis server")
-		rsc <<- rediscc::redis.connect(queueHost, queuePort) 
+		rsc <<- rediscc::redis.connect(redisHost, redisPort) 
 		info("Starting osrv server")
 		osrv::start(osrvHost, osrvPort)
 		NULL }
@@ -33,7 +33,7 @@ CHUNK_TABLE <- local({
 	rmChunk 	<- function(cID) rm(list = cID, envir = ct)
 	chunk.chunkID 	<- function(x, ...) get(x, ct)
 	chunk.chunkRef 	<- function(x, ...) get(chunkID(x), ct)
-	queues 		<- function() ls(ct)
+	localChunks	<- function() ls(ct)
 	addChunk 	<- function(cID, val) {
 		info("Assigned chunk to ID:", 
 		     format(cID), "in chunk table")
@@ -53,6 +53,6 @@ myPort		<- getInit("myPort")
 chunkTable 	<- getChunkTable("chunkTable")
 addChunk 	<- getChunkTable("addChunk")
 rmChunk 	<- getChunkTable("rmChunk")
-queues 		<- getChunkTable("queues")
+localChunks	<- getChunkTable("localChunks")
 chunk.chunkID 	<- getChunkTable("chunk.chunkID")
 chunk.chunkRef 	<- getChunkTable("chunk.chunkRef")

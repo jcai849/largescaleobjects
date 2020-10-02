@@ -1,5 +1,5 @@
 server <- function(stopOnError=FALSE) repeat {
-	m <- read.queue(queues())
+	m <- read.queue(localChunks())
 	a <- toAssign(m)
 	v <- if (stopOnError) serveCore(m, a) else
 		tryCatch(serveCore(m,a),

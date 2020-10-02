@@ -89,8 +89,11 @@ osrvCmd <- function(s, cmd) {
 	} else stop("Answer: ", sr[1])
 }
 
-osrvGet <- function(what) {
+osrvGet <- function(x) {
+	info("Getting the referent of the reference with chunkID", chunkID(x), 
+	     "from port", format(port(x)), 
+	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
-	v <- osrvCmd(s, paste("GET", chunkID(x), "\n", collapse=" "))
+	v <- osrvCmd(s, paste0("GET", " ", chunkID(x), "\n"))
 	unserialize(v)
 }

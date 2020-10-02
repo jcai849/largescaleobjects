@@ -46,7 +46,7 @@ size.chunkRef 		<- envGet("SIZE")
 # Other methods
 
 emerge.chunkRef <- function(x, ...) {
-	if (chunkID(x) %in% chunkTable()) {
+	if (chunkID(x) %in% localChunks()) {
 		chunk.chunkRef(x)
 	} else {
 		osrvGet(x)
@@ -64,10 +64,12 @@ resolve.chunkRef <- function(x, ...) {
 	if (!resolved(x)) {
 		info("Chunk not yet resolved. Resolving...")
 		m <- read.queue(jobID(x), clear=TRUE)
-		resolution(x) <- resolution(m)
-		preview(x) <- preview(m)
-		size(x) <- size(m)
+		resolution(x)	<- resolution(m)
 		if (identical(resolution(x), "ERROR")) stop(preview(x))
+		preview(x)	<- preview(m)
+		size(x)		<- size(m)
+		host(x)		<- host(m)
+		port(x)		<- port(m)
 	} 
 	resolved(x)
 }
