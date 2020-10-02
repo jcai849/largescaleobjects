@@ -15,9 +15,10 @@ write.msg <- function(m, to) {
 	rediscc::redis.push(conn(), to, serializedMsg)
 }
 
-read.queue <- function(queue, clear = FALSE, timeOut=Inf) {
+read.queue <- function(queue, clear = FALSE) {
 	info("Awaiting message on queues:", format(queue))
-	serializedMsg <- rediscc::redis.pop(conn(), queue, timeout=timeOut)
+	while (is.null(serializedMsg <-rediscc::redis.pop(conn(), queue,
+							  timeout=10))) {}
 	if (clear) rediscc::redis.rm(conn(), queue)
 	m <- unserialize(charToRaw(serializedMsg))
 	info("Received message:", format(m))

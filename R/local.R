@@ -12,7 +12,7 @@ INIT <- local({
 		p <<- osrvPort
 		# Place for starting up server nodes
 		info("Connecting to Redis server")
-		rsc <<- rediscc::redis.connect(redisHost, redisPort) 
+		rsc <<- rediscc::redis.connect(redisHost, redisPort, reconnect=TRUE) 
 		info("Starting osrv server")
 		osrv::start(osrvHost, osrvPort)
 		NULL }
