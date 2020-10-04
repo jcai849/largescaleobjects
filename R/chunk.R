@@ -26,7 +26,7 @@ port.chunkRef		<- envGet("PORT")
 preview.default 	<- utils::head
 preview.chunkRef	<- function(x) 
 	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
-		"Chunk not yet resolved"
+		"Error in preview"
 to.chunkRef 		<- envGet("TO")
 from.chunkRef 		<- envGet("FROM")
 size.chunkRef 		<- envGet("SIZE")

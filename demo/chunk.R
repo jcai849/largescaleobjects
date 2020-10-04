@@ -1,5 +1,16 @@
 ############################### Initialisation ################################
 
+invisible(parallel::mcparallel({
+	library(distObj)
+
+	distInit(verbose=T)
+	chunk1 <- seq(10)
+	addChunk("chunk1", chunk1)
+
+	server()
+}))
+
+############################### Initialisation ################################
 library(distObj)
 distInit(verbose=T)
 # Clear any previous examples
@@ -28,6 +39,7 @@ expm1(x=1:10)
 
 invisible(readline()) ##### [44mPreview of Successful Chunk[0m ############
 
+resolve(x)
 x
 
 invisible(readline()) ##### [44mValue of Successful Chunk[0m ##############
@@ -37,3 +49,4 @@ do.call.chunkRef("identity", list(x), x, assign=FALSE)
 invisible(readline()) ##### [44mResolution of Unsuccessful Chunk[0m #######
 
 resolve(y)
+y
