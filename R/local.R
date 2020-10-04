@@ -3,13 +3,15 @@ INIT <- local({
 	v <- FALSE		# verbose
 	h <- character()	# host
 	p <- character()	# port
+	n <- NULL		# nodename
 
 	distInit <- function(redisHost="localhost", redisPort=6379L, 
 			     osrvHost=Sys.info()["nodename"], osrvPort=9012L,
-			     verbose=FALSE, ...) {
+			     verbose=FALSE, nodeName=NULL, ...) {
 		v <<- verbose
 		h <<- osrvHost
 		p <<- osrvPort
+		n <<- nodeName
 		# Place for starting up server nodes
 		info("Connecting to Redis server")
 		rsc <<- rediscc::redis.connect(redisHost, redisPort, reconnect=TRUE) 
@@ -24,6 +26,7 @@ INIT <- local({
 	verbose <- function() v
 	myHost	<- function() h
 	myPort	<- function() p
+	myNode	<- function() n
 })
 
 CHUNK_TABLE <- local({
@@ -49,6 +52,7 @@ conn		<- getInit("conn")
 verbose		<- getInit("verbose")
 myHost		<- getInit("myHost")
 myPort		<- getInit("myPort")
+myNode		<- getInit("myNode")
 
 chunkTable 	<- getChunkTable("chunkTable")
 addChunk 	<- getChunkTable("addChunk")

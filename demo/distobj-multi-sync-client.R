@@ -14,7 +14,7 @@
 ############################### Initialisation #################################
 
 library(distObj)
-distInit(verbose=T, osrvPort=9011L)
+distInit(verbose=T, osrvPort=9011L, nodeName="N0")
 # Clear any previous examples
 rediscc::redis.rm(conn(), c(paste0("chunk", 1:20), 
 			    paste0("C", 1:100), paste0("J", 1:100),
