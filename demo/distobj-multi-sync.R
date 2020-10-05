@@ -80,19 +80,19 @@ chunk(distObj3) <- list(chunk7)
 
 ################################################################################
 
-### univariate function over multiple nodes ###
+invisible(readline()) ### univariate function over multiple nodes ###
 
 x <- do.call.distObjRef("-", list(distObj1))
 resolve(x)
 chunk(x)
 
-### multivariate function on aligned objects over multiple nodes ###
+invisible(readline()) ### multivariate function on aligned objects over multiple nodes ###
 
 y <- do.call.distObjRef("+", list(x, distObj2))
 resolve(y)
 chunk(y)
 
-### multivariate function on non-aligned objects over multiple nodes ###
+invisible(readline()) ### multivariate function on non-aligned objects over multiple nodes ###
 
 z <- do.call.distObjRef("+", list(y, distObj3))
 resolve(z)
