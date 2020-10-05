@@ -38,6 +38,6 @@ distObjSet <- function(fun) function(x, value) {
 resolve.distObjRef <- function(x) {
 	r <- distObjDo(resolve, logical)(x)
 	to(x) <- cumsum(size(x))
-	from(x) <- c(1L, to(x)+1L)[-length(chunk(x))]
+	from(x) <- c(1L, to(x)[-length(chunk(x))] + 1L)
 	r
 }
