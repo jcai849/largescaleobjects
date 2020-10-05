@@ -1,0 +1,7 @@
+	library(distObj)
+	distInit(osrvPort=9014L, verbose=T, nodeName="N3")
+
+	addChunk("chunk3", 11:15)
+	addChunk("chunk5", 6:10)
+
+	server()

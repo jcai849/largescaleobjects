@@ -82,13 +82,13 @@ chunk(distObj3) <- list(chunk7)
 
 ### univariate function over multiple nodes ###
 
-x <- do.call.distObjRef("expm1", list(distObj1))
+x <- do.call.distObjRef("-", list(distObj1))
 resolve(x)
 chunk(x)
 
 ### multivariate function on aligned objects over multiple nodes ###
 
-y <- do.call.distObjRef("%%", list(x, distObj2))
+y <- do.call.distObjRef("+", list(x, distObj2))
 resolve(y)
 chunk(y)
 
