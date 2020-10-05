@@ -9,12 +9,12 @@ isA <- function(class) function(x) inherits(x, class)
 
 info <- function(...) {
 	op <- options(digits.secs = 6)
-	if (verbose()) do.call(cat, c("[36m", 
+	if (verbose()) do.call(cat, c(if (interactive()) "[36m" else NULL, 
 				      if (!is.null(myNode()))
 					      c("[",myNode(),"]"
 						) else NULL,
 				      format(Sys.time(), "%H:%M:%OS6"),
-				      "[0m",
+				      if (interactive()) "[0m" else NULL,
 				      list(...), "\n"))
 	options(op)
 }

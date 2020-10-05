@@ -3,7 +3,7 @@ do.call.chunkRef <- function(what, args, target, assign=TRUE) {
 	resolved(target) # raise error if chunk resolved as failure
 	jID <- jobID()
 	cID <- if (assign) chunkID()
-	info("Requested to perform function", format(what), 
+	info("Requesting to perform function", format(what), 
 	     "with parameters", format(names(args)), 
 	     "set to", format(args), "using chunk", format(chunkID(target)),
 	     "as target,", 
