@@ -94,6 +94,10 @@ osrvGet <- function(x) {
 	     "from port", format(port(x)), 
 	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
-	v <- osrvCmd(s, paste0("GET", " ", chunkID(x), "\n"))
-	unserialize(v)
+	sv <- osrvCmd(s, paste0("GET", " ", chunkID(x), "\n"))
+	close(s)
+	v <- unserialize(sv)
+	info("Received referent with head", format(head(v)),
+	     "and size", format(size(v)))
+	v
 }
