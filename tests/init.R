@@ -18,6 +18,8 @@ chunkL 	<- distObj:::addTestChunk("chunkL", 4:25)
 
 distObj1 		<- structure(new.env(), class = "distObjRef")
 distObj2 		<- structure(new.env(), class = "distObjRef")
+distObj3 		<- structure(new.env(), class = "distObjRef")
 
 chunk(distObj1) 	<- list(chunk1, chunk2, chunk3)
 chunk(distObj2) 	<- list(chunkH)
+chunk(distObj3) 	<- list(chunkA)

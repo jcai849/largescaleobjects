@@ -10,6 +10,9 @@ stopifnot(
 )
   
 # alignment: arg X w/ targets A-G at from/to/size
+#              _____ _____ _____     
+#  X 1/15/15  |__C1_|__C2_|__C3_|       
+#
 #  A 1/3/3     ---
 #  B 1/5/5     -----
 #  C 9/12/4             -- -- 
@@ -22,8 +25,6 @@ stopifnot(
 #  J 2/15/14    ---- ----- ----- 
 #  K 1/16/16   ----- ----- ----- -
 #  L 4/25/22      -- ----- ----- ----- -----
-#              _____ _____ _____     
-#  X 1/15/15  |__C1_|__C2_|__C3_|       
 
 stopifnot(
 	  identical(alignment(distObj1, chunkA),
@@ -73,6 +74,17 @@ stopifnot(
 	  identical(alignment(distObj1, chunkL),
 		    list(HEAD	= list(FROM = 4L, TO = 5L),
 			 REF	= list(chunk1, chunk2, chunk3, chunk1),
+			 TAIL	= list(FROM = 1L, TO = 3L)))
+	  )
+
+# alignment: arg Y w/ target B at from/to/size
+#              ___ 
+#  Y 1/3/3    |_C1|
+#  B 1/5/5     -----
+stopifnot(
+	  identical(alignment(distObj3, chunkB),
+		    list(HEAD	= list(FROM = 1L, TO = 3L),
+			 REF	= list(chunkB),
 			 TAIL	= list(FROM = 1L, TO = 3L)))
 	  )
 
