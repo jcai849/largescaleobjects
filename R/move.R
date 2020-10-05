@@ -53,8 +53,8 @@ alignment <- function(arg, target) {
 	tailRefNum <- which(tailToAbs <= argTo)[1]
 	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1L
 
-	ref <- if (targetSize+headFromAbs-1 > argTo[headRefNum] && 
-		   tailRefNum<=headRefNum) # modular
+	ref <- if ((targetSize >= argSize && argFrom[1] != targetFrom) ||
+		   (targetSize < argSize && headFromAbs > tailToAbs)) # modular
 		c(seq(headRefNum, length(argChunks)), seq(1L, tailRefNum)) else
 			seq(headRefNum, tailRefNum)
 

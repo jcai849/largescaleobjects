@@ -15,6 +15,8 @@ chunkI 	<- distObj:::addTestChunk("chunkI", 2:16)
 chunkJ 	<- distObj:::addTestChunk("chunkJ", 2:15)
 chunkK 	<- distObj:::addTestChunk("chunkK", 1:16)
 chunkL 	<- distObj:::addTestChunk("chunkL", 4:25)
+chunkM 	<- distObj:::addTestChunk("chunkL", 1L)
+chunkN 	<- distObj:::addTestChunk("chunkL", 4L)
 
 distObj1 		<- structure(new.env(), class = "distObjRef")
 distObj2 		<- structure(new.env(), class = "distObjRef")

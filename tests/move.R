@@ -25,6 +25,8 @@ stopifnot(
 #  J 2/15/14    ---- ----- ----- 
 #  K 1/16/16   ----- ----- ----- -
 #  L 4/25/22      -- ----- ----- ----- -----
+#  M 1/1/1     -
+#  N 4/4/1        -
 
 stopifnot(
 	  identical(alignment(distObj1, chunkA),
@@ -74,18 +76,52 @@ stopifnot(
 	  identical(alignment(distObj1, chunkL),
 		    list(HEAD	= list(FROM = 4L, TO = 5L),
 			 REF	= list(chunk1, chunk2, chunk3, chunk1),
-			 TAIL	= list(FROM = 1L, TO = 3L)))
+			 TAIL	= list(FROM = 1L, TO = 3L))),
+	  identical(alignment(distObj1, chunkM),
+		    list(HEAD	= list(FROM = 1L, TO = 1L),
+			 REF	= list(chunk1),
+			 TAIL	= list(FROM = 1L, TO = 1L))),
+	  identical(alignment(distObj1, chunkN),
+		    list(HEAD	= list(FROM = 4L, TO = 4L),
+			 REF	= list(chunk1),
+			 TAIL	= list(FROM = 1L, TO = 4L)))
 	  )
 
 # alignment: arg Y w/ target B at from/to/size
 #              ___ 
-#  Y 1/3/3    |_C1|
+#  Y 1/3/3    |_CA|
+#  A 1/3/3     ---
 #  B 1/5/5     -----
+#  C 9/12/4             -- -- 
+#  E 17/19/3                      ---
+#  M 1/1/1     -
+#  N 4/4/1        -
+
 stopifnot(
+	  identical(alignment(distObj3, chunkA),
+		    list(HEAD	= list(FROM = 1L, TO = 3L),
+			 REF	= list(chunkA),
+			 TAIL	= list(FROM = 1L, TO = 3L))),
 	  identical(alignment(distObj3, chunkB),
 		    list(HEAD	= list(FROM = 1L, TO = 3L),
-			 REF	= list(chunkB),
-			 TAIL	= list(FROM = 1L, TO = 3L)))
+			 REF	= list(chunkA),
+			 TAIL	= list(FROM = 1L, TO = 3L))),
+	  identical(alignment(distObj3, chunkC),
+		    list(HEAD	= list(FROM = 3L, TO = 3L),
+			 REF	= list(chunkA, chunkA),
+			 TAIL	= list(FROM = 1L, TO = 2L))),
+	  identical(alignment(distObj3, chunkE),
+		    list(HEAD	= list(FROM = 2L, TO = 3L),
+			 REF	= list(chunkA, chunkA),
+			 TAIL	= list(FROM = 1L, TO = 1L))),
+	  identical(alignment(distObj3, chunkM),
+		    list(HEAD	= list(FROM = 1L, TO = 1L),
+			 REF	= list(chunkA),
+			 TAIL	= list(FROM = 1L, TO = 1L))),
+	  identical(alignment(distObj3, chunkN),
+		    list(HEAD	= list(FROM = 1L, TO = 1L),
+			 REF	= list(chunkA),
+			 TAIL	= list(FROM = 1L, TO = 1L)))
 	  )
 
 stopifnot(
