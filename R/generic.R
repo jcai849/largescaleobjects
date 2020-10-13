@@ -1,7 +1,7 @@
 as.chunkRef	<- function(x, ...) UseMethod("as.chunkRef", x)
 chunk 		<- function(x, ...) UseMethod("chunk", x)
 chunkRef 	<- function(x, ...) UseMethod("chunkRef", x)
-combine         <- function(x, ...) UseMethod("combine", x)
+combine         <- function(...) UseMethod("combine", ..1)
 emerge          <- function(x, ...) UseMethod("emerge", x)
 from            <- function(x, ...) UseMethod("from", x)
 fun		<- function(x, ...) UseMethod("fun", x)

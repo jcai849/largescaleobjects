@@ -41,3 +41,5 @@ resolve.distObjRef <- function(x) {
 	from(x) <- c(1L, to(x)[-length(chunk(x))] + 1L)
 	r
 }
+
+emerge.distObjRef <- function(x) do.call(combine, lapply(chunk(x), emerge))
