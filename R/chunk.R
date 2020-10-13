@@ -49,6 +49,7 @@ emerge.chunkRef <- function(x, ...) {
 	if (chunkID(x) %in% localChunks()) {
 		chunk.chunkRef(x)
 	} else {
+		resolve(x)
 		osrvGet(x)
 	}
 }

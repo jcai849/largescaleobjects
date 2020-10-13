@@ -85,15 +85,18 @@ invisible(readline()) ### univariate function over multiple nodes ###
 x <- do.call.distObjRef("-", list(distObj1))
 resolve(x)
 chunk(x)
+emerge(x)
 
 invisible(readline()) ### multivariate function on aligned objects over multiple nodes ###
 
 y <- do.call.distObjRef("+", list(x, distObj2))
 resolve(y)
 chunk(y)
+emerge(y)
 
 invisible(readline()) ### multivariate function on non-aligned objects over multiple nodes ###
 
 z <- do.call.distObjRef("+", list(y, distObj3))
 resolve(z)
 chunk(z)
+emerge(z)

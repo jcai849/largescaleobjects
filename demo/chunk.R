@@ -28,6 +28,7 @@ chunk1
 invisible(readline()) ##### [44mAssign Chunk Reference[0m #################
 
 x <- do.call.chunkRef(what="expm1", args=list(x=chunk1), target=chunk1)
+resolve(x)
 
 invisible(readline()) ##### [44mAssign Chunk Reference with Failure[0m ####
 
@@ -39,14 +40,14 @@ expm1(x=1:10)
 
 invisible(readline()) ##### [44mPreview of Successful Chunk[0m ############
 
-resolve(x)
 x
 
 invisible(readline()) ##### [44mValue of Successful Chunk[0m ##############
 
-do.call.chunkRef("identity", list(x), x, assign=FALSE)
+emerge(x)
 
 invisible(readline()) ##### [44mResolution of Unsuccessful Chunk[0m #######
 
 resolve(y)
 y
+emerge(y)

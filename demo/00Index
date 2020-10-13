@@ -1,3 +1,2 @@
 chunk	A verbose system demonstrating several direct chunk operations
-distobj-single-sync A verbose system demonstrating several distributed object operations from a single-node server with resolves between requests
-distobj-multi-sync A verbose system demonstrating several distributed object operations distributed over several nodes with resolves between requests
+distobj	A verbose system demonstrating several distributed object operations distributed over several nodes with resolves between requests
