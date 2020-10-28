@@ -1,3 +1,7 @@
 beginNZSA2020Demo()
 
-endNZSA2020Demo(pid)
+flights <- do.call.distObjRef("read.csv", 
+			      list(file		= fileNames,
+				   header	= FALSE,
+				   col.names	= names(cols),
+				   colClasses	= as.vector(cols)))

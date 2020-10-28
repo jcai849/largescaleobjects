@@ -5,19 +5,19 @@ beginNZSA2020Demo <- function() {
 		 verbose=T,
 		 nodeName="N0/Init")
 
-	pid <<- lapply(1:32, function(n) {
+	pid <<- parallel::mclapply(1:32, function(n) {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
-				    shQuote(paste('nohup R -q -e',
-						  '"distObj::NZSA2020DemoNode(', n, ')"',
-						  '>.DOLOG 2>&1 </dev/null &',
-						  'echo $!'))),
+			    shQuote(paste('nohup R -q -e',
+					  '"distObj::NZSA2020DemoNode(', n, ')"',
+					  paste0('>DOLOG', n), '2>&1 </dev/null &',
+					  'echo $!'))),
 			      intern = TRUE)
 		 })
 
 	rediscc::redis.rm(conn(), c(paste0("fileNameChunk", 1:32),
 				    paste0("C", 1:1000), paste0("J", 1:1000)))
 
-	chunks <- lapply(1:32, function(n) 
+	chunks <- parallel::mclapply(1:32, function(n) 
 			 makeTestChunk(name	= paste0("fileNameChunk", n),
 				       contents	= paste0("~/flights-chunk-", sprintf("%02d", n), ".csv"),
 				       host	= paste0("hadoop", ((n-1) %/% 4) + 1),
@@ -27,11 +27,24 @@ beginNZSA2020Demo <- function() {
 				       ))
 
 	fileNames <<- makeDistObj(chunks)
+	
+	cols <<- c("Year"="integer","Month"="integer","DayofMonth"="integer",
+		   "DayOfWeek"="integer","DepTime"="integer","CRSDepTime"="integer",
+		   "ArrTime"="integer","CRSArrTime"="integer",
+		   "UniqueCarrier"="character","FlightNum"="integer","TailNum"="character",
+		   "ActualElapsedTime"="integer","CRSElapsedTime"="integer",
+		   "AirTime"="integer","ArrDelay"="integer", "DepDelay"="integer",
+		   "Origin"="character","Dest"="character","Distance"="integer",
+		   "TaxiIn"="integer","TaxiOut"="integer", "Cancelled"="integer",
+		   "CancellationCode"="character","Diverted"="integer",
+		   "CarrierDelay"="integer","WeatherDelay"="integer","NASDelay"="integer",
+		   "SecurityDelay"="integer","LateAircraftDelay"="integer")
+
 	NULL
 }
 
 endNZSA2020Demo <- function(pid) {
-	lapply(1:32, function(n) {
+	parallel::lapply(1:32, function(n) {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
 				    "kill", pid[[n]]))
 		 })

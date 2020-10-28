@@ -14,8 +14,7 @@ Description: Allows for transparent interaction with distributed objects,
 	the rapid development of parallel algorithms over the distributed data
 	for fast run time.
 Depends: R (>= 3.4.0)
-Imports: rediscc, osrv
-Suggests: parallel
+Imports: parallel, rediscc, osrv
 License: GPL-3
 URL: https://github.com/jcai849/distObj
 BugReports: https://github.com/jcai849/distObj/issues
