@@ -57,6 +57,13 @@ endNZSA2020Demo <- function(pid) {
 NZSA2020DemoNode <- function(n) {
 	require(distObj)
 
+	options(error = quote(dump.frames(dumpto = paste0("DO",
+						  Sys.getpid(),
+						  format(Sys.time(),
+							 "-%F-%H-%M-%S")),
+					  to.file = TRUE, 
+					  include.GlobalEnv = FALSE)))
+
 	distInit(redisHost="hdp",
 		 osrvPort=9012L+((n-1L)%%4L),
 		 verbose=T, 

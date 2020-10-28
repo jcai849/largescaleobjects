@@ -4,6 +4,8 @@ findTarget <- function(args) {
 	args[dist][[which.max(sizes)]] # longest
 }
 
+refToRec.default <- function(arg, target) arg
+
 refToRec.chunkRef <- function(arg, target) chunk(arg)
 
 refToRec.distObjRef <- function(arg, target) {
