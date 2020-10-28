@@ -29,13 +29,21 @@ addTestChunk <- function(name, contents) {
 	ck
 }
 
+makeDistObj <- function(chunkList) {
+	dO <- structure(new.env(), class = "distObjRef")
+	chunk(dO) <- chunkList
+	dO
+}
+
 makeTestChunk <- function(name, contents, 
-			  host=Sys.info()["nodename"], port=integer()) {
+			  host=Sys.info()["nodename"], port=integer(),
+			  from, to) {
 	ck		<- structure(new.env(), class = "chunkRef")
 	chunkID(ck)	<- structure(name, class="chunkID")
+	jobID(ck)	<- jobID()
 	preview(ck)	<- contents
-	from(ck)	<- contents[1]
-	to(ck)		<- contents[length(contents)]
+	from(ck)	<- if (missing(from)) contents[1] else from
+	to(ck)		<- if (missing(to)) contents[length(contents)] else to
 	size(ck)	<- length(contents)
 	resolution(ck)	<- "RESOLVED"
 	host(ck) 	<- host

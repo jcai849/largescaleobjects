@@ -57,19 +57,12 @@ rediscc::redis.rm(conn(), c(paste0("chunk", 1:20),
 
 # Create new example object
 chunk1 <- distObj:::makeTestChunk("chunk1", 1:5, port=9012L)
-jobID(chunk1) <- jobID()
 chunk2 <- distObj:::makeTestChunk("chunk2", 6:10, port=9013L)
-jobID(chunk2) <- jobID()
 chunk3 <- distObj:::makeTestChunk("chunk3", 11:15, port=9014L)
-jobID(chunk3) <- jobID()
 chunk4 <- distObj:::makeTestChunk("chunk4", 1:5, port=9013L)
-jobID(chunk4) <- jobID()
 chunk5 <- distObj:::makeTestChunk("chunk5", 6:10, port=9014L)
-jobID(chunk5) <- jobID()
 chunk6 <- distObj:::makeTestChunk("chunk6", 11:15, port=9012L)
-jobID(chunk6) <- jobID()
 chunk7 <- distObj:::makeTestChunk("chunk7", 1:3, port=9013L)
-jobID(chunk7) <- jobID()
 
 distObj1 <- structure(new.env(), class = "distObjRef")
 chunk(distObj1) <- list(chunk1, chunk2, chunk3)
