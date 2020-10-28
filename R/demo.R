@@ -9,7 +9,7 @@ beginNZSA2020Demo <- function() {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
 				    shQuote(paste('nohup R -q -e',
 						  '"distObj::NZSA2020DemoNode(', n, ')"',
-						  '>/dev/null 2>&1 </dev/null &',
+						  '>.DOLOG 2>&1 </dev/null &',
 						  'echo $!'))),
 			      intern = TRUE)
 		 })
@@ -44,7 +44,7 @@ endNZSA2020Demo <- function(pid) {
 NZSA2020DemoNode <- function(n) {
 	require(distObj)
 
-	distInit(redisHost="hadoop",
+	distInit(redisHost="hdp",
 		 osrvPort=9012L+((n-1L)%%4L),
 		 verbose=T, 
 		 nodeName=paste0("N", n))
