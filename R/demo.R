@@ -17,7 +17,7 @@ beginNZSA2020Demo <- function() {
 	rediscc::redis.rm(conn(), c(paste0("fileNameChunk", 1:32),
 				    paste0("C", 1:1000), paste0("J", 1:1000)))
 
-	chunks <- parallel::mclapply(1:32, function(n) 
+	chunks <- lapply(1:32, function(n) 
 			 makeTestChunk(name	= paste0("fileNameChunk", n),
 				       contents	= paste0("~/flights-chunk-", sprintf("%02d", n), ".csv"),
 				       host	= paste0("hadoop", ((n-1) %/% 4) + 1),
