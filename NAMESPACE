@@ -48,6 +48,8 @@ export(server)
 export(size)
 export(to)
 
+S3method(refToRec, default)
+
 S3method('chunk<-', distObjRef)
 S3method(chunk, distObjRef)
 S3method(emerge, distObjRef)

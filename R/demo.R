@@ -44,7 +44,7 @@ beginNZSA2020Demo <- function() {
 }
 
 endNZSA2020Demo <- function(pid) {
-	parallel::lapply(1:32, function(n) {
+	parallel::mclapply(1:32, function(n) {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
 				    "kill", pid[[n]]))
 		 })
