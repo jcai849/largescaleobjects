@@ -1,4 +1,4 @@
-beginNZSA2020Demo()
+distObj::beginNZSA2020Demo()
 
 flights <- do.call.distObjRef("read.csv", 
 			      list(file		= fileNames,
