@@ -1,6 +1,6 @@
 do.call.chunkRef <- function(what, args, target) {
 	stopifnot(is.list(args))
-	resolved(target) # raise error if chunk resolved as failure
+	resolve(target) # force target resolution
 	jID <- jobID()
 	cID <- chunkID()
 	info("Requesting to perform function", format(what), 
@@ -28,6 +28,7 @@ do.call.msg <- function(what, args, target, pCID, pJID) {
 
 do.call.distObjRef <- function(what, args) {
 	target <- findTarget(args)
+	args <- lapply(args, recToRef, target=target)
 	postChunks <- lapply(chunk(target), 
 			     function(t) do.call.chunkRef(what, args, t))
 	distObjRef(postChunks)

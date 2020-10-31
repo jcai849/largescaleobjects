@@ -7,6 +7,13 @@ envSet <- function(field) function(x, value) {
 
 isA <- function(class) function(x) inherits(x, class)
 
+is.AsIs <- isA("AsIs")
+
+unAsIs <- function(x) {
+	class(x) <- class(x)[!class(x) == "AsIs"]
+	x
+}
+
 info <- function(...) {
 	op <- options(digits.secs = 6)
 	if (verbose()) do.call(cat, c(if (!is.null(myNode()))
@@ -18,8 +25,10 @@ info <- function(...) {
 
 combine.default 	<- c
 combine.data.frame 	<- rbind
+combine.matrix	 	<- rbind
 size.default 		<- length
 size.data.frame 	<- nrow
+size.matrix	 	<- nrow
 
 # Testing
 
@@ -40,7 +49,7 @@ makeTestChunk <- function(name, contents,
 			  from, to) {
 	ck		<- structure(new.env(), class = "chunkRef")
 	chunkID(ck)	<- structure(name, class="chunkID")
-	jobID(ck)	<- jobID()
+	jobID(ck)	<- if (connected()) jobID() else NULL
 	preview(ck)	<- contents
 	from(ck)	<- if (missing(from)) contents[1] else from
 	to(ck)		<- if (missing(to)) contents[length(contents)] else to

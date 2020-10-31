@@ -23,6 +23,23 @@ refToRec.distObjRef <- function(arg, target) {
 	combined
 }
 
+recToRef.distObjRef <- function(arg, target) {
+	if (is.distObjRef(arg) || is.chunkRef(arg)) return(arg)
+	if (is.AsIs(arg)) return(unAsIs(arg))
+	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
+	chunks <- mapply(recToRef,
+			 splits, chunk(target)[seq(length(splits))],
+			 SIMPLIFY = FALSE)
+	distObjRef(chunks)
+}
+
+recToRef.chunkRef <- function(arg, target) {
+	do.call.chunkRef(function(a, b) identity(a),
+			 list(a = arg, b = target))
+}
+
+recToRef.default <- function(arg, target) arg
+
 # `alignment` returns list of form:
 #  .
 #  ├── HEAD

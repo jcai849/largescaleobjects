@@ -19,10 +19,11 @@ INIT <- local({
 		osrv::start(osrvHost, osrvPort)
 		NULL }
 	conn <- function() {
-		if (is.null(rsc)) 
+		if (!connected()) 
 			stop("Redis connection not found.",
 			     "Use `distInit` to initialise.")
 		rsc }
+	connected <- function() !is.null(rsc)
 	verbose <- function() v
 	myHost	<- function() h
 	myPort	<- function() p
@@ -49,6 +50,7 @@ getChunkTable	<- getLocal(CHUNK_TABLE)
 
 distInit	<- getInit("distInit")
 conn		<- getInit("conn")
+connected	<- getInit("connected")
 verbose		<- getInit("verbose")
 myHost		<- getInit("myHost")
 myPort		<- getInit("myPort")
