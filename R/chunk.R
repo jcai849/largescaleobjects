@@ -58,7 +58,7 @@ format.chunkRef	<- function(x, ...) format(preview(x))
 print.chunkRef 	<- function(x, ...) {
 	cat("Chunk Reference with ID", format(chunkID(x)), "\n")
 	resolve(x)
-	print(x)
+	print(preview(x))
 }
 
 resolve.chunkRef <- function(x, ...) {

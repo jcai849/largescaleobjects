@@ -59,3 +59,8 @@ makeTestChunk <- function(name, contents,
 	port(ck) 	<- port
 	ck
 }
+
+clear <- function() rediscc::redis.rm(conn(), c(paste0("chunk", 1:20),
+						  paste0("C", 1:1000),
+						  paste0("J", 1:1000),
+						  "JOB_ID", "CHUNK_ID"))

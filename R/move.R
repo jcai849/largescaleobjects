@@ -35,7 +35,8 @@ recToRef.distObjRef <- function(arg, target) {
 
 recToRef.chunkRef <- function(arg, target) {
 	do.call.chunkRef(function(a, b) identity(a),
-			 list(a = arg, b = target))
+			 list(a = arg, b = target),
+			 target = target)
 }
 
 recToRef.default <- function(arg, target) arg
