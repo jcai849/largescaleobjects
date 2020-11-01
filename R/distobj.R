@@ -6,6 +6,7 @@ distObjRef <- function(x) {
 	dr <- new.env()
 	class(dr) <- "distObjRef"
 	chunk(dr) <- x
+	resolution(dr) <- "UNRESOLVED"
 	dr
 }
 
@@ -25,7 +26,7 @@ chunk.distObjRef	<- envGet("CHUNK")
 size.distObjRef 	<- distObjResDo(size, integer)
 to.distObjRef		<- distObjResDo(to,   integer)
 from.distObjRef 	<- distObjResDo(from, integer)
-resolved.distObjRef	<- distObjDo(resolved, logical)
+resolved.distObjRef	<- function(x) envGet("RESOLUTION")(x) == "RESOLVED"
 
 # Set
 
@@ -37,13 +38,15 @@ distObjSet <- function(fun) function(x, value) {
 `chunk<-.distObjRef`		<- envSet("CHUNK")
 `to<-.distObjRef`		<- distObjSet(`to<-`)
 `from<-.distObjRef`		<- distObjSet(`from<-`)
+`resolution<-.distObjRef`	<- envSet("RESOLUTION")
 
 # Other methods
 
 resolve.distObjRef <- function(x) {
-	r <- all(resolved(x))
+	r <- resolved(x)
 	if (r) return(r)
 	distObjDo(resolve, logical)(x)
+	resolution(x) <- "RESOLVED"
 	tos <- cumsum(size(x))
 	to(x) <- tos
 	from(x) <- c(1L, tos[-length(chunk(x))] + 1L)
@@ -71,10 +74,14 @@ Ops.distObjRef <- function(e1, e2)
 Complex.distObjRef <- function(z) 
 	do.call.distObjRef(.Generic,
 			   list(z=z))
-Summary.distObjRef <- function(..., na.rm = FALSE) 
-	do.call(.Generic, c(list(emerge(do.call.distObjRef(.Generic,
-				   c(list(...), list(na.rm=I(na.rm)))))), 
-			    list(na.rm=na.rm)))
+Summary.distObjRef <- function(..., na.rm = FALSE) {
+	mapped <- emerge(do.call.distObjRef(.Generic,
+					    c(list(...), list(na.rm=I(na.rm)))))
+	do.call(.Generic, 
+		c(list(mapped), list(na.rm=na.rm)))
+}
+`$.distObjRef` <- function(x, name)
+	do.call.distObjRef("$", list(x=x, name=I(name)))
 table.distObjRef <- function(...)
 	emerge(do.call.distObjRef(table,
 				  list(...)))

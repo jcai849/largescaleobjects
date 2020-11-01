@@ -63,6 +63,7 @@ S3method(resolve, distObjRef)
 S3method(size, distObjRef)
 S3method(to, distObjRef)
 
+S3method('$', distObjRef)
 S3method(Math, distObjRef)
 S3method(Ops, distObjRef)
 S3method(Complex, distObjRef)

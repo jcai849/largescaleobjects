@@ -62,6 +62,7 @@ addTestChunk <- function(name, contents) {
 makeDistObj <- function(chunkList) {
 	dO 		<- structure(new.env(), class = "distObjRef")
 	chunk(dO) 	<- chunkList
+	resolution(dO)  <- "RESOLVED"
 	dO
 }
 
@@ -74,7 +75,7 @@ makeTestChunk <- function(name, contents,
 	preview(ck)	<- contents
 	from(ck)	<- if (missing(from)) contents[1] else from
 	to(ck)		<- if (missing(to)) contents[length(contents)] else to
-	size(ck)	<- length(contents)
+	size(ck)	<- size(contents)
 	resolution(ck)	<- "RESOLVED"
 	host(ck) 	<- host
 	port(ck) 	<- port
