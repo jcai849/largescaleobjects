@@ -13,6 +13,4 @@ stopifnot(
 	  identical(1:20, emerge(recToRef(1:20, distObj1)))
 )
 
-# do.call & recycling through osrv
-
 clear()

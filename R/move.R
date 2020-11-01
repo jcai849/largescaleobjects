@@ -30,12 +30,15 @@ recToRef.distObjRef <- function(arg, target) {
 	chunks <- mapply(recToRef,
 			 splits, chunk(target)[seq(length(splits))],
 			 SIMPLIFY = FALSE)
-	distObjRef(chunks)
+	x <- distObjRef(chunks)
+	resolve(x)
+	x
 }
 
 recToRef.chunkRef <- function(arg, target) {
 	do.call.chunkRef(function(a, b) identity(a),
-			 list(a = arg, b = target),
+			 list(a = arg, 
+			      b = target),
 			 target = target)
 }
 
