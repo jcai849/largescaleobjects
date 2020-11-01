@@ -62,8 +62,12 @@ Math.distObjRef <- function(x, ...)
 	do.call.distObjRef(.Generic, 
 			   c(list(x=x), list(...)))
 Ops.distObjRef <- function(e1, e2) 
-	do.call.distObjRef(.Generic,
-			   list(e1=e1, e2=e2))
+	if (missing(e2)) {
+		do.call.distObjRef(.Generic,
+				   list(e1=e1)) 
+	} else
+		do.call.distObjRef(.Generic,
+				   list(e1=e1, e2=e2))
 Complex.distObjRef <- function(z) 
 	do.call.distObjRef(.Generic,
 			   list(z=z))
