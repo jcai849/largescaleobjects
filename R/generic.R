@@ -29,10 +29,6 @@ to              <- function(x, ...) UseMethod("to", x)
 `host<-`        <- function(x, value) UseMethod("host<-", x)
 `port<-`        <- function(x, value) UseMethod("port<-", x)
 
-# masking
-args		<- function(name) UseMethod("args", name)
-args.default	<- base::args
-
 host <- function(x, ...) {
 	if (missing(x)) return(myHost())
 	UseMethod("host", x)
@@ -62,3 +58,9 @@ jobID <- function(x, ...) {
 	}
 	UseMethod("jobID", x)
 }
+
+# masking
+args		<- function(name) UseMethod("args", name)
+args.default	<- base::args
+table		<- function(...) UseMethod("table", ..1)
+table.default	<- base::table
