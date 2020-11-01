@@ -63,6 +63,12 @@ S3method(resolve, distObjRef)
 S3method(size, distObjRef)
 S3method(to, distObjRef)
 
+S3method(Math, distObjRef)
+S3method(Ops, distObjRef)
+S3method(Complex, distObjRef)
+S3method(Summary, distObjRef)
+S3method(table, distObjRef)
+
 S3method('chunkID<-', chunkRef)
 S3method('from<-', chunkRef)
 S3method('jobID<-', chunkRef)
