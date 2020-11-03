@@ -9,6 +9,14 @@ refToRec.default <- function(arg, target) arg
 refToRec.chunkRef <- function(arg, target) chunk(arg)
 
 refToRec.distObjRef <- function(arg, target) {
+	#### optimise if already aligned
+	fromSame <- which(from(arg) == from(target)) 
+	toSame <- which(to(arg) == to(target))
+	if (identical(fromSame, toSame) &&
+	    length(fromSame) == 1 && length(toSame) == 1) 
+		return(emerge(chunk(arg)[[fromSame]]))
+	####
+
 	toAlign <- alignment(arg, target) 
 
 	ref <- lapply(toAlign$REF, emerge)
