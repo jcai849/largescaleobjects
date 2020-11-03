@@ -6,8 +6,7 @@ flights <- do.call.distObjRef("read.csv",
 				   col.names	= I(names(cols)),
 				   colClasses	= I(as.vector(cols))))
 
-# anonfun
-sanOrig <- flights$Origin
+sanOrig <- flights$Origin == "SAN"
 
 sanOrigCounts <- sum(sanOrig)
 

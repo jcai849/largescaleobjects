@@ -8,7 +8,6 @@ importFrom(rediscc, redis.pop)
 importFrom(rediscc, redis.rm)
 
 export(beginNZSA2020Demo)
-export(endNZSA2020Demo)
 export(NZSA2020DemoNode)
 
 export('chunk<-')
