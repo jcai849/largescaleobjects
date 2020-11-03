@@ -11,7 +11,7 @@ send <- function(..., to) {
 write.msg <- function(m, to) {
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	info("writing message:", format(m), 
-	     "to queue belonging to chunk\"", to, "\"")
+	     "to queue belonging to chunk", unclass(to))
 	rediscc::redis.push(conn(), to, serializedMsg)
 }
 

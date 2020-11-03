@@ -49,9 +49,12 @@ export(send)
 export(server)
 export(size)
 export(to)
+export(table)
 
 S3method(refToRec, default)
 S3method(recToRef, default)
+S3method(resolve, default)
+S3method(table, default)
 
 S3method('chunk<-', distObjRef)
 S3method(chunk, distObjRef)

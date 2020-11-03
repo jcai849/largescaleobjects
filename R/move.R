@@ -13,13 +13,13 @@ refToRec.distObjRef <- function(arg, target) {
 
 	ref <- lapply(toAlign$REF, emerge)
 	combined <- if (length(ref) == 1) {
-		ref[[1]][seq(toAlign$HEAD$FROM, toAlign$HEAD$TO)] 
+		index(ref[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
 	} else do.call(combine, 
-		       c(list(ref[[1]][seq(toAlign$HEAD$FROM, 
-					   toAlign$HEAD$TO)]), 
+		       c(list(index(ref[[1]], seq(toAlign$HEAD$FROM, 
+						  toAlign$HEAD$TO))), 
 			 ref[-c(1, length(ref))], 
-			 list(ref[[length(ref)]][seq(toAlign$TAIL$FROM,
-						     toAlign$TAIL$TO)])))
+			 list(index(ref[[length(ref)]], seq(toAlign$TAIL$FROM,
+							    toAlign$TAIL$TO)))))
 	combined
 }
 
@@ -113,14 +113,14 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
-	info("Getting the referent of the reference with chunkID", chunkID(x), 
+	info("Getting the referent of the reference with chunkID", unclass(chunkID(x)), 
 	     "from port", format(port(x)), 
 	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", chunkID(x), "\n"))
 	close(s)
 	v <- unserialize(sv)
-	info("Received referent with head", format(head(v)),
-	     "and size", format(size(v)))
+	info("Received referent with head:", format(head(v)),
+	     "and size:", format(size(v)))
 	v
 }

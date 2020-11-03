@@ -44,13 +44,13 @@ distObjSet <- function(fun) function(x, value) {
 
 resolve.distObjRef <- function(x) {
 	r <- resolved(x)
-	if (r) return(r)
+	if (r) return(T)
 	distObjDo(resolve, logical)(x)
 	resolution(x) <- "RESOLVED"
 	tos <- cumsum(size(x))
 	to(x) <- tos
 	from(x) <- c(1L, tos[-length(chunk(x))] + 1L)
-	r
+	T
 }
 
 emerge.distObjRef <- function(x) {

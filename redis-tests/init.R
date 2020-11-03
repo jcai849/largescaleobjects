@@ -39,7 +39,7 @@ invisible(parallel::mcparallel({
 	server()
 }))
 
-#N3
+# N3
 invisible(parallel::mcparallel({
 	library(distObj)
 	distInit(osrvPort=9014L, verbose=T, nodeName="N3")

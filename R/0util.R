@@ -15,12 +15,18 @@ unAsIs <- function(x) {
 }
 
 info <- function(...) {
-	op <- options(digits.secs = 6)
-	if (verbose()) do.call(cat, c(if (!is.null(myNode()))
-				      c("[",myNode(),"]") else NULL,
-				      format(Sys.time(), "%H:%M:%OS6"),
-				      list(...), "\n"))
-	options(op)
+	if (verbose()) {
+		op <- options(digits.secs = 6)
+		cat(c(if (!is.null(myNode())) c("[", myNode(), "]") else NULL,
+		      format(Sys.time(), "%H:%M:%OS6")), " ")
+		for (item in list(...)) {
+			if (is.vector(item) && length(item) == 1) {
+				cat(" ", format(item))
+			} else {cat("\n"); print(item)}
+		}
+		cat("\n")
+		options(op)
+	}
 }
 
 combine.default 	<- c
@@ -50,6 +56,8 @@ combine.table <- function(...) {
 size.default 		<- length
 size.data.frame 	<- nrow
 size.matrix	 	<- nrow
+
+resolve.default <- function(x, ...) identity
 
 # Testing
 
@@ -86,3 +94,9 @@ clear <- function() rediscc::redis.rm(conn(), c(paste0("chunk", 1:20),
 						  paste0("C", 1:1000),
 						  paste0("J", 1:1000),
 						  "JOB_ID", "CHUNK_ID"))
+
+index <- function(x, i) {
+	ndim <- if (is.null(dim(x))) 1L else length(dim(x))
+	eval(str2lang(paste0(c( 'x[i', rep(',', times=ndim-1L), ']'),
+			     collapse='')))
+}
