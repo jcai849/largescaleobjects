@@ -100,6 +100,11 @@ clear <- function() rediscc::redis.rm(conn(), c(paste0("chunk", 1:20),
 
 index <- function(x, i) {
 	ndim <- if (is.null(dim(x))) 1L else length(dim(x))
-	eval(str2lang(paste0(c( 'x[i', rep(',', times=ndim-1L), ']'),
-			     collapse='')))
+	l <- as.list(quote(x[]))[3]
+	eval(as.call(
+		     c(list(quote(`[`)), 
+		       list(quote(x)),
+		       list(quote(i)),
+		       rep(l, ndim-1L))
+		     ))
 }
