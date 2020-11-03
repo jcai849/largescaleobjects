@@ -2,9 +2,9 @@ distObj::beginNZSA2020Demo()
 
 flights <- do.call.distObjRef("read.csv", 
 			      list(file		= fileNames,
-				   header	= FALSE,
-				   col.names	= names(cols),
-				   colClasses	= as.vector(cols)))
+				   header	= I(FALSE),
+				   col.names	= I(names(cols)),
+				   colClasses	= I(as.vector(cols))))
 
 # anonfun
 sanOrig <- flights$Origin
@@ -15,7 +15,7 @@ sanOrigCounts <- sum(sanOrig)
 
 table(flights$Origin, flights$Dest)
 
-# lm
+# exit
 
-do.call.distObjRef(function(x) q("no"),
-		   list(x = flights))
+killAt(flights)
+clear()
