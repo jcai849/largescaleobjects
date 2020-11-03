@@ -43,17 +43,6 @@ beginNZSA2020Demo <- function() {
 	NULL
 }
 
-endNZSA2020Demo <- function(pid) {
-	parallel::mclapply(1:32, function(n) {
-		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
-				    "kill", pid[[n]]))
-		 })
-
-	rediscc::redis.rm(conn(), c(paste0("fileNameChunk", 1:32),
-				    paste0("C", 1:1000), paste0("J", 1:1000)))
-	NULL
-}
-
 NZSA2020DemoNode <- function(n) {
 	require(distObj)
 
