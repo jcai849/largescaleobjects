@@ -1,5 +1,10 @@
 source("init.R")
 
+# refToRec.distObjRef
+stopifnot(
+	  identical(1:5, refToRec(arg=distObj1, target=chunk1))
+)
+
 # recToRef.chunkRef
 stopifnot(
 	  identical(1:3, emerge(recToRef(1:3, chunk1))),
