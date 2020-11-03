@@ -59,6 +59,9 @@ size.matrix	 	<- nrow
 
 resolve.default <- function(x, ...) identity
 
+killAt <- function(x)
+	do.call.distObjRef(function(x) q("no"), list(x=x))
+
 # Testing
 
 addTestChunk <- function(name, contents) {
