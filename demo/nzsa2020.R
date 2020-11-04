@@ -10,7 +10,7 @@ flights <- do.call.distObjRef("read.csv",
 
 #sanOrig <- flights$Origin == "SAN"
 #
-#sanOrigCounts <- sum(sanOrig)
+#sanOrigCounts <- sum(sanOrig, na.rm=TRUE)
 #
 ## table
 #
