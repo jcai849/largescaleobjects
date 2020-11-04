@@ -56,6 +56,8 @@ resolve.distObjRef <- function(x) {
 emerge.distObjRef <- function(x) {
 	chunks <- lapply(chunk(x), emerge)
 	names(chunks) <- NULL
+	if (length(chunks) == 1)
+		return(chunks[[1]])
 	do.call(combine, chunks)
 }
 
