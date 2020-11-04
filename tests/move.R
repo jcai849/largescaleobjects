@@ -124,6 +124,17 @@ stopifnot(
 			 TAIL	= list(FROM = 1L, TO = 1L)))
 	  )
 
+# alignment: arg Z w/ target B at from/to/size
+#              			 _ 
+#  Z 1/1/1    			|_|
+#  O 3754443/7489749/3735307     	-...-
+stopifnot(
+	  identical(alignment(distObj4, chunkO),
+		    list(HEAD	= list(FROM = 1L, TO = 1L),
+			 REF	= list(chunkM),
+			 TAIL	= list(FROM = 1L, TO = 1L)))
+	  )
+
 stopifnot(
 	  identical(refToRec(distObj1, chunkA),
 		    1:3),
