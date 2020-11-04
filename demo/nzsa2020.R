@@ -1,6 +1,6 @@
 distObj::beginNZSA2020Demo()
 
-chunk(fileNames) <- chunk(fileNames)[seq(1,32,4)]
+chunk(fileNames) <- chunk(fileNames)[seq(1,32,4)[-2]]
 
 flights <- do.call.distObjRef("read.csv", 
 			      list(file		= fileNames,

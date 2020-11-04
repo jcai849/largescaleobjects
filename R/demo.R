@@ -5,7 +5,7 @@ beginNZSA2020Demo <- function() {
 		 verbose=T,
 		 nodeName="N0/Init")
 
-	pid <<- parallel::mclapply(2:32, function(n) {
+	pid <<- parallel::mclapply(c(1:4, 6:32), function(n) {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
 			    shQuote(paste('nohup R -q -e',
 					  '"distObj::NZSA2020DemoNode(', n, ')"',
@@ -61,5 +61,5 @@ NZSA2020DemoNode <- function(n) {
 	addChunk(paste0("fileNameChunk", n),
 		 paste0("~/flights-chunk-", sprintf("%02d", n), ".csv"))
 
-	server()
+	server(T)
 }

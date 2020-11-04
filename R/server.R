@@ -3,7 +3,7 @@ server <- function(stopOnError=FALSE) repeat {
 	v <- if (stopOnError) serveCore(m) else
 		tryCatch(serveCore(m),
 			 error = function(e) {
-				 info("Error occurred. See frame dump on node")
+				 print(e)
 				 send(RESOLUTION= "ERROR", 
 				      PREVIEW	= "Error. See frame dump on node", 
 				      to	= postJobID(m))
