@@ -3,9 +3,9 @@ server <- function(stopOnError=FALSE) repeat {
 	v <- if (stopOnError) serveCore(m) else
 		tryCatch(serveCore(m),
 			 error = function(e) {
-				 info("Error occurred: ", format(e$message))
+				 info("Error occurred. See frame dump on node")
 				 send(RESOLUTION= "ERROR", 
-				      PREVIEW	= e, 
+				      PREVIEW	= "Error. See frame dump on node", 
 				      to	= postJobID(m))
 				 e})
 	addChunk(postChunkID(m), v)
