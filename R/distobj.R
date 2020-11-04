@@ -48,8 +48,11 @@ resolve.distObjRef <- function(x) {
 	distObjDo(resolve, logical)(x)
 	resolution(x) <- "RESOLVED"
 	tos <- cumsum(size(x))
+	name(tos) <- NULL
 	to(x) <- tos
-	from(x) <- c(1L, tos[-length(chunk(x))] + 1L)
+	froms <- c(1L, tos[-length(chunk(x))] + 1L)
+	name(froms) <- NULL
+	from(x) <- froms
 	T
 }
 
