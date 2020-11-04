@@ -13,10 +13,13 @@ refToRec.distObjRef <- function(arg, target) {
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
 	if (identical(fromSame, toSame) &&
-	    length(fromSame) == 1 && length(toSame) == 1) 
+	    length(fromSame) == 1 && length(toSame) == 1) {
+		info("arg and target already aligned; emerging arg")
 		return(emerge(chunk(arg)[[fromSame]]))
+	}
 	####
 
+	info("arg and target unaligned; aligning arg")
 	toAlign <- alignment(arg, target) 
 
 	ref <- lapply(toAlign$REF, emerge)
