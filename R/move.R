@@ -11,7 +11,7 @@ refToRec.chunkRef <- function(arg, target) chunk(arg)
 refToRec.distObjRef <- function(arg, target) {
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
-	if (identical(fromSame, toSame) &&
+	if (identical(as.vector(fromSame), as.vector(toSame)) &&
 	    length(fromSame) == 1 && length(toSame) == 1) {
 		info("arg and target already aligned; emerging arg")
 		return(emerge(chunk(arg)[[fromSame]]))
@@ -85,7 +85,7 @@ alignment <- function(arg, target) {
 	tailRefNum <- which(tailToAbs <= argTo)[1]
 	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1L
 
-	ref <- if ((targetSize >= argSize && argFrom[1] != targetFrom) ||
+	ref <- if ((targetSize >= argSize && headFromAbs > argFrom[1]) ||
 		   (targetSize < argSize && headFromAbs > tailToAbs)) # modular
 		c(seq(headRefNum, length(argChunks)), seq(1L, tailRefNum)) else
 			seq(headRefNum, tailRefNum)
