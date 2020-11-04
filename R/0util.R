@@ -7,6 +7,7 @@ envSet <- function(field) function(x, value) {
 
 isA <- function(class) function(x) inherits(x, class)
 
+is.distributed <- function(x) is.distObjRef(x) | is.chunkRef(x)
 is.AsIs <- isA("AsIs")
 
 unAsIs <- function(x) {

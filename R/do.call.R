@@ -23,7 +23,9 @@ do.call.msg <- function(what, args, target, pCID, pJID) {
 
 do.call.distObjRef <- function(what, args) {
 	target <- findTarget(args)
-	args <- lapply(args, recToRef, target=target)
+	args <- lapply(args, function(arg) 
+		       if (!is.distributed(arg) && size(arg) == 1L) I(arg) else 
+			       recToRef(arg, target))
 	lapply(args, resolve)
 	postChunks <- lapply(chunk(target), 
 			     function(t) do.call.chunkRef(what, args, t))
