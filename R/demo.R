@@ -61,5 +61,5 @@ NZSA2020DemoNode <- function(n) {
 	addChunk(paste0("fileNameChunk", n),
 		 paste0("~/flights-chunk-", sprintf("%02d", n), ".csv"))
 
-	server(T)
+	server()
 }
