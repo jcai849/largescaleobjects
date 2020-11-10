@@ -64,6 +64,17 @@ emerge.distObjRef <- function(x) {
 	do.call(combine, chunks)
 }
 
+print.distObjRef <- function(x, ...) {
+	if (!resolved(x)) {
+		cat("Not yet resolved. Resolving...\n")
+		resolve(x)
+	}
+	cat("Distributed object reference. First chunk head:\n")
+	print(chunk(x)[[1]])
+	cat("With", format(length(chunk(x))), "chunks, and size",
+	    format(sum(size(x))), "\n")
+}
+
 # User-level
 
 Math.distObjRef <- function(x, ...) 

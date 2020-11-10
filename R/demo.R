@@ -2,7 +2,7 @@ beginNZSA2020Demo <- function() {
 	require(distObj)
 
 	distInit(osrvPort=9012L,
-		 verbose=T,
+		 verbose=F,
 		 nodeName="N0/Init")
 
 	pid <<- parallel::mclapply(c(1:4, 6:32), function(n) {
@@ -55,7 +55,7 @@ NZSA2020DemoNode <- function(n) {
 
 	distInit(redisHost="hdp",
 		 osrvPort=9012L+((n-1L)%%4L),
-		 verbose=T, 
+		 verbose=if (n==5) T else F, 
 		 nodeName=paste0("N", n))
 
 	addChunk(paste0("fileNameChunk", n),
