@@ -64,3 +64,7 @@ args		<- function(name) UseMethod("args", name)
 args.default	<- base::args
 table		<- function(...) UseMethod("table", ..1)
 table.default	<- base::table
+read.csv	<- function(...) UseMethod("read.csv", ..1)
+read.csv.default<- utils::read.csv
+dim		<- function(x) UseMethod("dim", x)
+dim.default	<- base::dim

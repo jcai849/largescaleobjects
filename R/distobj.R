@@ -99,5 +99,11 @@ Summary.distObjRef <- function(..., na.rm = FALSE) {
 `$.distObjRef` <- function(x, name)
 	do.call.distObjRef("$", list(x=x, name=I(name)))
 table.distObjRef <- function(...)
-	emerge(do.call.distObjRef(table,
+	emerge(do.call.distObjRef("table",
 				  list(...)))
+read.csv.distObjRef <- function(...)
+	do.call.distObjRef("read.csv", list(...))
+dim.distObjRef <- function(x) {
+	dims <- sapply(chunk(do.call.distObjRef("dim", list(x=x))), emerge)
+	c(sum(dims[1,]), dims[,1][-1])
+}
