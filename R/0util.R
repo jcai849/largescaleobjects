@@ -60,8 +60,10 @@ size.matrix	 	<- nrow
 
 resolve.default <- function(x, ...) identity
 
-killAt <- function(x)
+killAt <- function(x) {
 	do.call.distObjRef(function(x) q("no"), list(x=x))
+	NULL
+}
 
 # Testing
 
