@@ -27,6 +27,7 @@ dygraphs::dyRangeSelector(dygraphs::dygraph(nFlights,
 moveTab <- table(flights$Origin, flights$Dest)
 moveTab
 bigMoves <- moveTab[rowSums(moveTab) > 3E6, colSums(moveTab) > 3E6]
+X11(type="cairo")
 circlize::chordDiagram(bigMoves)
 
 killAt(flights)
