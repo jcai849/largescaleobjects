@@ -5,7 +5,7 @@ beginNZSA2020Demo <- function() {
 		 verbose=F,
 		 nodeName="N0/Init")
 
-	pid <<- parallel::mclapply(c(1:4, 6:32), function(n) {
+	pid <<- parallel::mclapply(c(1:4, 7:32), function(n) {
 		       system(paste("ssh", paste0("hadoop", ((n-1) %/% 4) + 1),
 			    shQuote(paste('nohup R -q -e',
 					  '"distObj::NZSA2020DemoNode(', n, ')"',
