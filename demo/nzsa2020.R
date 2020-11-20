@@ -1,3 +1,4 @@
+###############################################################################
 distObj::beginNZSA2020Demo()
 
 fileNames
@@ -23,6 +24,7 @@ dygraphs::dyRangeSelector(dygraphs::dygraph(nFlights,
 				    main = "Monthly Commercial Flights in USA",
 				    xlab = "Count",
 				    ylab = "Time"))
+###############################################################################
 
 moveTab <- table(flights$Origin, flights$Dest)
 moveTab
