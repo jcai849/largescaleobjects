@@ -55,7 +55,7 @@ NZSA2020DemoNode <- function(n) {
 
 	distInit(redisHost="hdp",
 		 osrvPort=9012L+((n-1L)%%4L),
-		 verbose=if (n==5) T else F, 
+		 verbose=if (n %in% 5:6) T else F, 
 		 nodeName=paste0("N", n))
 
 	addChunk(paste0("fileNameChunk", n),
