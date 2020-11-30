@@ -1,3 +1,11 @@
+# Bespoke demo for NZSA2020
+
+# Requires 8 machines of hostnames hadoop1 -> hadoop8, and nodes 5 and 6
+# running manually on hadoop2 with the command, distObj::NZSA2020DemoNode(5)
+# (and 6). Flights data needs to be present in csv form on the appropriate
+# nodes, as implied in the construction of the filenames variable as part of
+# the distObj::beginNZSA2020Demo() function.
+
 distObj::beginNZSA2020Demo()
 
 fileNames
