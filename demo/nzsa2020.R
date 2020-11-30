@@ -6,6 +6,8 @@
 # nodes, as implied in the construction of the filenames variable as part of
 # the distObj::beginNZSA2020Demo() function.
 
+###############################################################################
+
 distObj::beginNZSA2020Demo()
 
 fileNames
@@ -32,9 +34,12 @@ dygraphs::dyRangeSelector(dygraphs::dygraph(nFlights,
 				    xlab = "Count",
 				    ylab = "Time"))
 
+###############################################################################
+
 moveTab <- table(flights$Origin, flights$Dest)
 moveTab
 bigMoves <- moveTab[rowSums(moveTab) > 3E6, colSums(moveTab) > 3E6]
+X11(type="cairo")
 circlize::chordDiagram(bigMoves)
 
 killAt(flights)
