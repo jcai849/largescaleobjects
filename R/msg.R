@@ -3,6 +3,7 @@ msg <- function(...) {
 }
 
 send <- function(..., to) {
+	stopifnot(is.node(to))
 	items <- list(...)
 	m <- do.call(msg, items)
 	write.msg(m, to)
