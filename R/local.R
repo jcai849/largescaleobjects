@@ -1,33 +1,29 @@
 INIT <- local({
-	nt <- new.env()		# node table
 	rsc <- NULL		# redis connection
 	v <- FALSE		# verbose
 	thisNode <- NULL
-	masterNode <- NULL
+	commServer <- NULL
 
 	# if any nodes given in ... as master, this node is treated as the user
 	# node and is used as startup. Otherwise, used to fire up worker nodes
 	# directly
-	init <- function(..., curr, verbose=FALSE) {
+	init <- function(curr, commServer, ..., verbose=FALSE) {
 		dots <- list(...)
-		if (any(sapply(is.worker, dots))) {
-			# paste node startup code from demo (see doRedis as
-			# well)
-			workerNodes <- dots[-masterNode]
-			if (workerNodes > 0) lapply(registerNodes, workerNodes)
-		}
-		if (missing(curr) && missing(dots)) curr <- master()
-		if (!is.master(curr)) {
-			iMaster <- which(is.master, dots)
-			stopifnot(length(iMaster) == 1L)
-			store(dots[iMaster])
-		} else store(curr)
+		# paste node startup code from demo (see doRedis as
+		# well) 
+		# --- 
+		# foreach in dots:
+		# 	init;
+		# 	put root queue on list;
+		# 	server;
+		# ---
 		thisNode <<- curr
+		commServer <<- commServer
 		v <<- verbose
 		info("Connecting to Redis server")
-		rsc <<- rediscc::redis.connect(host(getMaster()),
-					       commPort(getMaster()),
-					       commPass(getMaster()),
+		rsc <<- rediscc::redis.connect(host(getCommServer()),
+					       commPort(getCommServer()),
+					       commPass(getCommServer()),
 					       reconnect=TRUE)
 		info("Starting osrv server")
 		osrv::start(host(getNode()), objectPort(getNode()))
@@ -41,10 +37,7 @@ INIT <- local({
 	connected	<- function() !is.null(rsc)
 	verbose 	<- function() v
 	getNode		<- function() thisNode
-	getMaster	<- function() masterNode
-	store.node	<- function(node) assign(name(node), node, envir = nt)
-	store.master	<- function(x) masterNode <<- x
-	nodes		<- function() nt
+	getCommServer	<- function() commServer
 })
 
 CHUNK_TABLE <- local({
@@ -69,11 +62,7 @@ init		<- fromInitTabGet("init")
 conn		<- fromInitTabGet("conn")
 connected	<- fromInitTabGet("connected")
 getNode		<- fromInitTabGet("getNode")
-getMaster	<- fromInitTabGet("getMaster")
-verbose		<- fromInitTabGet("verbose")
-store.node	<- fromInitTabGet("store.node")
-store.master	<- fromInitTabGet("store.master")
-nodes		<- fromInitTabGet("nodes")
+getCommServer	<- fromInitTabGet("getCommServer")
 
 chunks	 	<- fromChunkTabGet("chunks")
 addChunk 	<- fromChunkTabGet("addChunk")

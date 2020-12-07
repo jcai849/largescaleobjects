@@ -1,12 +1,14 @@
-registerNodes <- function(...) {
-	lapply(store, args)
-	init(args)
-}
+# init function: see local.R
 
 dist.read <- function(filePath, colClasses, ...) {
-	chunkSize <- ceiling(nlines / length(ls(nodes())))
-	chunks <- mapply(send, 
-			 iotools::chunk.reader(filePath, colClasses, chunkSize, ...),
-			 to=eapply(name, nodes()))
+	startQueues <- startQueues()
+	chunkSize <- ceiling(nlines / length(ls(startQueues)))
+	chunks <- lapply(startQueues,
+			 function(q)
+				 do.call.chunkRef(what="iotools::chunk.reader",
+						  args=list(filePath,
+							    colClasses,
+							    chunkSize, ...),
+						  target=q))
 	as.distObjRef(chunks)
 }

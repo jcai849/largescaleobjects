@@ -2,13 +2,13 @@ do.call.chunkRef <- function(what, args, target) {
 	stopifnot(is.list(args))
 	resolve(target) # force target resolution
 	jID <- jobID()
-	cID <- chunkID()
+	cID <- name(type="chunkID")
 	send(FUN		= what, 
 	     ARGS		= args,
 	     TARGET		= target,
 	     POST_CHUNK_ID	= cID,
 	     POST_JOB_ID	= jID,
-	     to			= chunkID(target))
+	     to			= name(target))
 	chunkRef(cID, jID)
 }
 
