@@ -1,7 +1,7 @@
-server <- function(stopOnError=FALSE) repeat {
+serve <- function(stopOnError=FALSE) repeat {
 	m <- read.queue(localChunks())
-	if (stopOnError) serveCore(m) else
-		tryCatch(serveCore(m),
+	if (stopOnError) evaluate(m) else
+		tryCatch(evaluate(m),
 		 error = function(e) {
 			 print(e)
 			 addChunk(postChunkID(m), e)
@@ -11,7 +11,7 @@ server <- function(stopOnError=FALSE) repeat {
 			 NULL})
 }
 
-serveCore <- function(m) {
+evaluate <- function(m) {
 	res <- do.call.msg(what		= fun(m), 
 			   args		= args(m),
 			   target	= target(m),
