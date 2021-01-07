@@ -19,6 +19,7 @@ is.chunkRef <- isA("chunkRef")
 # Get
 
 chunkID.chunkRef 	<- envGet("CHUNK_ID")
+name.chunkRef		<- envGet("CHUNK_ID")
 jobID.chunkRef 		<- envGet("JOB_ID")
 resolution.chunkRef 	<- envGet("RESOLUTION")
 host.chunkRef		<- envGet("HOST")

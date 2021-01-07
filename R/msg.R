@@ -3,7 +3,6 @@ msg <- function(...) {
 }
 
 send <- function(..., to) {
-	stopifnot(is.node(to))
 	items <- list(...)
 	m <- do.call(msg, items)
 	write.msg(m, to)
@@ -12,7 +11,7 @@ send <- function(..., to) {
 write.msg <- function(m, to) {
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	info("writing message:", format(m), 
-	     "to queue belonging to chunk", unclass(to))
+	     "to queue belonging to chunk", to)
 	rediscc::redis.push(conn(), to, serializedMsg)
 }
 
