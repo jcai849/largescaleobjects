@@ -7,7 +7,10 @@ distribute	<- function(x, target) UseMethod("distribute", target)
 emerge		<- function(x, ...) UseMethod("emerge", x)
 from		<- function(x, ...) UseMethod("from", x)
 fun		<- function(x, ...) UseMethod("fun", x)
-password	<- function(x, ...) UseMethod("password", x)
+host		<- function(x, ...) UseMethod("host", x)
+init		<- function(x, ...) UseMethod("init", x)
+pass		<- function(x, ...) UseMethod("pass", x)
+port		<- function(x, ...) UseMethod("port", x)
 postChunkID	<- function(x, ...) UseMethod("postChunkID", x)
 postJobID	<- function(x, ...) UseMethod("postJobID", x)
 preview		<- function(x, ...) UseMethod("preview", x)
@@ -31,23 +34,13 @@ user		<- function(x, ...) UseMethod("user", x)
 `jobID<-` 	<- function(x, value) UseMethod("jobID<-", x)
 `name<-`        <- function(x, value) UseMethod("name<-", x)
 `objectPort<-`	<- function(x, value) UseMethod("objectPort<-", x)
-`password<-`    <- function(x, value) UseMethod("password<-", x)
+`pass<-`	<- function(x, value) UseMethod("pass<-", x)
 `port<-`        <- function(x, value) UseMethod("port<-", x)
 `preview<-` 	<- function(x, value) UseMethod("preview<-", x)
 `resolution<-` 	<- function(x, value) UseMethod("resolution<-", x)
 `size<-`        <- function(x, value) UseMethod("size<-", x)
 `to<-`          <- function(x, value) UseMethod("to<-", x)
 `user<-`        <- function(x, value) UseMethod("user<-", x)
-
-host <- function(x, ...) {
-	if (missing(x)) return(host(node()))
-	UseMethod("host", x)
-}
-
-port <- function(x, ...) {
-	if (missing(x)) return(port(node()))
-	UseMethod("port", x)
-}
 
 name <- function(x, type) {
 	if (missing(x)) {

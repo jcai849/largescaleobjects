@@ -1,6 +1,6 @@
-Package: distObj
+Package: largeScaleR
 Type: Package
-Title: Provides a Distributed System for Statistical Modelling
+Title: Provides a Distributed Framework for Statistical Modelling
 Version: 0.1
 Date: 2020-07-31
 Author: Jason Cairns [aut, cre]
