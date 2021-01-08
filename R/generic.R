@@ -10,7 +10,10 @@ fun		<- function(x, ...) UseMethod("fun", x)
 host		<- function(x, ...) UseMethod("host", x)
 init		<- function(x, ...) UseMethod("init", x)
 pass		<- function(x, ...) UseMethod("pass", x)
-port		<- function(x, ...) UseMethod("port", x)
+port 		<- function(x, ...) {
+				if (missing(x)) return(.Call(C_port))
+				UseMethod("port", x)
+		}
 postChunkID	<- function(x, ...) UseMethod("postChunkID", x)
 postJobID	<- function(x, ...) UseMethod("postJobID", x)
 preview		<- function(x, ...) UseMethod("preview", x)

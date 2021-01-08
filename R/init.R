@@ -19,13 +19,13 @@ opProc <- function(host="localhost", user=NULL, pass=NULL) {
 
 print.proc <- function(x) {
 	print("Model of largeScaleR process at host", host(x))
-	if (!is.null(user(x))
+	if (!is.null(user(x)))
 		 print("At user", user(x))
 }
 
 print.commProc <- function(x) {
 	print("Model of largeScaleR communications process at host", host(x), "and port", port(x))
-	if (!is.null(user(x))
+	if (!is.null(user(x)))
 		 print("At user", user(x))
 }
 
@@ -38,8 +38,6 @@ port.commProc <- function(x) x$port
 `user.proc<-` <- function(x, value) { x$user <- value; x }
 `pass.proc<-` <- function(x, value) { x$pass <- value; x }
 `port.commProc<-` <- function(x, value) { x$port <- value; x}
-
-init <- generic..
 
 # read from config file
 init.default <- function(x) {
