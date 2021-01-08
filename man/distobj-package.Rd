@@ -1,23 +1,23 @@
-\name{distObj-package}
-\alias{distObj-package}
-\alias{distObj}
+\name{largeScaleR-package}
+\alias{largeScaleR-package}
+\alias{largeScaleR}
 \docType{package}
 \title{
-\packageTitle{distObj}
+\packageTitle{largeScaleR}
 }
 \description{
-\packageDescription{distObj}
+\packageDescription{largeScaleR}
 }
 \details{
-\packageDESCRIPTION{distObj}
-\packageIndices{distObj}
+\packageDESCRIPTION{largeScaleR}
+\packageIndices{largeScaleR}
 
 A comprehensive system for the creation and control of distributed objects for
 standard R usage in statistical modelling.
 }
 \author{
-\packageAuthor{distObj}
+\packageAuthor{largeScaleR}
 
-Maintainer: \packageMaintainer{distObj}
+Maintainer: \packageMaintainer{largeScaleR}
 }
 \keyword{ package }
