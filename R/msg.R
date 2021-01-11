@@ -35,7 +35,7 @@ target.msg	<- msgField("TARGET")
 postChunkID.msg	<- msgField("POST_CHUNK_ID")
 postJobID.msg	<- msgField("POST_JOB_ID")
 
-chunk.msg <- function(x, ...) chunk(chunkID(chunkRef(x)))
+chunk.msg <- function(x, ...) chunk(chunkDesc(chunkRef(x)))
 
 # Responses
 resolution.msg	<- msgField("RESOLUTION")

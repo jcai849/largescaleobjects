@@ -1,12 +1,12 @@
 # Instantiate
 
-chunkRef.chunkID <- function(x, jID)  {
+chunkRef.chunkDesc <- function(x, jID)  {
 	info("Producing new chunk reference with",
 	     "chunk ID:", format(x), 
 	     "and job ID:", format(jID))
 	cr <- new.env()
 	class(cr) <- "chunkRef"
-	chunkID(cr) <- x
+	chunkDesc(cr) <- x
 	jobID(cr) <- jID
 	resolution(cr) <- "UNRESOLVED"
 	cr
@@ -18,7 +18,7 @@ is.chunkRef <- isA("chunkRef")
 
 # Get
 
-chunkID.chunkRef 	<- envGet("CHUNK_ID")
+chunkDesc.chunkRef 	<- envGet("CHUNK_ID")
 name.chunkRef		<- envGet("CHUNK_ID")
 jobID.chunkRef 		<- envGet("JOB_ID")
 resolution.chunkRef 	<- envGet("RESOLUTION")
@@ -34,7 +34,7 @@ size.chunkRef 		<- envGet("SIZE")
 
 # Set
 
-`chunkID<-.chunkRef` 	<- envSet("CHUNK_ID")
+`chunkDesc<-.chunkRef` 	<- envSet("CHUNK_ID")
 `jobID<-.chunkRef` 	<- envSet("JOB_ID")
 `preview<-.chunkRef` 	<- envSet("PREVIEW")
 `resolution<-.chunkRef`	<- envSet("RESOLUTION")
@@ -47,7 +47,7 @@ size.chunkRef 		<- envGet("SIZE")
 # Other methods
 
 emerge.chunkRef <- function(x, ...) {
-	if (chunkID(x) %in% localChunks()) {
+	if (chunkDesc(x) %in% localChunks()) {
 		chunk.chunkRef(x)
 	} else {
 		resolve(x)
@@ -57,7 +57,7 @@ emerge.chunkRef <- function(x, ...) {
 
 format.chunkRef	<- function(x, ...) format(preview(x))
 print.chunkRef 	<- function(x, ...) {
-	cat("Chunk Reference with ID", format(chunkID(x)), "\n")
+	cat("Chunk Reference with ID", format(chunkDesc(x)), "\n")
 	resolve(x)
 	print(preview(x))
 }

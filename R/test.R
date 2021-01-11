@@ -15,7 +15,7 @@ makeTestChunk <- function(name, contents,
 			  host=Sys.info()["nodename"], port=integer(),
 			  from, to) {
 	ck		<- structure(new.env(), class = "chunkRef")
-	chunkID(ck)	<- structure(name, class="chunkID")
+	chunkDesc(ck)	<- structure(name, class="chunkDesc")
 	jobID(ck)	<- if (connected()) jobID() else NULL
 	preview(ck)	<- contents
 	from(ck)	<- if (missing(from)) contents[1] else from

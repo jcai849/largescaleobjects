@@ -4,6 +4,7 @@ chunk		<- function(x, ...) UseMethod("chunk", x)
 chunkRef	<- function(x, ...) UseMethod("chunkRef", x)
 combine		<- function(...) UseMethod("combine", ..1)
 distribute	<- function(x, target) UseMethod("distribute", target)
+dbpass		<- function(x, ...) UseMethod("dbpass", x)
 emerge		<- function(x, ...) UseMethod("emerge", x)
 from		<- function(x, ...) UseMethod("from", x)
 fun		<- function(x, ...) UseMethod("fun", x)
@@ -55,7 +56,7 @@ desc <- function(type) {
 chunkDesc <- function(x, ...) {
 	if (missing(x)) {
 		cd <- desc("chunk")
-		class(cd) <- "chunkID"
+		class(cd) <- "chunkDesc"
 		return(cID)
 	}
 	UseMethod("chunkDesc", x)

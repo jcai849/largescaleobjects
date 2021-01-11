@@ -2,7 +2,7 @@ do.call.chunkRef <- function(what, args, target) {
 	stopifnot(is.list(args))
 	resolve(target) # force target resolution
 	jID <- jobID()
-	cID <- name(type="chunkID")
+	cID <- name(type="chunkDesc")
 	send(FUN		= what, 
 	     ARGS		= args,
 	     TARGET		= target,
@@ -16,7 +16,7 @@ do.call.msg <- function(what, args, target, pCID, pJID) {
 	stopifnot(is.list(args))
 	args <- lapply(args, refToRec, target=target)
 	info("Requested to perform function", format(what),
-	     "using chunk", format(chunkID(target)), 
+	     "using chunk", format(chunkDesc(target)), 
 	     "as target, and assigning to chunk ID", format(pCID))
 	do.call(what, args)
 }
