@@ -44,11 +44,10 @@ port 		<- function(x, ...) {
 }
 
 desc <- function(type) {
-	typelist <- c("proc", "chunk")
+	typelist <- c("process", "chunk")
 	stopifnot(type %in% typelist)
 
-	desc <- paste0(capitalise(substr(type, 1, 1)),
-		     rediscc::redis.inc(commConn(), capitalise(type)))
+	desc <- rediscc::redis.inc(commConn(), type)
 	info("Attained ", type, " descriptor: ", desc)
 	desc
 }

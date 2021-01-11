@@ -54,7 +54,7 @@ init.commProc <- function(x) {
 }
 
 # startup operator processes (possibly remotely)
-init.opProc <- function(x, commProc, verbose) {
+init.opProc <- function(x, commProc, verbose=TRUE) {
 	assign("verbose", verbose,envir=.largeScaleRConfig)
 
 	# self init
@@ -67,7 +67,7 @@ init.opProc <- function(x, commProc, verbose) {
 		assign("rsc", rsc, envir=.largeScaleRConn)
 
 		info("Attaining process descriptor")
-		procDesc <- desc("proc")
+		procDesc <- desc("process")
 		assign("procDesc", procDesc, envir=.largeScaleRConn)
 
 		info("Starting osrv server")
