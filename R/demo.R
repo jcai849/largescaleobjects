@@ -14,7 +14,7 @@ beginNZSA2020Demo <- function() {
 			      intern = TRUE)
 		 })
 
-	rediscc::redis.rm(conn(), c(paste0("fileNameChunk", 1:32),
+	rediscc::redis.rm(commConn(), c(paste0("fileNameChunk", 1:32),
 				    paste0("C", 1:1000), paste0("J", 1:1000)))
 
 	chunks <- lapply(1:32, function(n) 

@@ -12,14 +12,14 @@ write.msg <- function(m, to) {
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	info("writing message:", format(m), 
 	     "to queue belonging to chunk", to)
-	rediscc::redis.push(conn(), to, serializedMsg)
+	rediscc::redis.push(commConn(), to, serializedMsg)
 }
 
 read.queue <- function(queue, clear = FALSE) {
 	info("Awaiting message on queues:", format(queue))
-	while (is.null(serializedMsg <-rediscc::redis.pop(conn(), queue,
+	while (is.null(serializedMsg <-rediscc::redis.pop(commConn(), queue,
 							  timeout=10))) {}
-	if (clear) rediscc::redis.rm(conn(), queue)
+	if (clear) rediscc::redis.rm(commConn(), queue)
 	m <- unserialize(charToRaw(serializedMsg))
 	info("Received message:", format(m))
 	m
