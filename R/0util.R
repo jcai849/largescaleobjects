@@ -7,6 +7,8 @@ envSet <- function(field) function(x, value) {
 
 isA <- function(class) function(x) inherits(x, class)
 
+is.verbose <- function() get("verbose", envir = .largeScaleRConfig)
+
 is.distributed <- function(x) is.distObjRef(x) | is.chunkRef(x)
 is.AsIs <- isA("AsIs")
 
@@ -16,10 +18,13 @@ unAsIs <- function(x) {
 }
 
 info <- function(...) {
-	if (verbose()) {
+	if (is.verbose()) {
 		op <- options(digits.secs = 6)
-		cat(c(if (!is.null(myNode())) c("[", myNode(), "]") else NULL,
-		      format(Sys.time(), "%H:%M:%OS6")), " ")
+		tryCatch(cat("[ ", 
+			     get("procDesc", envir = .largeScaleRConn),
+			     "] "),
+			 error=function(e){})
+		cat(format(Sys.time(), "%H:%M:%OS6"), " ")
 		for (item in list(...)) {
 			if (is.vector(item) && length(item) == 1) {
 				cat(" ", format(item))

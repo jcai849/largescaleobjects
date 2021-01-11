@@ -10,12 +10,7 @@ fun		<- function(x, ...) UseMethod("fun", x)
 host		<- function(x, ...) UseMethod("host", x)
 init		<- function(x, ...) UseMethod("init", x)
 pass		<- function(x, ...) UseMethod("pass", x)
-port 		<- function(x, ...) {
-				if (missing(x)) return(.Call(C_port))
-				UseMethod("port", x)
-		}
-postChunkID	<- function(x, ...) UseMethod("postChunkID", x)
-postJobID	<- function(x, ...) UseMethod("postJobID", x)
+postChunkDesc	<- function(x, ...) UseMethod("postChunkDesc", x)
 preview		<- function(x, ...) UseMethod("preview", x)
 recToRef	<- function(arg, target) UseMethod("recToRef", target)
 refToRec	<- function(arg, target) UseMethod("refToRec", arg)
@@ -29,14 +24,11 @@ to		<- function(x, ...) UseMethod("to", x)
 user		<- function(x, ...) UseMethod("user", x)
 
 `chunk<-` 	<- function(x, value) UseMethod("chunk<-", x)
-`chunkID<-` 	<- function(x, value) UseMethod("chunkID<-", x)
-`commPass<-` 	<- function(x, value) UseMethod("commPass<-", x)
-`commPort<-` 	<- function(x, value) UseMethod("commPort<-", x)
+`chunkDesc<-` 	<- function(x, value) UseMethod("chunkDesc<-", x)
+`dbpass<-` 	<- function(x, value) UseMethod("dbpass<-", x)
 `from<-`        <- function(x, value) UseMethod("from<-", x)
 `host<-`        <- function(x, value) UseMethod("host<-", x)
-`jobID<-` 	<- function(x, value) UseMethod("jobID<-", x)
 `name<-`        <- function(x, value) UseMethod("name<-", x)
-`objectPort<-`	<- function(x, value) UseMethod("objectPort<-", x)
 `pass<-`	<- function(x, value) UseMethod("pass<-", x)
 `port<-`        <- function(x, value) UseMethod("port<-", x)
 `preview<-` 	<- function(x, value) UseMethod("preview<-", x)
@@ -45,37 +37,28 @@ user		<- function(x, ...) UseMethod("user", x)
 `to<-`          <- function(x, value) UseMethod("to<-", x)
 `user<-`        <- function(x, value) UseMethod("user<-", x)
 
-name <- function(x, type) {
-	if (missing(x)) {
-		typelist <- c("node", "chunk", "job")
-		stopifnot(type %in% typelist)
-
-		ID <- paste0(capitalise(substr(type, 1, 1)),
-			     rediscc::redis.inc(conn(), capitalise(type)))
-		info("Attained ", type, " name: ", format(cID))
-		return(ID)
-	}
-	UseMethod("name", x)
+port 		<- function(x, ...) {
+	if (missing(x)) return(.Call(C_port))
+	UseMethod("port", x)
 }
 
-chunkID <- function(x, ...) {
+desc <- function(type) {
+	typelist <- c("proc", "chunk")
+	stopifnot(type %in% typelist)
+
+	desc <- paste0(capitalise(substr(type, 1, 1)),
+		     rediscc::redis.inc(commConn(), capitalise(type)))
+	info("Attained ", type, " descriptor: ", desc)
+	desc
+}
+
+chunkDesc <- function(x, ...) {
 	if (missing(x)) {
-		cID <- paste0("C", rediscc::redis.inc(conn(), "CHUNK_ID"))
-		info("Attained Chunk ID: ", format(cID))
-		class(cID) <- "chunkID"
+		cd <- desc("chunk")
+		class(cd) <- "chunkID"
 		return(cID)
 	}
-	UseMethod("chunkID", x)
-}
-
-jobID <- function(x, ...) {
-	if (missing(x)) {
-		jID <- paste0("J", rediscc::redis.inc(conn(), "JOB_ID"))
-		info("Attained job ID: ", format(jID))
-		class(jID) <- "jobID"
-		return(jID)
-	}
-	UseMethod("jobID", x)
+	UseMethod("chunkDesc", x)
 }
 
 # masking

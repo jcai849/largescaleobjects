@@ -8,3 +8,5 @@ addChunk <- function(cID, val) {
 	assign(cID, val, envir = .largeScaleRChunks)
 	osrv::put(cID, serialize(val, NULL))
 }
+
+commConn <- function() get("rsc", .largeScaleRConn)
