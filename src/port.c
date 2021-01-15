@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/ip.h>
+#include <netinet/in.h>
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>

@@ -1,7 +1,6 @@
 as.chunkRef	<- function(x, ...) UseMethod("as.chunkRef", x)
 as.node		<- function(x, ...) UseMethod("as.node", x)
-chunk		<- function(x, ...) UseMethod("chunk", x)
-chunkRef	<- function(x, ...) UseMethod("chunkRef", x)
+chunkStub	<- function(x, ...) UseMethod("chunkStub", x)
 combine		<- function(...) UseMethod("combine", ..1)
 distribute	<- function(x, target) UseMethod("distribute", target)
 dbpass		<- function(x, ...) UseMethod("dbpass", x)
@@ -11,22 +10,20 @@ fun		<- function(x, ...) UseMethod("fun", x)
 host		<- function(x, ...) UseMethod("host", x)
 init		<- function(x, ...) UseMethod("init", x)
 pass		<- function(x, ...) UseMethod("pass", x)
-postChunkDesc	<- function(x, ...) UseMethod("postChunkDesc", x)
 preview		<- function(x, ...) UseMethod("preview", x)
-recToRef	<- function(arg, target) UseMethod("recToRef", target)
-refToRec	<- function(arg, target) UseMethod("refToRec", arg)
+marshall	<- function(arg, target) UseMethod("marshall", target)
+unmarshall	<- function(arg, target) UseMethod("unmarshall", arg)
 resolution	<- function(x, ...) UseMethod("resolution", x)
 resolve		<- function(x, ...) UseMethod("resolve", x)
-resolved	<- function(x, ...) UseMethod("resolved", x)
 size		<- function(x, ...) UseMethod("size", x)
 store		<- function(x, ...) UseMethod("store", x)
 target		<- function(x, ...) UseMethod("target", x)
 to		<- function(x, ...) UseMethod("to", x)
 user		<- function(x, ...) UseMethod("user", x)
 
-`chunk<-` 	<- function(x, value) UseMethod("chunk<-", x)
-`chunkDesc<-` 	<- function(x, value) UseMethod("chunkDesc<-", x)
+`chunkStub<-` 	<- function(x, value) UseMethod("chunkStub<-", x)
 `dbpass<-` 	<- function(x, value) UseMethod("dbpass<-", x)
+`desc<-` 	<- function(x, value) UseMethod("desc<-", x)
 `from<-`        <- function(x, value) UseMethod("from<-", x)
 `host<-`        <- function(x, value) UseMethod("host<-", x)
 `name<-`        <- function(x, value) UseMethod("name<-", x)
@@ -43,22 +40,15 @@ port 		<- function(x, ...) {
 	UseMethod("port", x)
 }
 
-desc <- function(type) {
+desc <- function(x, ...) UseMethod("desc", x)
+
+desc.default <- function(type) {
 	typelist <- c("process", "chunk")
 	stopifnot(type %in% typelist)
 
 	desc <- rediscc::redis.inc(commConn(), type)
 	info("Attained ", type, " descriptor: ", desc)
 	desc
-}
-
-chunkDesc <- function(x, ...) {
-	if (missing(x)) {
-		cd <- desc("chunk")
-		class(cd) <- "chunkDesc"
-		return(cID)
-	}
-	UseMethod("chunkDesc", x)
 }
 
 # masking
@@ -70,3 +60,4 @@ read.csv	<- function(...) UseMethod("read.csv", ..1)
 read.csv.default<- utils::read.csv
 dim		<- function(x) UseMethod("dim", x)
 dim.default	<- base::dim
+preview.default	<- utils::head

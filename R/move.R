@@ -1,73 +1,73 @@
 findTarget <- function(args) {
-	dist <- vapply(args, is.distObjRef, logical(1))
-	sizes <- lengths(lapply(args[dist], chunk))
+	dist <- vapply(args, is.distObjStub, logical(1))
+	sizes <- lengths(lapply(args[dist], chunkStub))
 	args[dist][[which.max(sizes)]] # longest
 }
 
-refToRec.default <- function(arg, target) arg
+unmarshall.default <- function(arg, target) arg
 
-refToRec.chunkRef <- function(arg, target) chunk(arg)
+unmarshall.chunkStub <- function(arg, target) emerge(arg)
 
-refToRec.distObjRef <- function(arg, target) {
+unmarshall.distObjStub <- function(arg, target) {
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
 	if (identical(as.vector(fromSame), as.vector(toSame)) &&
 	    length(fromSame) == 1 && length(toSame) == 1) {
 		info("arg and target already aligned; emerging arg")
-		return(emerge(chunk(arg)[[fromSame]]))
+		return(emerge(chunkStub(arg)[[fromSame]]))
 	}
 
 	info("arg and target unaligned; aligning arg")
 	toAlign <- alignment(arg, target) 
 
-	ref <- lapply(toAlign$REF, emerge)
-	combined <- if (length(ref) == 1) {
-		index(ref[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
+	Stub <- lapply(toAlign$Stub, emerge)
+	combined <- if (length(Stub) == 1) {
+		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
 	} else do.call(combine, 
-		       c(list(index(ref[[1]], seq(toAlign$HEAD$FROM, 
+		       c(list(index(Stub[[1]], seq(toAlign$HEAD$FROM, 
 						  toAlign$HEAD$TO))), 
-			 ref[-c(1, length(ref))], 
-			 list(index(ref[[length(ref)]], seq(toAlign$TAIL$FROM,
+			 Stub[-c(1, length(Stub))], 
+			 list(index(Stub[[length(Stub)]], seq(toAlign$TAIL$FROM,
 							    toAlign$TAIL$TO)))))
 	combined
 }
 
-recToRef.distObjRef <- function(arg, target) {
-	if (is.distObjRef(arg) || is.chunkRef(arg)) return(arg)
+marshall.distObjStub <- function(arg, target) {
+	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
-	chunks <- mapply(recToRef,
-			 splits, chunk(target)[seq(length(splits))],
+	chunks <- mapply(marshall,
+			 splits, chunkStub(target)[seq(length(splits))],
 			 SIMPLIFY = FALSE)
-	x <- distObjRef(chunks)
+	x <- distObjStub(chunks)
 	resolve(x)
 	x
 }
 
-recToRef.chunkRef <- function(arg, target) {
-	do.call.chunkRef(function(a, b) identity(a),
+marshall.chunkStub <- function(arg, target) {
+	do.call.chunkStub(function(a, b) identity(a),
 			 list(a = arg, 
 			      b = target),
 			 target = target)
 }
 
-recToRef.default <- function(arg, target) arg
+marshall.default <- function(arg, target) arg
 
 # `alignment` returns list of form:
 #  .
 #  ├── HEAD
 #  │   ├── FROM
 #  │   └── TO
-#  ├── REF
+#  ├── Stub
 #  └── TAIL
 #      ├── FROM
 #      └── TO
 alignment <- function(arg, target) {
-	stopifnot(is.distObjRef(arg),
-		  is.chunkRef(target))
+	stopifnot(is.distObjStub(arg),
+		  is.chunkStub(target))
 
 	toAlign 	<- list()
-	argChunks	<- chunk(arg)
+	argChunks	<- chunkStub(arg)
 	argFrom 	<- from(arg)
 	argTo 		<- to(arg)
 	argSize 	<- sum(size(arg))
@@ -77,24 +77,24 @@ alignment <- function(arg, target) {
 
 	# (x-1%%y)-1 to force a 1->n cycle instead of 0->n-1 for R's 1-indexing
 	headFromAbs <- ((targetFrom-1L) %% argSize)+1L
-	headRefNum <- which(headFromAbs <= argTo)[1]
-	headFromRel <- headFromAbs - argFrom[headRefNum] + 1L
+	headStubNum <- which(headFromAbs <= argTo)[1]
+	headFromRel <- headFromAbs - argFrom[headStubNum] + 1L
 
 	tailToAbs <- if (targetSize > argSize)  #clip rep, force local recycling
 		((headFromAbs-2L)%%argSize)+1L else ((targetTo-1L)%%argSize)+1L
-	tailRefNum <- which(tailToAbs <= argTo)[1]
-	tailToRel <- tailToAbs - argFrom[tailRefNum] + 1L
+	tailStubNum <- which(tailToAbs <= argTo)[1]
+	tailToRel <- tailToAbs - argFrom[tailStubNum] + 1L
 
-	ref <- if ((targetSize >= argSize && headFromAbs > argFrom[1]) ||
+	Stub <- if ((targetSize >= argSize && headFromAbs > argFrom[1]) ||
 		   (targetSize < argSize && headFromAbs > tailToAbs)) # modular
-		c(seq(headRefNum, length(argChunks)), seq(1L, tailRefNum)) else
-			seq(headRefNum, tailRefNum)
+		c(seq(headStubNum, length(argChunks)), seq(1L, tailStubNum)) else
+			seq(headStubNum, tailStubNum)
 
 	toAlign <- list()
 	toAlign$HEAD$FROM <- headFromRel
-	toAlign$HEAD$TO <- if (length(ref) == 1) 
-		tailToRel else argTo[headRefNum] - argFrom[headRefNum] + 1L
-	toAlign$REF <- argChunks[ref]
+	toAlign$HEAD$TO <- if (length(Stub) == 1) 
+		tailToRel else argTo[headStubNum] - argFrom[headStubNum] + 1L
+	toAlign$Stub <- argChunks[Stub]
 	toAlign$TAIL$FROM <- 1L
 	toAlign$TAIL$TO <- tailToRel
 
@@ -122,14 +122,14 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
-	info("Getting the referent of the reference with chunkDesc", unclass(chunkDesc(x)), 
+	info("Getting the chunk referenced by chunk descriptor", desc(x), 
 	     "from port", format(port(x)), 
 	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
-	sv <- osrvCmd(s, paste0("GET", " ", chunkDesc(x), "\n"))
+	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)
 	v <- unserialize(sv)
-	info("Received referent with head:", format(head(v)),
+	info("Received chunk with head:", format(head(v)),
 	     "and size:", format(size(v)))
 	v
 }

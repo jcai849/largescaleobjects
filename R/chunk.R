@@ -1,83 +1,67 @@
 # Instantiate
 
-chunkRef.chunkDesc <- function(x, jID)  {
+chunkStub.integer <- function(cd)  {
 	info("Producing new chunk reference with",
-	     "chunk ID:", format(x), 
-	     "and job ID:", format(jID))
-	cr <- new.env()
-	class(cr) <- "chunkRef"
-	chunkDesc(cr) <- x
-	jobID(cr) <- jID
-	resolution(cr) <- "UNRESOLVED"
-	cr
+	     "chunk Descriptor:", format(cd)) 
+	cs <- new.env()
+	class(cs) <- "chunkStub"
+	chunkDesc(cs) <- cd 
+	resolution(cs) <- FALSE
+	cs
 }
 
 # Inherit
 
-is.chunkRef <- isA("chunkRef")
+is.chunkStub <- isA("chunkStub")
 
 # Get
 
-chunkDesc.chunkRef 	<- envGet("CHUNK_ID")
-name.chunkRef		<- envGet("CHUNK_ID")
-jobID.chunkRef 		<- envGet("JOB_ID")
-resolution.chunkRef 	<- envGet("RESOLUTION")
-host.chunkRef		<- envGet("HOST")
-port.chunkRef		<- envGet("PORT")
-preview.default 	<- utils::head
-preview.chunkRef	<- function(x) 
+desc.chunkStub		<- envGet("CHUNK_DESC")
+resolution.chunkStub	<- envGet("RESOLUTION")
+host.chunkStub		<- envGet("HOST")
+port.chunkStub		<- envGet("PORT")
+preview.chunkStub	<- function(x) 
 	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
 		"Error in preview"
-to.chunkRef 		<- envGet("TO")
-from.chunkRef 		<- envGet("FROM")
-size.chunkRef 		<- envGet("SIZE")
+to.chunkStub 		<- envGet("TO")
+from.chunkStub 		<- envGet("FROM")
+size.chunkStub 		<- envGet("SIZE")
 
 # Set
 
-`chunkDesc<-.chunkRef` 	<- envSet("CHUNK_ID")
-`jobID<-.chunkRef` 	<- envSet("JOB_ID")
-`preview<-.chunkRef` 	<- envSet("PREVIEW")
-`resolution<-.chunkRef`	<- envSet("RESOLUTION")
-`to<-.chunkRef` 	<- envSet("TO")
-`from<-.chunkRef`	<- envSet("FROM")
-`size<-.chunkRef` 	<- envSet("SIZE")
-`port<-.chunkRef` 	<- envSet("PORT")
-`host<-.chunkRef` 	<- envSet("HOST")
+`desc<-.chunkStub`	<- envSet("CHUNK_DESC")
+`preview<-.chunkStub` 	<- envSet("PREVIEW")
+`resolution<-.chunkStub`<- envSet("RESOLUTION")
+`to<-.chunkStub` 	<- envSet("TO")
+`from<-.chunkStub`	<- envSet("FROM")
+`size<-.chunkStub` 	<- envSet("SIZE")
+`port<-.chunkStub` 	<- envSet("PORT")
+`host<-.chunkStub` 	<- envSet("HOST")
 
 # Other methods
 
-emerge.chunkRef <- function(x, ...) {
-	if (chunkDesc(x) %in% localChunks()) {
-		chunk.chunkRef(x)
-	} else {
-		resolve(x)
-		osrvGet(x)
-	}
-}
-
-format.chunkRef	<- function(x, ...) format(preview(x))
-print.chunkRef 	<- function(x, ...) {
-	cat("Chunk Reference with ID", format(chunkDesc(x)), "\n")
+emerge.chunkStub <- function(x, ...) 
+	tryCatch(get(desc(x), envir = .largeScaleRChunks),
+		 error = function(e) {
+			 resolve(x)
+			 osrvGet(x)
+		 })
+format.chunkStub	<- function(x, ...) format(preview(x))
+print.chunkStub 	<- function(x, ...) {
+	cat("Chunk Reference with Descriptor", format(desc(x)), "\n")
 	resolve(x)
 	print(preview(x))
 }
 
-resolve.chunkRef <- function(x, ...) {
+resolve.chunkStub <- function(x, ...) {
 	if (!resolved(x)) {
 		info("Chunk not yet resolved. Resolving...")
-		m <- read.queue(jobID(x), clear=TRUE)
 		resolution(x)	<- resolution(m)
-		if (identical(resolution(x), "ERROR")) stop(preview(x))
+		if (is.NA(resolution(x))) stop(preview(x))
 		preview(x)	<- preview(m)
 		size(x)		<- size(m)
 		host(x)		<- host(m)
 		port(x)		<- port(m)
 	} 
 	resolved(x)
-}
-
-resolved.chunkRef <- function(x, ...) {
-	if (identical(resolution(x), "RESOLVED")) return(TRUE)
-	if (identical(resolution(x), "UNRESOLVED")) return(FALSE)
-	else stop(preview(x))
 }

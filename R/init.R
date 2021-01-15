@@ -26,7 +26,8 @@ print.proc <- function(x) {
 }
 
 print.commProc <- function(x) {
-	print(paste("Model of largeScaleR communications process at host", host(x), "and port", port(x)))
+	print(paste("Model of largeScaleR communications process at host",
+		    host(x), "and port", port(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
 }
@@ -64,18 +65,16 @@ init.opProc <- function(x, commProc, verbose=TRUE) {
 		rsc <- rediscc::redis.connect(host(commProc), port(commProc),
 					      reconnect = TRUE, 
 					      password=dbpass(commProc))
-		assign("rsc", rsc, envir=.largeScaleRConn)
+		assign("rsc", commConn, envir=.largeScaleRConn)
 
 		info("Attaining process descriptor")
 		procDesc <- desc("process")
 		assign("procDesc", procDesc, envir=.largeScaleRConn)
 
 		info("Starting osrv server")
-		objPort <- port()
-		osrv::start(port=objPort)
-		assign("objPort", objPort, envir=.largeScaleRConn)
-
-	# other init
+		movePort <- port()
+		osrv::start(port=movePort)
+		assign("objPort", movePort, envir=.largeScaleRConn)
 	} else {
 	# ssh and start +  serve
 	}

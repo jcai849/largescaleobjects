@@ -1,52 +1,48 @@
 # Instantiate
 
-# x is list of chunks
-distObjRef <- function(x) {
+distObjStub <- function(x) {
+	stopifnot(all(sapply(x, is.chunkStub)))
 	info("Producing new distributed object reference")
-	dr <- new.env()
-	class(dr) <- "distObjRef"
-	chunk(dr) <- x
-	resolution(dr) <- "UNRESOLVED"
+	dos <- new.env()
+	class(dos) <- "distObjStub"
+	chunkStub(dos) <- x
 	dr
 }
 
 # Inherit
 
-is.distObjRef <- isA("distObjRef")
+is.distObjStub <- isA("distObjStub")
 
 # Get
 
-distObjDo <- function(fun, rtype) function(x) vapply(chunk(x), fun, rtype(1))
+distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
 distObjResDo <- function(fun, rtype) function(x) { 
 	resolve(x) 
 	distObjDo(fun, rtype)(x)
 }
 
-chunk.distObjRef	<- envGet("CHUNK")
-size.distObjRef 	<- distObjResDo(size, integer)
-to.distObjRef		<- distObjResDo(to,   integer)
-from.distObjRef 	<- distObjResDo(from, integer)
-resolved.distObjRef	<- function(x) envGet("RESOLUTION")(x) == "RESOLVED"
+chunkStub.distObjStub	<- envGet("CHUNK")
+size.distObjStub 	<- distObjResDo(size, integer)
+to.distObjStub		<- distObjResDo(to,   integer)
+from.distObjStub 	<- distObjResDo(from, integer)
+resolution.distObjStub	<- function(x) all(distObjResDo(resolution, logical))
 
 # Set
 
 distObjSet <- function(fun) function(x, value) {
-	mapply(fun, chunk(x), value)
+	mapply(fun, chunkStub(x), value)
 	x
 }
 
-`chunk<-.distObjRef`		<- envSet("CHUNK")
-`to<-.distObjRef`		<- distObjSet(`to<-`)
-`from<-.distObjRef`		<- distObjSet(`from<-`)
-`resolution<-.distObjRef`	<- envSet("RESOLUTION")
+`chunkStub<-.distObjStub`	<- envSet("CHUNK")
+`to<-.distObjStub`		<- distObjSet(`to<-`)
+`from<-.distObjStub`		<- distObjSet(`from<-`)
 
 # Other methods
 
-resolve.distObjRef <- function(x) {
-	r <- resolved(x)
-	if (r) return(T)
+resolve.distObjStub <- function(x) {
+	if (resolution(x)) return(resolution(x))
 	distObjDo(resolve, logical)(x)
-	resolution(x) <- "RESOLVED"
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
 	to(x) <- tos
@@ -56,54 +52,55 @@ resolve.distObjRef <- function(x) {
 	T
 }
 
-emerge.distObjRef <- function(x) {
-	chunks <- lapply(chunk(x), emerge)
+emerge.distObjStub <- function(x) {
+	chunks <- lapply(chunkStub(x), emerge)
 	names(chunks) <- NULL
 	if (length(chunks) == 1)
 		return(chunks[[1]])
 	do.call(combine, chunks)
 }
 
-print.distObjRef <- function(x, ...) {
-	if (!resolved(x)) {
+print.distObjStub <- function(x, ...) {
+	if (!resolution(x)) {
 		cat("Not yet resolved. Resolving...\n")
 		resolve(x)
 	}
-	cat("Distributed object reference. First chunk head:\n")
-	print(chunk(x)[[1]])
-	cat("With", format(length(chunk(x))), "chunks, and size",
+	cat("Distributed Object Stub. First chunk head:\n")
+	print(chunkStub(x)[[1]])
+	cat("With", format(length(chunkStub(x))), 
+	    "chunk stubs, representing a size of",
 	    format(sum(size(x))), "\n")
 }
 
 # User-level
 
-Math.distObjRef <- function(x, ...) 
-	do.call.distObjRef(.Generic, 
+Math.distObjStub <- function(x, ...) 
+	do.call.distObjStub(.Generic, 
 			   c(list(x=x), list(...)))
-Ops.distObjRef <- function(e1, e2) 
+Ops.distObjStub <- function(e1, e2) 
 	if (missing(e2)) {
-		do.call.distObjRef(.Generic,
+		do.call.distObjStub(.Generic,
 				   list(e1=e1)) 
 	} else
-		do.call.distObjRef(.Generic,
+		do.call.distObjStub(.Generic,
 				   list(e1=e1, e2=e2))
-Complex.distObjRef <- function(z) 
-	do.call.distObjRef(.Generic,
+Complex.distObjStub <- function(z) 
+	do.call.distObjStub(.Generic,
 			   list(z=z))
-Summary.distObjRef <- function(..., na.rm = FALSE) {
-	mapped <- emerge(do.call.distObjRef(.Generic,
+Summary.distObjStub <- function(..., na.rm = FALSE) {
+	mapped <- emerge(do.call.distObjStub(.Generic,
 					    c(list(...), list(na.rm=I(na.rm)))))
 	do.call(.Generic, 
 		c(list(mapped), list(na.rm=na.rm)))
 }
-`$.distObjRef` <- function(x, name)
-	do.call.distObjRef("$", list(x=x, name=I(name)))
-table.distObjRef <- function(...)
-	emerge(do.call.distObjRef("table",
+`$.distObjStub` <- function(x, name)
+	do.call.distObjStub("$", list(x=x, name=I(name)))
+table.distObjStub <- function(...)
+	emerge(do.call.distObjStub("table",
 				  list(...)))
-read.csv.distObjRef <- function(...)
-	do.call.distObjRef("read.csv", list(...))
-dim.distObjRef <- function(x) {
-	dims <- sapply(chunk(do.call.distObjRef("dim", list(x=x))), emerge)
+read.csv.distObjStub <- function(...)
+	do.call.distObjStub("read.csv", list(...))
+dim.distObjStub <- function(x) {
+	dims <- sapply(chunk(do.call.distObjStub("dim", list(x=x))), emerge)
 	c(sum(dims[1,]), dims[,1][-1])
 }

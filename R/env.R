@@ -1,6 +1,7 @@
 .largeScaleRConfig	<- new.env()
 .largeScaleRChunks	<- new.env()
 .largeScaleRConn	<- new.env()
+.largeScaleRKeys	<- new.env()
 
 addChunk <- function(cID, val) {
 	info("Assigned chunk to ID:", 
@@ -9,4 +10,4 @@ addChunk <- function(cID, val) {
 	osrv::put(cID, serialize(val, NULL))
 }
 
-commConn <- function() get("rsc", .largeScaleRConn)
+commConn <- function() get("commConn", .largeScaleRConn)
