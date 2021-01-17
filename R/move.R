@@ -4,11 +4,11 @@ findTarget <- function(args) {
 	args[dist][[which.max(sizes)]] # longest
 }
 
-unmarshall.default <- function(arg, target) arg
+unstub.default <- function(arg, target) arg
 
-unmarshall.chunkStub <- function(arg, target) emerge(arg)
+unstub.chunkStub <- function(arg, target) emerge(arg)
 
-unmarshall.distObjStub <- function(arg, target) {
+unstub.distObjStub <- function(arg, target) {
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
 	if (identical(as.vector(fromSame), as.vector(toSame)) &&
@@ -32,11 +32,11 @@ unmarshall.distObjStub <- function(arg, target) {
 	combined
 }
 
-marshall.distObjStub <- function(arg, target) {
+stub.distObjStub <- function(arg, target) {
 	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
-	chunks <- mapply(marshall,
+	chunks <- mapply(stub,
 			 splits, chunkStub(target)[seq(length(splits))],
 			 SIMPLIFY = FALSE)
 	x <- distObjStub(chunks)
@@ -44,14 +44,14 @@ marshall.distObjStub <- function(arg, target) {
 	x
 }
 
-marshall.chunkStub <- function(arg, target) {
+stub.chunkStub <- function(arg, target) {
 	do.call.chunkStub(function(a, b) identity(a),
 			 list(a = arg, 
 			      b = target),
 			 target = target)
 }
 
-marshall.default <- function(arg, target) arg
+stub.default <- function(arg, target) arg
 
 # `alignment` returns list of form:
 #  .

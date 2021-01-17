@@ -13,7 +13,7 @@ do.call.distObjStub <- function(what, args) {
 	target <- findTarget(args)
 	args <- lapply(args, function(arg) 
 		       if (!is.distributed(arg) && size(arg) == 1L) I(arg) else 
-			       marshall(arg, target))
+			       stub(arg, target))
 	lapply(args, resolve)
 	cs <- lapply(chunkStub(target), 
 			     function(t) do.call.chunkStub(what, args, t))

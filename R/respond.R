@@ -27,7 +27,7 @@ evaluate <- function(request) {
 
 do.call.request <- function(what, args, target, chunk_desc) {
 	stopifnot(is.list(args))
-	args <- lapply(args, unmarshall, target=target)
+	args <- lapply(args, unstub, target=target)
 	info("Requested to perform function", format(what),
 	     "using chunk", format(desc(target)), 
 	     "as target, and assigning to chunk ID", chunk_desc)
