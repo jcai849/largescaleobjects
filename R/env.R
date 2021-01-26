@@ -8,6 +8,7 @@ addChunk <- function(cID, val) {
 	     format(cID), "in chunk table")
 	assign(cID, val, envir = .largeScaleRChunks)
 	osrv::put(cID, serialize(val, NULL))
+	val
 }
 
-commConn <- function() get("commConn", .largeScaleRConn)
+commsConn <- function() get("commsConn", .largeScaleRConn)

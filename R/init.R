@@ -1,81 +1,102 @@
-proc <- function(host="localhost", user=NULL, pass=NULL) {
+process <- function(host=Sys.info()["nodename"], user=NULL, pass=NULL) {
 	x <- list(host=host, user=user, pass=pass)
-	class(x) <- "proc"
+	class(x) <- "process"
 	x
 }
 
-commProc <- function(host="localhost", port=6379,
-		     user=NULL, pass=NULL, dbpass=NULL) {
-	x <- proc(host, user, pass)
-	class(x) <- c("commProc", class(x))
+commsProcess <- function(host=Sys.info()["nodename"], port=6379,
+			 user=NULL, pass=NULL, dbpass=NULL, init=FALSE) {
+	x <- process(host, user, pass)
+	class(x) <- c("commsProcess", class(x))
 	port(x) <- port
 	dbpass(x) <- dbpass
+
+	if (init)
+		system2("redis-server", wait=FALSE) # TODO - start remotely, change port etc.
+
+	assign("commsProcess", x, envir=.largeScaleRConn)
+}
+
+userProcess <- function() {
+	x <- process()
+	class(x) <- c("userProcess", class(x))
+
+	info("Attaining process descriptor")
+	processDesc <- desc("process")
+	assign("processDesc", processDesc, envir=.largeScaleRConn)
+
+	info("Starting osrv server")
+	movePort <- port()
+	osrv::start(port=movePort)
+	assign("objPort", movePort, envir=.largeScaleRConn)
+
+	info("Connecting to Redis server")
+	comms <- get("commsProcess", envir=.largeScaleRConn)
+	rsc <- rediscc::redis.connect(host(comms), port(comms),
+				      reconnect = TRUE, 
+				      password=dbpass(comms))
+	assign("rsc", commsConn, envir=.largeScaleRConn)
+
+	assign("userProcess", x, envir=.largeScaleRConn)
+
+	assign(processDesc, NULL, envir=.largeScaleRKeys)
+	assign(host(x), NULL, envir=.largeScaleRKeys)
+	assign(movePort, NULL, envir=.largeScaleRKeys)
+
 	x
 }
 
-opProc <- function(host="localhost", user=NULL, pass=NULL) {
-	x <- proc(host, user, pass)
-	class(x) <- c("opProc", class(x))
+workerProcess <- function(host=Sys.info()["nodename"], port=port(),
+			  user=NULL, pass=NULL, stopOnError=FALSE) {
+	x <- process(host, user, pass)
+	class(x) <- c("workerProcess", class(x))
+	loc <- paste0(ifelse(!is.null(user), paste0(user, "@"), NULL),
+		      host,
+		      ifelse(!is.null(port), paste0(port, ":"), NULL))
+	command <- c("R -e", 
+		     paste0("worker(comms=", 
+			    deparse(get("commsProcess", 
+					envir=.largeScaleRConn)), 
+			    ',stopOnError=', deparse(stopOnError)))
+	system2("ssh", shQuote(c(loc, command)))
 	x
 }
 
-print.proc <- function(x) {
+worker <- function(comms, stopOnError) {
+	commsProcess(host(comms), port(comms), user(comms), 
+		     pass(comms), dbpass(comms), FALSE)
+	userProcess()
+	repeat {
+		request <- read()
+		result <- tryCatch(evaluate(fun(request), args(request),
+					    target(request), desc(request)), 
+				   error = if (stopOnError) NULL else identity)
+		addChunk(desc(request), result)
+		respond(desc(request), result)
+	}
+}
+
+print.process <- function(x) {
 	print(paste("Model of largeScaleR process at host", host(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
 }
 
-print.commProc <- function(x) {
+print.comms <- function(x) {
 	print(paste("Model of largeScaleR communications process at host",
 		    host(x), "and port", port(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
 }
 
-host.proc <- function(x) x$host
-user.proc <- function(x) x$user
-pass.proc <- function(x) x$pass
-port.commProc <- function(x) x$port
-dbpass.commProc <- function(x) x$dbpass
+host.process <- function(x) x$host
+user.process <- function(x) x$user
+pass.process <- function(x) x$pass
+port.comms <- function(x) x$port
+dbpass.comms <- function(x) x$dbpass
 
-`host<-.proc` <- function(x, value) { x$host <- value; x }
-`user<-.proc` <- function(x, value) { x$user <- value; x }
-`pass<-.proc` <- function(x, value) { x$pass <- value; x }
-`port<-.commProc` <- function(x, value) { x$port <- value; x}
-`dbpass<-.commProc` <- function(x, value) { x$dbpass <- value; x}
-
-# read from config file
-init.default <- function(x) {
-	# parse config file as describing a commProc or opProc object
-	# run init with commProc or opProc object
-}
-
-# setup communication process (start redis-server)
-init.commProc <- function(x) {
-}
-
-# startup operator processes (possibly remotely)
-init.opProc <- function(x, commProc, verbose=TRUE) {
-	assign("verbose", verbose,envir=.largeScaleRConfig)
-
-	# self init
-	if (host(x) == "localhost" || host(x) == Sys.info()["nodename"]) {
-
-		info("Connecting to Redis server")
-		rsc <- rediscc::redis.connect(host(commProc), port(commProc),
-					      reconnect = TRUE, 
-					      password=dbpass(commProc))
-		assign("rsc", commConn, envir=.largeScaleRConn)
-
-		info("Attaining process descriptor")
-		procDesc <- desc("process")
-		assign("procDesc", procDesc, envir=.largeScaleRConn)
-
-		info("Starting osrv server")
-		movePort <- port()
-		osrv::start(port=movePort)
-		assign("objPort", movePort, envir=.largeScaleRConn)
-	} else {
-	# ssh and start +  serve
-	}
-}
+`host<-.process` <- function(x, value) { x$host <- value; x }
+`user<-.process` <- function(x, value) { x$user <- value; x }
+`pass<-.process` <- function(x, value) { x$pass <- value; x }
+`port<-.commsProcess` <- function(x, value) { x$port <- value; x}
+`dbpass<-.commsProcess` <- function(x, value) { x$dbpass <- value; x}
