@@ -71,7 +71,7 @@ worker <- function(comms, stopOnError) {
 		request <- read(keys)
 		result <- tryCatch(evaluate(fun(request), args(request),
 					    target(request), desc(request)), 
-				   error = if (stopOnError) NULL else identity)
+				   error = if (stopOnError) stop(e) else identity)
 		addChunk(desc(request), result)
 		respond(desc(request), result)
 	}

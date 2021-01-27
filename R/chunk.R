@@ -16,27 +16,25 @@ is.chunkStub <- isA("chunkStub")
 
 # Get
 
-desc.chunkStub		<- envGet("CHUNK_DESC")
-resolution.chunkStub	<- envGet("RESOLUTION")
-host.chunkStub		<- envGet("HOST")
-port.chunkStub		<- envGet("PORT")
-preview.chunkStub	<- function(x) 
-	if (hasName(x, "PREVIEW")) envGet("PREVIEW")(x) else
-		"Error in preview"
-to.chunkStub 		<- envGet("TO")
-from.chunkStub 		<- envGet("FROM")
-size.chunkStub 		<- envGet("SIZE")
+desc.chunkStub		<- envGet("desc")
+resolution.chunkStub	<- envGet("resolution")
+host.chunkStub		<- envGet("host")
+port.chunkStub		<- envGet("port")
+preview.chunkStub	<- envGet("preview")
+to.chunkStub 		<- envGet("to")
+from.chunkStub 		<- envGet("from")
+size.chunkStub 		<- envGet("size")
 
 # Set
 
-`desc<-.chunkStub`	<- envSet("CHUNK_DESC")
-`preview<-.chunkStub` 	<- envSet("PREVIEW")
-`resolution<-.chunkStub`<- envSet("RESOLUTION")
-`to<-.chunkStub` 	<- envSet("TO")
-`from<-.chunkStub`	<- envSet("FROM")
-`size<-.chunkStub` 	<- envSet("SIZE")
-`port<-.chunkStub` 	<- envSet("PORT")
-`host<-.chunkStub` 	<- envSet("HOST")
+`desc<-.chunkStub`	<- envSet("desc")
+`preview<-.chunkStub` 	<- envSet("preview")
+`resolution<-.chunkStub`<- envSet("resolution")
+`to<-.chunkStub` 	<- envSet("to")
+`from<-.chunkStub`	<- envSet("from")
+`size<-.chunkStub` 	<- envSet("size")
+`port<-.chunkStub` 	<- envSet("port")
+`host<-.chunkStub` 	<- envSet("host")
 
 # Other methods
 
@@ -54,14 +52,9 @@ print.chunkStub 	<- function(x, ...) {
 }
 
 resolve.chunkStub <- function(x, ...) {
-	if (!resolved(x)) {
+	if (!resolution(x)) {
 		info("Chunk not yet resolved. Resolving...")
-		resolution(x)	<- resolution(m)
-		if (is.NA(resolution(x))) stop(preview(x))
-		preview(x)	<- preview(m)
-		size(x)		<- size(m)
-		host(x)		<- host(m)
-		port(x)		<- port(m)
+		access(x)
+		resolution(x) <- TRUE
 	} 
-	resolved(x)
 }

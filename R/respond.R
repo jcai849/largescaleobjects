@@ -23,10 +23,10 @@ respond <- function(cd, chunk) {
 }
 
 post <- function(cd, chunk) {
-	keys <- list(PREVIEW 	= preview(chunk),
-		     SIZE 	= size(chunk),
-		     HOST	= Sys.info()["nodename"],
-		     PORT	= get("objPort", envir = .largeScaleRConn))
+	keys <- list(preview 	= preview(chunk),
+		     size 	= size(chunk),
+		     host	= Sys.info()["nodename"],
+		     port	= get("objPort", envir = .largeScaleRConn)) 
 	names(keys) <- paste0(cd, names(keys))
 	rediscc::redis.set(commConn(), keys, list=TRUE)
 }
@@ -36,5 +36,5 @@ checkInterest <- function(cd)
 
 respondInterest <- function(cd, interest) {
 	for (i in paste0("response", seq(interest)))
-		send(COMPLETE = TRUE, i)
+		send(complete = TRUE, i)
 }

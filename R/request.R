@@ -2,11 +2,10 @@ do.call.chunkStub <- function(what, args, target) {
 	stopifnot(is.list(args))
 	resolve(target) # force target resolution
 	d <- desc("chunk")
-	send(FUN		= what, 
-	     ARGS		= args,
-	     TARGET		= target,
-	     DESC		= d,
-	     cd		= desc(target))
+	send(fun	= what, 
+	     args	= args,
+	     target	= target,
+	     desc	= d)
 	chunkStub(cd)
 }
 
@@ -27,12 +26,11 @@ send <- function(..., loc) {
 	rediscc::redis.push(commConn(), loc, serializedMsg)
 }
 
-# Access of object details
 access <- function(x) {
 	cd <- desc(x)
 	inform(cd)
 	if (!checkKey(cd))
-		read(paste0("COMPLETE", cd))
+		read(paste0("response", cd))
 	clean(cd)
 	populate(x)
 }
@@ -43,6 +41,15 @@ inform <- function(cd)
 checkKey <- function(cd) 
 	!is.null(rediscc::redis.get(commsConn(), paste0("avail", cd)))
 
-await <- function(cd)
-clean <- function(cd) {}
-populate <- function(x) {}
+clean <- function(cd)
+	rediscc::redis.dec(commsConn(), paste0("interest", cd))
+
+populate <- function(x) {
+	cd		<- desc(x)
+	preview(x)	<- rediscc::redis.get(commConn(), paste0(cd, "preview"))
+	if (inherits("error", preview(x))) stop(preview(x))	
+	size(x)		<- rediscc::redis.get(commConn(), paste0(cd, "size"))
+	host(x)		<- rediscc::redis.get(commConn(), paste0(cd, "host"))
+	port(x)		<- rediscc::redis.get(commConn(), paste0(cd, "port"))
+	NULL
+}

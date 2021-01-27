@@ -6,7 +6,8 @@ distObjStub <- function(x) {
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
-	dr
+	resolution(dos) <- FALSE
+	dos
 }
 
 # Inherit
@@ -21,11 +22,11 @@ distObjResDo <- function(fun, rtype) function(x) {
 	distObjDo(fun, rtype)(x)
 }
 
-chunkStub.distObjStub	<- envGet("CHUNK")
+chunkStub.distObjStub	<- envGet("chunk")
+resolution.distObjStub	<- envGet("resolution")
 size.distObjStub 	<- distObjResDo(size, integer)
 to.distObjStub		<- distObjResDo(to,   integer)
 from.distObjStub 	<- distObjResDo(from, integer)
-resolution.distObjStub	<- function(x) all(distObjResDo(resolution, logical))
 
 # Set
 
@@ -34,7 +35,8 @@ distObjSet <- function(fun) function(x, value) {
 	x
 }
 
-`chunkStub<-.distObjStub`	<- envSet("CHUNK")
+`chunkStub<-.distObjStub`	<- envSet("chunk")
+`resolution<-.distObjStub`	<- envSet("resolution")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 
@@ -49,7 +51,7 @@ resolve.distObjStub <- function(x) {
 	froms <- c(1L, tos[-length(chunk(x))] + 1L)
 	names(froms) <- NULL
 	from(x) <- froms
-	T
+	resolution(x) <- TRUE
 }
 
 emerge.distObjStub <- function(x) {
@@ -77,6 +79,7 @@ print.distObjStub <- function(x, ...) {
 Math.distObjStub <- function(x, ...) 
 	do.call.distObjStub(.Generic, 
 			   c(list(x=x), list(...)))
+
 Ops.distObjStub <- function(e1, e2) 
 	if (missing(e2)) {
 		do.call.distObjStub(.Generic,
@@ -84,22 +87,28 @@ Ops.distObjStub <- function(e1, e2)
 	} else
 		do.call.distObjStub(.Generic,
 				   list(e1=e1, e2=e2))
+
 Complex.distObjStub <- function(z) 
 	do.call.distObjStub(.Generic,
 			   list(z=z))
+
 Summary.distObjStub <- function(..., na.rm = FALSE) {
 	mapped <- emerge(do.call.distObjStub(.Generic,
 					    c(list(...), list(na.rm=I(na.rm)))))
 	do.call(.Generic, 
 		c(list(mapped), list(na.rm=na.rm)))
 }
+
 `$.distObjStub` <- function(x, name)
 	do.call.distObjStub("$", list(x=x, name=I(name)))
+
 table.distObjStub <- function(...)
 	emerge(do.call.distObjStub("table",
 				  list(...)))
+
 read.csv.distObjStub <- function(...)
 	do.call.distObjStub("read.csv", list(...))
+
 dim.distObjStub <- function(x) {
 	dims <- sapply(chunk(do.call.distObjStub("dim", list(x=x))), emerge)
 	c(sum(dims[1,]), dims[,1][-1])

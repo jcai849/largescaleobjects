@@ -3,6 +3,7 @@ msg <- function(...) {
 	class(m) <- "msg"
 	m
 }
+
 print.msg <- function(x) {
 	cat("Message with components:\n")
 	for (n in names(x)) {
@@ -10,7 +11,8 @@ print.msg <- function(x) {
 		print(x[[n]])
 	}
 }
-fun.msg <- function(x) x$FUN
-args.msg <- function(x) x$ARGS
-target.msg <- function(x) x$TARGET
-desc.msg <- function(x) x$DESC
+
+fun.msg		<- function(x) x$fun
+args.msg	<- function(x) x$args
+target.msg	<- function(x) x$target
+desc.msg	<- function(x) x$desc

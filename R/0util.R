@@ -62,6 +62,9 @@ combine.table <- function(...) {
 size.default 		<- length
 size.data.frame 	<- nrow
 size.matrix	 	<- nrow
+size.error		<- function(x) NULL
+
+preview.error		<- identity
 
 resolve.default <- function(x, ...) identity
 
