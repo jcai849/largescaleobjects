@@ -13,7 +13,7 @@ evaluate <- function(fun, args, target, cd) {
 	info("Requested to perform function", format(fun),
 	     "using chunk", format(desc(target)), 
 	     "as target, and assigning to chunk ID", cd)
-	chunk <- do.call(fun, args)
+	chunk <- do.call(fun, args, envir=.GlobalEnv)
 }
 
 respond <- function(cd, chunk) {

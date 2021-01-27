@@ -1,34 +1,30 @@
-process <- function(host=Sys.info()["nodename"], user=NULL, pass=NULL) {
+process <- function(host=Sys.info()["nodename"], port=port(), user=NULL, pass=NULL) {
 	x <- list(host=host, user=user, pass=pass)
 	class(x) <- "process"
+	info("Attaining process descriptor")
+	desc(x) <- desc("process")
 	x
 }
 
 commsProcess <- function(host=Sys.info()["nodename"], port=6379,
 			 user=NULL, pass=NULL, dbpass=NULL, init=FALSE) {
-	x <- process(host, user, pass)
+	x <- process(host, port, user, pass)
 	class(x) <- c("commsProcess", class(x))
 	port(x) <- port
 	dbpass(x) <- dbpass
 
 	if (init)
-		system2("redis-server", wait=FALSE) # TODO - start remotely, change port etc.
+		system2("redis-server", wait=FALSE)
 
-	assign("commsProcess", x, envir=.largeScaleRConn)
+	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
-userProcess <- function() {
+userProcess <- function(port) {
 	x <- process()
 	class(x) <- c("userProcess", class(x))
 
-	info("Attaining process descriptor")
-	processDesc <- desc("process")
-	assign("processDesc", processDesc, envir=.largeScaleRConn)
-
 	info("Starting osrv server")
-	movePort <- port()
-	osrv::start(port=movePort)
-	assign("objPort", movePort, envir=.largeScaleRConn)
+	osrv::start(port=port(x))
 
 	info("Connecting to Redis server")
 	comms <- get("commsProcess", envir=.largeScaleRConn)
@@ -37,19 +33,18 @@ userProcess <- function() {
 				      password=dbpass(comms))
 	assign("rsc", commsConn, envir=.largeScaleRConn)
 
-	assign("userProcess", x, envir=.largeScaleRConn)
-
 	assign(processDesc, NULL, envir=.largeScaleRKeys)
 	assign(host(x), NULL, envir=.largeScaleRKeys)
 	assign(movePort, NULL, envir=.largeScaleRKeys)
 
-	x
+	assign("userProcess", x, envir=.largeScaleRProcesses)
 }
 
 workerProcess <- function(host=Sys.info()["nodename"], port=port(),
 			  user=NULL, pass=NULL, stopOnError=FALSE) {
-	x <- process(host, user, pass)
+	x <- process(host, port, user, pass)
 	class(x) <- c("workerProcess", class(x))
+
 	loc <- paste0(ifelse(!is.null(user), paste0(user, "@"), NULL),
 		      host,
 		      ifelse(!is.null(port), paste0(port, ":"), NULL))
@@ -59,7 +54,8 @@ workerProcess <- function(host=Sys.info()["nodename"], port=port(),
 					envir=.largeScaleRConn)), 
 			    ',stopOnError=', deparse(stopOnError)))
 	system2("ssh", shQuote(c(loc, command)))
-	x
+
+	assign(desc(x), x, envir=get("workerProcesses", envir=.largeScaleRProcesses))
 }
 
 worker <- function(comms, stopOnError) {
@@ -93,11 +89,13 @@ print.comms <- function(x) {
 host.process <- function(x) x$host
 user.process <- function(x) x$user
 pass.process <- function(x) x$pass
-port.comms <- function(x) x$port
-dbpass.comms <- function(x) x$dbpass
+port.process <- function(x) x$port
+dbpass.commsProcess <- function(x) x$dbpass
+desc.process <- function(x) x$desc
 
 `host<-.process` <- function(x, value) { x$host <- value; x }
 `user<-.process` <- function(x, value) { x$user <- value; x }
 `pass<-.process` <- function(x, value) { x$pass <- value; x }
-`port<-.commsProcess` <- function(x, value) { x$port <- value; x}
+`port<-.process` <- function(x, value) { x$port <- value; x}
 `dbpass<-.commsProcess` <- function(x, value) { x$dbpass <- value; x}
+`desc<-.commsProcess` <- function(x, value) { x$desc <- value; x}
