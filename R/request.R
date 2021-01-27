@@ -2,10 +2,11 @@ do.call.chunkStub <- function(what, args, target) {
 	stopifnot(is.list(args))
 	resolve(target) # force target resolution
 	d <- desc("chunk")
-	request(FUN		= what, 
-		ARGS		= args,
-		TARGET		= target,
-		DESC		= d)
+	send(FUN		= what, 
+	     ARGS		= args,
+	     TARGET		= target,
+	     DESC		= d,
+	     cd		= desc(target))
 	chunkStub(cd)
 }
 
@@ -20,12 +21,10 @@ do.call.distObjStub <- function(what, args) {
 	distObjStub(cs)
 }
 
-request <- function(..., cd) {
+send <- function(..., loc) {
 	m <- msg(...)
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	info("writing message:", format(m), 
-	     "to queue belonging to chunk", cd)
-	rediscc::redis.push(commConn(), cd, serializedMsg)
+	rediscc::redis.push(commConn(), loc, serializedMsg)
 }
 
 # Access of object details
@@ -33,13 +32,17 @@ access <- function(x) {
 	cd <- desc(x)
 	inform(cd)
 	if (!checkKey(cd))
-		await(cd)
+		read(paste0("COMPLETE", cd))
 	clean(cd)
 	populate(x)
 }
 
-inform <- function(cd) {}
-checkKey <- function(cd) {}
-await <- function(cd) {}
+inform <- function(cd) 
+	rediscc::redis.inc(commsConn(), paste0("interest", cd))
+
+checkKey <- function(cd) 
+	!is.null(rediscc::redis.get(commsConn(), paste0("avail", cd)))
+
+await <- function(cd)
 clean <- function(cd) {}
 populate <- function(x) {}

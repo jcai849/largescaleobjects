@@ -67,7 +67,8 @@ worker <- function(comms, stopOnError) {
 		     pass(comms), dbpass(comms), FALSE)
 	userProcess()
 	repeat {
-		request <- read()
+		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
+		request <- read(keys)
 		result <- tryCatch(evaluate(fun(request), args(request),
 					    target(request), desc(request)), 
 				   error = if (stopOnError) NULL else identity)

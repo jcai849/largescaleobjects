@@ -1,12 +1,10 @@
-read <- function() {
-	keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
+read <- function(keys) {
 	info("Awaiting message on queues:", format(keys))
-	while (is.null(serializedMsg <-rediscc::redis.pop(commConn(), keys,
-							  timeout=10))) {}
-	if (clear) rediscc::redis.rm(commConn(), keys)
-	request <- unserialize(charToRaw(serializedMsg))
+	while (is.null(serializedMsg <- rediscc::redis.pop(commConn(), keys,
+							   timeout=10))) {}
+	m <- unserialize(charToRaw(serializedMsg))
 	info("Received message:", format(m))
-	request
+	m
 }
 
 evaluate <- function(fun, args, target, cd) {
@@ -29,8 +27,14 @@ post <- function(cd, chunk) {
 		     SIZE 	= size(chunk),
 		     HOST	= Sys.info()["nodename"],
 		     PORT	= get("objPort", envir = .largeScaleRConn))
+	names(keys) <- paste0(cd, names(keys))
 	rediscc::redis.set(commConn(), keys, list=TRUE)
 }
 
-checkInterest <- function(cd) {}
-respondInterest <- function(cd, interest) {}
+checkInterest <- function(cd)
+	redis.get(commsConn(), paste0("interest", cd))
+
+respondInterest <- function(cd, interest) {
+	for (i in paste0("response", seq(interest)))
+		send(COMPLETE = TRUE, i)
+}
