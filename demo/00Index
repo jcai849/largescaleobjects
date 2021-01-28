@@ -1,2 +1,0 @@
-chunk	A verbose system demonstrating several direct chunk operations
-distobj	A verbose system demonstrating several distributed object operations distributed over several nodes with resolves between requests

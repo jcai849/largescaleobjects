@@ -19,7 +19,7 @@ commsProcess <- function(host=Sys.info()["nodename"], port=6379,
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
-userProcess <- function(port) {
+userProcess <- function(port=port()) {
 	x <- process()
 	class(x) <- c("userProcess", class(x))
 
@@ -52,16 +52,17 @@ workerProcess <- function(host=Sys.info()["nodename"], port=port(),
 		     paste0("worker(comms=", 
 			    deparse(get("commsProcess", 
 					envir=.largeScaleRConn)), 
+			    ", port=", port,
 			    ',stopOnError=', deparse(stopOnError)))
 	system2("ssh", shQuote(c(loc, command)))
 
 	assign(desc(x), x, envir=get("workerProcesses", envir=.largeScaleRProcesses))
 }
 
-worker <- function(comms, stopOnError) {
+worker <- function(comms, port, stopOnError) {
 	commsProcess(host(comms), port(comms), user(comms), 
 		     pass(comms), dbpass(comms), FALSE)
-	userProcess()
+	userProcess(port)
 	repeat {
 		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
 		request <- read(keys)
