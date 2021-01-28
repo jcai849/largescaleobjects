@@ -5,7 +5,8 @@ do.call.chunkStub <- function(what, args, target) {
 	send(fun	= what, 
 	     args	= args,
 	     target	= target,
-	     desc	= d)
+	     desc	= d,
+	     loc	= desc(target))
 	chunkStub(cd)
 }
 
@@ -30,7 +31,7 @@ access <- function(x) {
 	cd <- desc(x)
 	inform(cd)
 	if (!checkKey(cd))
-		read(paste0("response", cd))
+		read(queue(paste0("response", cd)))
 	clean(cd)
 	populate(x)
 }

@@ -106,9 +106,6 @@ table.distObjStub <- function(...)
 	emerge(do.call.distObjStub("table",
 				  list(...)))
 
-read.csv.distObjStub <- function(...)
-	do.call.distObjStub("read.csv", list(...))
-
 dim.distObjStub <- function(x) {
 	dims <- sapply(chunk(do.call.distObjStub("dim", list(x=x))), emerge)
 	c(sum(dims[1,]), dims[,1][-1])

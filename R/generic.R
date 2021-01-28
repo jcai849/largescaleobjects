@@ -11,8 +11,9 @@ host		<- function(x, ...) UseMethod("host", x)
 init		<- function(x, ...) UseMethod("init", x)
 pass		<- function(x, ...) UseMethod("pass", x)
 preview		<- function(x, ...) UseMethod("preview", x)
-stub	<- function(arg, target) UseMethod("stub", target)
-unstub	<- function(arg, target) UseMethod("unstub", arg)
+stub		<- function(arg, target) UseMethod("stub", target)
+unstub		<- function(arg, target) UseMethod("unstub", arg)
+read		<- function(x, ...) UseMethod("read", x)
 resolution	<- function(x, ...) UseMethod("resolution", x)
 resolve		<- function(x, ...) UseMethod("resolve", x)
 size		<- function(x, ...) UseMethod("size", x)
@@ -56,8 +57,6 @@ args		<- function(name) UseMethod("args", name)
 args.default	<- base::args
 table		<- function(...) UseMethod("table", ..1)
 table.default	<- base::table
-read.csv	<- function(...) UseMethod("read.csv", ..1)
-read.csv.default<- utils::read.csv
 dim		<- function(x) UseMethod("dim", x)
 dim.default	<- base::dim
 preview.default	<- utils::head

@@ -1,6 +1,8 @@
-read <- function(keys) {
-	info("Awaiting message on queues:", format(keys))
-	while (is.null(serializedMsg <- rediscc::redis.pop(commConn(), keys,
+queue <- function(x) {class(x) <- "queue"; x}
+
+read.queue <- function(x) {
+	info("Awaiting message on queues:", format(x))
+	while (is.null(serializedMsg <- rediscc::redis.pop(commConn(), x,
 							   timeout=10))) {}
 	m <- unserialize(charToRaw(serializedMsg))
 	info("Received message:", format(m))
@@ -36,5 +38,5 @@ checkInterest <- function(cd)
 
 respondInterest <- function(cd, interest) {
 	for (i in paste0("response", seq(interest)))
-		send(complete = TRUE, i)
+		send(complete = TRUE, loc=i)
 }
