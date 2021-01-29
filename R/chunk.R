@@ -12,29 +12,29 @@ chunkStub.integer <- function(cd)  {
 
 # Inherit
 
-is.chunkStub <- isA("chunkStub")
+is.chunkStub <- largeScaleR:::isA("chunkStub")
 
 # Get
 
-desc.chunkStub		<- envGet("desc")
-resolution.chunkStub	<- envGet("resolution")
-host.chunkStub		<- envGet("host")
-port.chunkStub		<- envGet("port")
-preview.chunkStub	<- envGet("preview")
-to.chunkStub 		<- envGet("to")
-from.chunkStub 		<- envGet("from")
-size.chunkStub 		<- envGet("size")
+desc.chunkStub		<- largeScaleR:::envGet("desc")
+resolution.chunkStub	<- largeScaleR:::envGet("resolution")
+host.chunkStub		<- largeScaleR:::envGet("host")
+port.chunkStub		<- largeScaleR:::envGet("port")
+preview.chunkStub	<- largeScaleR:::envGet("preview")
+to.chunkStub 		<- largeScaleR:::envGet("to")
+from.chunkStub 		<- largeScaleR:::envGet("from")
+size.chunkStub 		<- largeScaleR:::envGet("size")
 
 # Set
 
-`desc<-.chunkStub`	<- envSet("desc")
-`preview<-.chunkStub` 	<- envSet("preview")
-`resolution<-.chunkStub`<- envSet("resolution")
-`to<-.chunkStub` 	<- envSet("to")
-`from<-.chunkStub`	<- envSet("from")
-`size<-.chunkStub` 	<- envSet("size")
-`port<-.chunkStub` 	<- envSet("port")
-`host<-.chunkStub` 	<- envSet("host")
+`desc<-.chunkStub`	<- largeScaleR:::envSet("desc")
+`preview<-.chunkStub` 	<- largeScaleR:::envSet("preview")
+`resolution<-.chunkStub`<- largeScaleR:::envSet("resolution")
+`to<-.chunkStub` 	<- largeScaleR:::envSet("to")
+`from<-.chunkStub`	<- largeScaleR:::envSet("from")
+`size<-.chunkStub` 	<- largeScaleR:::envSet("size")
+`port<-.chunkStub` 	<- largeScaleR:::envSet("port")
+`host<-.chunkStub` 	<- largeScaleR:::envSet("host")
 
 # Other methods
 

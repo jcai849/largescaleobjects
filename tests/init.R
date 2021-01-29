@@ -1,10 +1,13 @@
 library(largeScaleR)
 
-commsProcess()
+debug(workerProcess)
+
+# ensure redis-server running on localhost:6379
+commsProcess('localhost')
 userProcess()
-workerProcess()
-workerProcess()
-workerProcess()
+workerProcess('localhost')
+workerProcess('localhost')
+workerProcess('localhost')
 
 mtcarsFile <- tempfile(fileext=".csv")
 write.csv(mtcars, mtcarsFile, row.names=FALSE)

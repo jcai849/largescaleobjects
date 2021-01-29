@@ -1,4 +1,4 @@
-read.localCSV <- function(x, col_types, sep,="|", nsep=NA, 
+read.localCSV <- function(x, col_types, sep="|", nsep=NA, 
 			  strict=TRUE, skip=0L, nrows=-1L, quote="") {
 	chunkStubs <- list()
 	cr <- iotools::chunk.reader(file(x))

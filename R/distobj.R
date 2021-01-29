@@ -12,7 +12,7 @@ distObjStub <- function(x) {
 
 # Inherit
 
-is.distObjStub <- isA("distObjStub")
+is.distObjStub <- largeScaleR:::isA("distObjStub")
 
 # Get
 
@@ -22,8 +22,8 @@ distObjResDo <- function(fun, rtype) function(x) {
 	distObjDo(fun, rtype)(x)
 }
 
-chunkStub.distObjStub	<- envGet("chunk")
-resolution.distObjStub	<- envGet("resolution")
+chunkStub.distObjStub	<- largeScaleR:::envGet("chunk")
+resolution.distObjStub	<- largeScaleR:::envGet("resolution")
 size.distObjStub 	<- distObjResDo(size, integer)
 to.distObjStub		<- distObjResDo(to,   integer)
 from.distObjStub 	<- distObjResDo(from, integer)
@@ -35,8 +35,8 @@ distObjSet <- function(fun) function(x, value) {
 	x
 }
 
-`chunkStub<-.distObjStub`	<- envSet("chunk")
-`resolution<-.distObjStub`	<- envSet("resolution")
+`chunkStub<-.distObjStub`	<- largeScaleR:::envSet("chunk")
+`resolution<-.distObjStub`	<- largeScaleR:::envSet("resolution")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 

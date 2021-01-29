@@ -2,7 +2,7 @@ queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
 	info("Awaiting message on queues:", format(x))
-	while (is.null(serializedMsg <- rediscc::redis.pop(commConn(), x,
+	while (is.null(serializedMsg <- rediscc::redis.pop(commsConn(), x,
 							   timeout=10))) {}
 	m <- unserialize(charToRaw(serializedMsg))
 	info("Received message:", format(m))
@@ -30,7 +30,7 @@ post <- function(cd, chunk) {
 		     host	= Sys.info()["nodename"],
 		     port	= get("objPort", envir = .largeScaleRConn)) 
 	names(keys) <- paste0(cd, names(keys))
-	rediscc::redis.set(commConn(), keys, list=TRUE)
+	rediscc::redis.set(commsConn(), keys, list=TRUE)
 }
 
 checkInterest <- function(cd)

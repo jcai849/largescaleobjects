@@ -24,7 +24,7 @@ do.call.distObjStub <- function(what, args) {
 send <- function(..., loc) {
 	m <- msg(...)
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	rediscc::redis.push(commConn(), loc, serializedMsg)
+	rediscc::redis.push(commsConn(), loc, serializedMsg)
 }
 
 access <- function(x) {
@@ -47,10 +47,10 @@ clean <- function(cd)
 
 populate <- function(x) {
 	cd		<- desc(x)
-	preview(x)	<- rediscc::redis.get(commConn(), paste0(cd, "preview"))
+	preview(x)	<- rediscc::redis.get(commsConn(), paste0(cd, "preview"))
 	if (inherits("error", preview(x))) stop(preview(x))	
-	size(x)		<- rediscc::redis.get(commConn(), paste0(cd, "size"))
-	host(x)		<- rediscc::redis.get(commConn(), paste0(cd, "host"))
-	port(x)		<- rediscc::redis.get(commConn(), paste0(cd, "port"))
+	size(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "size"))
+	host(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "host"))
+	port(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "port"))
 	NULL
 }

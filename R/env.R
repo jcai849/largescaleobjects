@@ -4,7 +4,7 @@
 .largeScaleRProcesses	<- new.env()
 .largeScaleRKeys	<- new.env()
 
-assign("/", envir=.largeScaleRKeys)
+assign("/", "/", envir=.largeScaleRKeys)
 assign("workerProcesses", new.env(), envir=.largeScaleRProcesses)
 
 addChunk <- function(cID, val) {
@@ -15,4 +15,4 @@ addChunk <- function(cID, val) {
 	val
 }
 
-commsConn <- function() get("commsConn", .largeScaleRConn)
+commsConn <- function() get("commsConn", envir=.largeScaleRConn)
