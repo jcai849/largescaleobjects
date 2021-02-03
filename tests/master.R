@@ -1,18 +1,16 @@
 library(largeScaleR)
 
-debug(workerProcess)
-
 # ensure redis-server running on localhost:6379
 commsProcess('localhost')
 userProcess()
-workerProcess('localhost')
-workerProcess('localhost')
-workerProcess('localhost')
+#workerProcess('localhost')
+#workerProcess('localhost')
+#workerProcess('localhost')
 
 mtcarsFile <- tempfile(fileext=".csv")
 write.csv(mtcars, mtcarsFile, row.names=FALSE)
 
-x <- read(localCSV(mtcarsFile), col_types = sapply(mtcars, class), sep=",")
+x <- read(localCSV(mtcarsFile), col_types = sapply(mtcars, class), sep=",", skip=1L)
 
 # old - to be converted
 

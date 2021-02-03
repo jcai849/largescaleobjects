@@ -1,11 +1,11 @@
 # Instantiate
 
 chunkStub.integer <- function(cd)  {
-	info("Producing new chunk reference with",
+	info("Producing new chunk stub with",
 	     "chunk Descriptor:", format(cd)) 
 	cs <- new.env()
 	class(cs) <- "chunkStub"
-	chunkDesc(cs) <- cd 
+	desc(cs) <- cd 
 	resolution(cs) <- FALSE
 	cs
 }
@@ -39,7 +39,7 @@ size.chunkStub 		<- largeScaleR:::envGet("size")
 # Other methods
 
 emerge.chunkStub <- function(x, ...) 
-	tryCatch(get(desc(x), envir = .largeScaleRChunks),
+	tryCatch(get(as.character(desc(x)), envir = .largeScaleRChunks),
 		 error = function(e) {
 			 resolve(x)
 			 osrvGet(x)

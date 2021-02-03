@@ -13,8 +13,7 @@ evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
 	info("Requested to perform function", format(fun),
-	     "using chunk", format(desc(target)), 
-	     "as target, and assigning to chunk ID", cd)
+	     "and assigning to chunk ID", cd)
 	chunk <- do.call(fun, args, envir=.GlobalEnv)
 }
 
@@ -25,18 +24,23 @@ respond <- function(cd, chunk) {
 }
 
 post <- function(cd, chunk) {
-	keys <- list(preview 	= preview(chunk),
+	keys <- list(avail	= TRUE,
+		     preview 	= preview(chunk),
 		     size 	= size(chunk),
 		     host	= Sys.info()["nodename"],
-		     port	= get("objPort", envir = .largeScaleRConn)) 
-	names(keys) <- paste0(cd, names(keys))
-	rediscc::redis.set(commsConn(), keys, list=TRUE)
+		     port	= port(get("userProcess", envir =
+					    .largeScaleRProcesses)))
+	rediscc::redis.set(commsConn(), paste0(cd, names(keys)), keys)
 }
 
-checkInterest <- function(cd)
-	redis.get(commsConn(), paste0("interest", cd))
+checkInterest <- function(cd) {
+	interest <- rediscc::redis.get(commsConn(), paste0("interest", cd))
+	if (is.null(interest)) 0L else as.integer(interest)
+}
 
 respondInterest <- function(cd, interest) {
+	if (interest == 0L) return()
 	for (i in paste0("response", seq(interest)))
 		send(complete = TRUE, loc=i)
+	return()
 }

@@ -2,7 +2,7 @@
 
 distObjStub <- function(x) {
 	stopifnot(all(sapply(x, is.chunkStub)))
-	info("Producing new distributed object reference")
+	info("Producing new distributed object stub")
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
@@ -17,16 +17,12 @@ is.distObjStub <- largeScaleR:::isA("distObjStub")
 # Get
 
 distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
-distObjResDo <- function(fun, rtype) function(x) { 
-	resolve(x) 
-	distObjDo(fun, rtype)(x)
-}
 
 chunkStub.distObjStub	<- largeScaleR:::envGet("chunk")
 resolution.distObjStub	<- largeScaleR:::envGet("resolution")
-size.distObjStub 	<- distObjResDo(size, integer)
-to.distObjStub		<- distObjResDo(to,   integer)
-from.distObjStub 	<- distObjResDo(from, integer)
+size.distObjStub 	<- distObjDo(size, integer)
+to.distObjStub		<- distObjDo(to,   integer)
+from.distObjStub 	<- distObjDo(from, integer)
 
 # Set
 
@@ -48,7 +44,7 @@ resolve.distObjStub <- function(x) {
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
 	to(x) <- tos
-	froms <- c(1L, tos[-length(chunk(x))] + 1L)
+	froms <- c(1L, to(x)[-length(to(x))] + 1L)
 	names(froms) <- NULL
 	from(x) <- froms
 	resolution(x) <- TRUE

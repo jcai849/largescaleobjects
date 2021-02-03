@@ -9,7 +9,7 @@ isA <- function(class) function(x) inherits(x, class)
 
 is.verbose <- function() get("verbose", envir = .largeScaleRConfig)
 
-is.distributed <- function(x) is.distObjRef(x) | is.chunkRef(x)
+is.distributed <- function(x) is.distObjStub(x) | is.chunkStub(x)
 is.AsIs <- isA("AsIs")
 
 unAsIs <- function(x) {

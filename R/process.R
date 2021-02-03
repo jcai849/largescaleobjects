@@ -1,12 +1,16 @@
 process <- function(host=Sys.info()["nodename"], port=port(), user=NULL, pass=NULL) {
-	x <- list(host=host, user=user, pass=pass)
+	x <- list()
 	class(x) <- "process"
 	info("Attaining process descriptor")
 	desc(x) <- desc("process")
+	host(x) <- host
+	port(x) <- port
+	user(x) <- user
+	pass(x) <- pass
 	x
 }
 
-commsProcess <- function(host=Sys.info()["nodename"], port=6379, user=NULL,
+commsProcess <- function(host=Sys.info()["nodename"], port=6379L, user=NULL,
 			 pass=NULL, dbpass=NULL, init=FALSE, verbose=TRUE) {
 	tryCatch(get("verbose", envir=.largeScaleRConfig), error = function(e)
 		 assign("verbose", verbose, envir=.largeScaleRConfig))
@@ -27,10 +31,11 @@ commsProcess <- function(host=Sys.info()["nodename"], port=6379, user=NULL,
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
-userProcess <- function(port=largeScaleR::port(), verbose=TRUE) {
+userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port(),
+			verbose=TRUE) {
 	assign("verbose", verbose, envir=.largeScaleRConfig)
 
-	x <- process(port=port)
+	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
 
 	info("Starting osrv server")
@@ -55,6 +60,7 @@ workerProcess <- function(host=Sys.info()["nodename"],
 		     paste0("largeScaleR::worker(comms=", 
 			    deparse1(get("commsProcess", 
 					envir=.largeScaleRProcesses)), 
+			    ",host=", deparse1(host),
 			    ",port=", deparse1(port),
 			    ",stopOnError=", deparse1(stopOnError),
 			    ",verbose=", deparse1(verbose),
@@ -65,19 +71,20 @@ workerProcess <- function(host=Sys.info()["nodename"],
 	       envir=get("workerProcesses", envir=.largeScaleRProcesses))
 }
 
-worker <- function(comms, port, stopOnError, verbose) {
+worker <- function(comms, host, port, stopOnError, verbose) {
 
 	library("largeScaleR")
 
-	commsProcess(host(comms), largeScaleR::port(comms), user(comms),
-		     pass(comms), dbpass(comms), FALSE, verbose)
-	userProcess(port, verbose)
+	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
+		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
+	userProcess(host, port, verbose)
 	repeat {
 		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
 		request <- read(keys)
 		result <- tryCatch(evaluate(fun(request), args(request),
 					    target(request), desc(request)), 
-				   error = if (stopOnError) stop(e) else identity)
+				   error = if (stopOnError) function(e) stop(e)
+					   else identity)
 		addChunk(desc(request), result)
 		respond(desc(request), result)
 	}

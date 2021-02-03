@@ -1,11 +1,11 @@
 do.call.chunkStub <- function(what, args, target) {
 	stopifnot(is.list(args))
 	resolve(target) # force target resolution
-	d <- desc("chunk")
+	cd <- desc("chunk")
 	send(fun	= what, 
 	     args	= args,
 	     target	= target,
-	     desc	= d,
+	     desc	= cd,
 	     loc	= desc(target))
 	chunkStub(cd)
 }
@@ -37,18 +37,18 @@ access <- function(x) {
 }
 
 inform <- function(cd) 
-	rediscc::redis.inc(commsConn(), paste0("interest", cd))
+	rediscc::redis.inc(commsConn(), paste0(cd, "interest"))
 
 checkKey <- function(cd) 
-	!is.null(rediscc::redis.get(commsConn(), paste0("avail", cd)))
+	!is.null(rediscc::redis.get(commsConn(), paste0(cd, "avail")))
 
 clean <- function(cd)
-	rediscc::redis.dec(commsConn(), paste0("interest", cd))
+	rediscc::redis.dec(commsConn(), paste0(cd, "interest"))
 
 populate <- function(x) {
 	cd		<- desc(x)
 	preview(x)	<- rediscc::redis.get(commsConn(), paste0(cd, "preview"))
-	if (inherits("error", preview(x))) stop(preview(x))	
+	if (inherits(preview(x), "error")) stop(preview(x))	
 	size(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "size"))
 	host(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "host"))
 	port(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "port"))

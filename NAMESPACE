@@ -50,7 +50,6 @@ S3method("to<-", "chunkStub")
 
 # distobj.R
 export("distObjDo")
-export("distObjResDo")
 export("distObjSet")
 export("distObjStub")
 S3method("$", "distObjStub")
@@ -100,6 +99,8 @@ export("from<-")
 export("fun")
 export("host")
 export("host<-")
+export("loc")
+export("loc<-")
 export("name<-")
 export("pass")
 export("pass<-")
@@ -129,7 +130,7 @@ S3method("args", "default")
 
 # in.R
 export("localCSV")
-S3method("file", "localCSV")
+S3method("loc", "localCSV")
 S3method("print", "localCSV")
 S3method("read", "localCSV")
 
