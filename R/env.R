@@ -7,11 +7,11 @@
 assign("/", "/", envir=.largeScaleRKeys)
 assign("workerProcesses", new.env(), envir=.largeScaleRProcesses)
 
-addChunk <- function(cID, val) {
-	info("Assigned chunk to ID:", 
-	     format(cID), "in chunk table")
-	assign(as.character(cID), val, envir = .largeScaleRChunks)
-	osrv::put(as.character(cID), serialize(val, NULL))
+addChunk <- function(cd, val) {
+	info("Added chunk with descriptor:", 
+	     format(cd), "in chunk table")
+	assign(as.character(cd), val, envir = .largeScaleRChunks)
+	osrv::put(as.character(cd), serialize(val, NULL))
 	val
 }
 

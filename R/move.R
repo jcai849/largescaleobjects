@@ -122,14 +122,13 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
-	info("Getting the chunk referenced by chunk descriptor", desc(x), 
+	info("Getting the chunk referenced by chunk descriptor", format(desc(x)), 
 	     "from port", format(port(x)), 
 	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)
 	v <- unserialize(sv)
-	info("Received chunk with head:", format(head(v)),
-	     "and size:", format(size(v)))
+	info("Received chunk of size:", format(size(v)))
 	v
 }
