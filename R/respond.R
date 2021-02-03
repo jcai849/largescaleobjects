@@ -34,13 +34,13 @@ post <- function(cd, chunk) {
 }
 
 checkInterest <- function(cd) {
-	interest <- rediscc::redis.get(commsConn(), paste0("interest", cd))
+	interest <- rediscc::redis.get(commsConn(), paste0(cd, "interest"))
 	if (is.null(interest)) 0L else as.integer(interest)
 }
 
 respondInterest <- function(cd, interest) {
 	if (interest == 0L) return()
-	for (i in paste0("response", seq(interest)))
-		send(complete = TRUE, loc=i)
+	for (i in seq(interest))
+		send(complete = TRUE, loc=paste0(cd, "response"))
 	return()
 }

@@ -11,6 +11,9 @@ mtcarsFile <- tempfile(fileext=".csv")
 write.csv(mtcars, mtcarsFile, row.names=FALSE)
 
 x <- read(localCSV(mtcarsFile), col_types = sapply(mtcars, class), sep=",", skip=1L)
+debug(access)
+print(x)
+print(x$mpg)
 
 # old - to be converted
 

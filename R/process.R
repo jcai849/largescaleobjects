@@ -1,8 +1,6 @@
 process <- function(host=Sys.info()["nodename"], port=port(), user=NULL, pass=NULL) {
 	x <- list()
 	class(x) <- "process"
-	info("Attaining process descriptor")
-	desc(x) <- desc("process")
 	host(x) <- host
 	port(x) <- port
 	user(x) <- user
@@ -26,22 +24,26 @@ commsProcess <- function(host=Sys.info()["nodename"], port=6379L, user=NULL,
 
 	x <- process(host, port, user, pass)
 	class(x) <- c("commsProcess", class(x))
+	desc(x) <- "comms"
 	port(x) <- port
 	dbpass(x) <- dbpass
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
 userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port(),
-			verbose=TRUE) {
+			desc=largeScaleR::desc("process"), verbose=TRUE) {
 	assign("verbose", verbose, envir=.largeScaleRConfig)
 
 	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
 
+	info("Attaining process descriptor")
+	desc(x) <- desc
+
 	info("Starting osrv server")
 	osrv::start(port=port)
 
-	assign(paste0("/process/", as.character(desc(x))),
+	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)
 	assign(paste0("/host/", host(x)),
 	       NULL, envir=.largeScaleRKeys)
@@ -50,10 +52,14 @@ userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port(),
 }
 
 workerProcess <- function(host=Sys.info()["nodename"],
-			  port=largeScaleR::port(), user=NULL, pass=NULL,
-			  stopOnError=FALSE, verbose=TRUE) {
+			  port=largeScaleR::port(),
+			  desc=largeScaleR::desc("process"), user=NULL,
+			  pass=NULL, stopOnError=FALSE, verbose=TRUE) {
 	x <- process(host, port, user, pass)
 	class(x) <- c("workerProcess", class(x))
+
+	info("Attaining process descriptor")
+	desc(x) <- desc
 
 	loc <- paste0(if (!is.null(user)) paste0(user, '@') else  NULL, host)
 	command <- c("R", "-e", 
@@ -62,37 +68,39 @@ workerProcess <- function(host=Sys.info()["nodename"],
 					envir=.largeScaleRProcesses)), 
 			    ",host=", deparse1(host),
 			    ",port=", deparse1(port),
+			    ",desc=", deparse1(desc),
 			    ",stopOnError=", deparse1(stopOnError),
 			    ",verbose=", deparse1(verbose),
 			    ")"))
 	system2("ssh", c(loc, shQuote(shQuote(command))))
 
-	assign(as.character(desc(x)), x,
+	assign(as.character(largeScaleR::desc(x)), x,
 	       envir=get("workerProcesses", envir=.largeScaleRProcesses))
 }
 
-worker <- function(comms, host, port, stopOnError, verbose) {
+worker <- function(comms, host, port, desc, stopOnError, verbose) {
 
 	library("largeScaleR")
 
 	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
 		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
-	userProcess(host, port, verbose)
+	userProcess(host, port, desc, verbose)
 	repeat {
 		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
 		request <- read(keys)
 		result <- tryCatch(evaluate(fun(request), args(request),
-					    target(request), desc(request)), 
+					    target(request),
+					    largeScaleR::desc(request)), 
 				   error = if (stopOnError) function(e) stop(e)
 					   else identity)
-		addChunk(desc(request), result)
-		respond(desc(request), result)
+		addChunk(largeScaleR::desc(request), result)
+		respond(largeScaleR::desc(request), result)
 	}
 }
 
 print.process <- function(x) {
 	print(paste("largeScaleR communications process at host",
-		    host(x), "and port", port(x)))
+		    host(x), "and port", port(x), "under descriptor", desc(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
 }
