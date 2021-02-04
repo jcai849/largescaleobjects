@@ -23,12 +23,12 @@ respond <- function(cd, chunk) {
 }
 
 post <- function(cd, chunk) {
+	selfProcess <- get("userProcess", envir = .largeScaleRProcesses)
 	keys <- list(avail	= TRUE,
 		     preview 	= preview(chunk),
 		     size 	= size(chunk),
-		     host	= Sys.info()["nodename"],
-		     port	= port(get("userProcess", envir =
-					    .largeScaleRProcesses)))
+		     host	= host(selfProcess),
+		     port	= port(selfProcess))
 	rediscc::redis.set(commsConn(), paste0(cd, names(keys)), keys)
 }
 

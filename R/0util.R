@@ -67,8 +67,3 @@ size.error		<- function(x) NULL
 preview.error		<- identity
 
 resolve.default <- function(x, ...) identity
-
-killAt <- function(x) {
-	do.call.distObjRef(function(x) q("no"), list(x=x))
-	NULL
-}

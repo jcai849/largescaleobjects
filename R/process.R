@@ -72,7 +72,8 @@ workerProcess <- function(host=Sys.info()["nodename"],
 			    ",stopOnError=", deparse1(stopOnError),
 			    ",verbose=", deparse1(verbose),
 			    ")"))
-	system2("ssh", c(loc, shQuote(shQuote(command))))
+	system2("ssh", c(loc, shQuote(shQuote(command))), 
+		stdout=FALSE, stderr=FALSE,  wait=FALSE)
 
 	assign(as.character(largeScaleR::desc(x)), x,
 	       envir=get("workerProcesses", envir=.largeScaleRProcesses))

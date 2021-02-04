@@ -7,13 +7,16 @@ userProcess()
 #workerProcess('localhost')
 #workerProcess('localhost')
 
-mtcarsFile <- tempfile(fileext=".csv")
-write.csv(mtcars, mtcarsFile, row.names=FALSE)
+x <- stub(mtcars, 4)
 
-x <- read(localCSV(mtcarsFile), col_types = sapply(mtcars, class), sep=",", skip=1L)
-debug(access)
-print(x)
-print(x$mpg)
+#fileLoc <- tempfile(fileext=".csv")
+#data <- data.frame(a=rnorm(1E6), b=rnorm(1E6), c=rnorm(1E6))
+#write.csv(data, fileLoc, row.names=FALSE)
+#
+#x <- read(localCSV(fileLoc), col_types = sapply(data, class), 
+#	  max.size=3000074)
+#print(x)
+#print(x$a + x$b)
 
 # old - to be converted
 

@@ -10,6 +10,14 @@ chunkStub.integer <- function(cd)  {
 	cs
 }
 
+root <- function() {
+	cs <- new.env()
+	class(cs) <- "chunkStub"
+	desc(cs) <- "/" 
+	resolution(cs) <- TRUE
+	cs
+}
+
 # Inherit
 
 is.chunkStub <- largeScaleR:::isA("chunkStub")

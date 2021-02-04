@@ -44,14 +44,17 @@ stub.distObjStub <- function(arg, target) {
 	x
 }
 
-stub.chunkStub <- function(arg, target) {
-	do.call.chunkStub(function(a, b) identity(a),
-			 list(a = arg, 
-			      b = target),
-			 target = target)
-}
+stub.chunkStub <- function(arg, target) 
+	do.call.chunkStub("identity", list(arg), target = target)
 
-stub.default <- function(arg, target) arg
+stub.integer <- function(arg, target) {
+	chunks <- split(arg, cut(seq(size(arg)), breaks=target))
+	chunkStubs <- lapply(chunks, function(chunk)
+			     do.call.chunkStub("identity", list(chunk),
+					       root()))
+	distObjStub(chunkStubs)
+}
+stub.numeric <- stub.integer
 
 # `alignment` returns list of form:
 #  .
