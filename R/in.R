@@ -1,13 +1,12 @@
 read.localCSV <- function(x, col_types, max.line=65536L, max.size=33554432L,
-			  sep="|", nsep=NA, strict=TRUE, skip=0L, nrows=-1L,
-			  quote="") {
+			  strict=TRUE, skip=0L, nrows=-1L, quote="") {
 	chunkStubs <- list()
 	cr <- iotools::chunk.reader(loc(x), max.line=max.line)
 	while(length(chunk <- iotools::read.chunk(cr, max.size=max.size))) {
 		cd <- desc("chunk")
-		send(fun	= "iotools::dstrsplit",
-		     args	= list(x=chunk, col_types=col_types, sep=sep,
-					nsep=nsep, strict=strict, skip=skip,
+		send(fun	= iotools::dstrsplit,
+		     args	= list(x=chunk, col_types=col_types, sep=",",
+					nsep=NA, strict=strict, skip=skip,
 					nrows=nrows, quote=quote),
 		     target	= NULL,
 		     desc	= cd,
