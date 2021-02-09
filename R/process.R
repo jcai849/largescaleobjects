@@ -25,7 +25,6 @@ commsProcess <- function(host=Sys.info()["nodename"], port=6379L, user=NULL,
 	x <- process(host, port, user, pass)
 	class(x) <- c("commsProcess", class(x))
 	desc(x) <- "comms"
-	port(x) <- port
 	dbpass(x) <- dbpass
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
