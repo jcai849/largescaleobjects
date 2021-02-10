@@ -12,8 +12,9 @@ write.csv(data, fileLoc, row.names=FALSE)
 x <- read(localCSV(fileLoc), col_types = sapply(data, class))
 
 debug(largeScaleR:::resolve.distObjStub)
+debug(largeScaleR:::access)
 
 print(x)
 print(x$mpg * x$cyl)
 
-.Last()
+browser()
