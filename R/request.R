@@ -1,6 +1,6 @@
 do.call.chunkStub <- function(what, args, target) {
 	stopifnot(is.list(args))
-	resolve(target) # force target resolution
+	resolve(target)
 	cd <- desc("chunk")
 	send(fun	= what, 
 	     args	= args,
@@ -29,28 +29,13 @@ send <- function(..., loc) {
 
 access <- function(x) {
 	cd <- desc(x)
-	inform(cd)
-	if (!checkKey(cd))
-		read(queue(paste0(cd, "response")))
-	clean(cd)
-	populate(x)
-}
-
-inform <- function(cd) 
-	rediscc::redis.inc(commsConn(), paste0(cd, "interest"))
-
-checkKey <- function(cd) 
-	!is.null(rediscc::redis.get(commsConn(), paste0(cd, "avail")))
-
-clean <- function(cd)
-	rediscc::redis.dec(commsConn(), paste0(cd, "interest"))
-
-populate <- function(x) {
-	cd		<- desc(x)
-	preview(x)	<- rediscc::redis.get(commsConn(), paste0(cd, "preview"))
-	if (inherits(preview(x), "error")) stop(preview(x))	
-	size(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "size"))
-	host(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "host"))
-	port(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "port"))
-	NULL
+	send(fun = sendMetadata,
+	     args = list(cd=cd),
+	     target = NULL,
+	     loc  = paste0(cd, "metadataRequest"),
+	     store=FALSE)
+	md <- read(queue(paste0(cd, "metadataResponse")))
+	preview(x) <- preview(md)
+	size(x) <- size(md)
+	invisible(NULL)
 }

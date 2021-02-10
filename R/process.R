@@ -49,6 +49,7 @@ userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port(),
 
 	assign("userProcess", x, envir=.largeScaleRProcesses)
 }
+getUserProcess <- function() get("userProcess", envir=.largeScaleRProcesses)
 
 workerProcess <- function(host=Sys.info()["nodename"],
 			  port=largeScaleR::port(),
@@ -86,15 +87,18 @@ worker <- function(comms, host, port, desc, stopOnError, verbose) {
 		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
 	userProcess(host, port, desc, verbose)
 	repeat {
-		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
+		keys <- queue(c(ls(.largeScaleRChunks),
+				paste0(ls(.largeScaleRChunks),
+				       "metadataRequest"),
+				ls(.largeScaleRKeys)))
 		request <- read(keys)
 		result <- tryCatch(evaluate(fun(request), args(request),
 					    target(request),
 					    largeScaleR::desc(request)), 
 				   error = if (stopOnError) function(e) stop(e)
 					   else identity)
-		addChunk(largeScaleR::desc(request), result)
-		respond(largeScaleR::desc(request), result)
+		if (store(request))
+			addChunk(largeScaleR::desc(request), result)
 	}
 }
 
