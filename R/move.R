@@ -4,6 +4,8 @@ findTarget <- function(args) {
 	args[dist][[which.max(sizes)]] # longest
 }
 
+# unstub dispatches on arg
+
 unstub.default <- function(arg, target) arg
 
 unstub.chunkStub <- function(arg, target) emerge(arg)
@@ -32,6 +34,8 @@ unstub.distObjStub <- function(arg, target) {
 	combined
 }
 
+# stub dispatches on target
+
 stub.distObjStub <- function(arg, target) {
 	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
@@ -47,6 +51,7 @@ stub.distObjStub <- function(arg, target) {
 stub.chunkStub <- function(arg, target) 
 	do.call.chunkStub("identity", list(arg), target = target)
 
+# scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
 	chunks <- split(arg, cut(seq(size(arg)), breaks=target))
 	chunkStubs <- lapply(chunks, function(chunk)
