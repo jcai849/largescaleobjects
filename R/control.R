@@ -9,10 +9,10 @@ clearComms <- function()
 
 .Last <- function() {
 	info("Shutting down cluster")
-	workers <- ls(get("workerProcesses", .largeScaleRProcesses))
+	workers <- rediscc::redis.get(commsConn(), "process") - 1
 	if (length(workers)) {
-		for (proc in workers)
+		for (proc in seq(workers))
 			kill(root())
-		clearComms()
 	}
+	clearComms()
 }
