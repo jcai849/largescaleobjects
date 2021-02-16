@@ -78,26 +78,6 @@ workerProcess <- function(host=Sys.info()["nodename"],
 	       envir=get("workerProcesses", envir=.largeScaleRProcesses))
 }
 
-worker <- function(comms, host, port, desc, stopOnError, verbose) {
-
-	library("largeScaleR")
-
-	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
-		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
-	userProcess(host, port, desc, verbose)
-	repeat {
-		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
-		request <- read(keys)
-		result <- tryCatch(evaluate(fun(request), args(request),
-					    target(request),
-					    largeScaleR::desc(request)), 
-				   error = if (stopOnError) function(e) stop(e)
-					   else identity)
-		addChunk(largeScaleR::desc(request), result)
-		respond(largeScaleR::desc(request), result)
-	}
-}
-
 print.process <- function(x) {
 	print(paste("largeScaleR communications process at host",
 		    host(x), "and port", port(x), "under descriptor", desc(x)))

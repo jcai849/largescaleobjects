@@ -1,3 +1,23 @@
+worker <- function(comms, host, port, desc, stopOnError, verbose) {
+
+	library("largeScaleR")
+
+	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
+		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
+	userProcess(host, port, desc, verbose)
+	repeat {
+		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
+		request <- read(keys)
+		result <- tryCatch(evaluate(fun(request), args(request),
+					    target(request),
+					    largeScaleR::desc(request)), 
+				   error = if (stopOnError) function(e) stop(e)
+					   else identity)
+		addChunk(largeScaleR::desc(request), result)
+		respond(largeScaleR::desc(request), result)
+	}
+}
+
 queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
