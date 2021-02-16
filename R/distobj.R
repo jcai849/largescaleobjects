@@ -6,7 +6,7 @@ distObjStub <- function(x) {
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
-	resolution(dos) <- FALSE
+	resolved(dos) <- FALSE
 	dos
 }
 
@@ -19,7 +19,7 @@ is.distObjStub <- largeScaleR:::isA("distObjStub")
 distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
 
 chunkStub.distObjStub	<- largeScaleR:::envGet("chunk")
-resolution.distObjStub	<- largeScaleR:::envGet("resolution")
+resolved.distObjStub	<- largeScaleR:::envGet("resolved")
 size.distObjStub 	<- distObjDo(size, integer)
 to.distObjStub		<- distObjDo(to,   integer)
 from.distObjStub 	<- distObjDo(from, integer)
@@ -32,14 +32,14 @@ distObjSet <- function(fun) function(x, value) {
 }
 
 `chunkStub<-.distObjStub`	<- largeScaleR:::envSet("chunk")
-`resolution<-.distObjStub`	<- largeScaleR:::envSet("resolution")
+`resolved<-.distObjStub`	<- largeScaleR:::envSet("resolved")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 
 # Other methods
 
 resolve.distObjStub <- function(x) {
-	if (resolution(x)) return(resolution(x))
+	if (resolved(x)) return(resolved(x))
 	distObjDo(resolve, logical)(x)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
@@ -47,27 +47,17 @@ resolve.distObjStub <- function(x) {
 	froms <- c(1L, to(x)[-length(to(x))] + 1L)
 	names(froms) <- NULL
 	from(x) <- froms
-	resolution(x) <- TRUE
-}
-
-emerge.distObjStub <- function(x) {
-	chunks <- lapply(chunkStub(x), emerge)
-	names(chunks) <- NULL
-	if (length(chunks) == 1)
-		return(chunks[[1]])
-	do.call(combine, chunks)
+	resolved(x) <- TRUE
 }
 
 print.distObjStub <- function(x, ...) {
-	if (!resolution(x)) {
-		cat("Not yet resolved. Resolving...\n")
-		resolve(x)
-	}
-	cat("Distributed Object Stub. First chunk head:\n")
-	print(chunkStub(x)[[1]])
-	cat("With", format(length(chunkStub(x))), 
-	    "chunk stubs, representing a size of",
-	    format(sum(size(x))), "\n")
+	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
+	    "chunk stubs.")
+	if (resolved(x)) {
+		cat("with total size", format(sum(size(x))), "\n")
+		cat("First chunk head:\n")
+		print(chunkStub(x)[[1]])
+	} else cat("unresolved\n")
 }
 
 # User-level

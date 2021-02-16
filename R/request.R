@@ -1,6 +1,5 @@
 do.call.chunkStub <- function(what, args, target) {
 	stopifnot(is.list(args))
-	resolve(target) # force target resolution
 	cd <- desc("chunk")
 	send(fun	= what, 
 	     args	= args,
@@ -12,12 +11,9 @@ do.call.chunkStub <- function(what, args, target) {
 
 do.call.distObjStub <- function(what, args) {
 	target <- findTarget(args)
-	args <- lapply(args, function(arg) 
-		       if (!is.distributed(arg) && size(arg) == 1L) I(arg) else 
-			       stub(arg, target))
-	lapply(args, resolve)
+	args <- lapply(args, stub, target=target)
 	cs <- lapply(chunkStub(target), 
-			     function(t) do.call.chunkStub(what, args, t))
+		     function(t) do.call.chunkStub(what, args, t))
 	distObjStub(cs)
 }
 

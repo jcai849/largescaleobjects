@@ -1,28 +1,43 @@
 findTarget <- function(args) {
 	dist <- vapply(args, is.distObjStub, logical(1))
+	if (!any(dist)) return(root())
 	sizes <- lengths(lapply(args[dist], chunkStub))
-	args[dist][[which.max(sizes)]] # longest
+	args[dist][[which.max(sizes)]] # most dispersed
 }
 
 # unstub dispatches on arg
 
 unstub.default <- function(arg, target) arg
 
-unstub.chunkStub <- function(arg, target) emerge(arg)
+unstub.chunkStub <- function(arg, target)
+	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
+	errot = function(e) {
+		resolve(arg)
+		osrvGet(arg)
+	})
 
 unstub.distObjStub <- function(arg, target) {
+	if (missing(target)) {
+		chunks <- lapply(chunkStub(arg), unstub)
+		names(chunks) <- NULL
+		return(do.call(combine, chunks))
+	}
+
+	resolve(target)
+	resolve(arg)
+
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
 	if (identical(as.vector(fromSame), as.vector(toSame)) &&
 	    length(fromSame) == 1 && length(toSame) == 1) {
 		info("arg and target already aligned; emerging arg")
-		return(emerge(chunkStub(arg)[[fromSame]]))
+		return(unstub(chunkStub(arg)[[fromSame]]))
 	}
 
 	info("arg and target unaligned; aligning arg")
 	toAlign <- alignment(arg, target) 
-
 	Stub <- lapply(toAlign$Stub, emerge)
+
 	combined <- if (length(Stub) == 1) {
 		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
 	} else do.call(combine, 

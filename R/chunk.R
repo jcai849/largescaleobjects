@@ -6,7 +6,7 @@ chunkStub.integer <- function(cd)  {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
-	resolution(cs) <- FALSE
+	resolved(cs) <- FALSE
 	cs
 }
 
@@ -14,7 +14,7 @@ root <- function() {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- "/" 
-	resolution(cs) <- TRUE
+	resolved(cs) <- TRUE
 	cs
 }
 
@@ -25,7 +25,7 @@ is.chunkStub <- largeScaleR:::isA("chunkStub")
 # Get
 
 desc.chunkStub		<- largeScaleR:::envGet("desc")
-resolution.chunkStub	<- largeScaleR:::envGet("resolution")
+resolved.chunkStub	<- largeScaleR:::envGet("resolved")
 host.chunkStub		<- largeScaleR:::envGet("host")
 port.chunkStub		<- largeScaleR:::envGet("port")
 preview.chunkStub	<- largeScaleR:::envGet("preview")
@@ -37,7 +37,7 @@ size.chunkStub 		<- largeScaleR:::envGet("size")
 
 `desc<-.chunkStub`	<- largeScaleR:::envSet("desc")
 `preview<-.chunkStub` 	<- largeScaleR:::envSet("preview")
-`resolution<-.chunkStub`<- largeScaleR:::envSet("resolution")
+`resolved<-.chunkStub`<- largeScaleR:::envSet("resolved")
 `to<-.chunkStub` 	<- largeScaleR:::envSet("to")
 `from<-.chunkStub`	<- largeScaleR:::envSet("from")
 `size<-.chunkStub` 	<- largeScaleR:::envSet("size")
@@ -46,23 +46,16 @@ size.chunkStub 		<- largeScaleR:::envGet("size")
 
 # Other methods
 
-emerge.chunkStub <- function(x, ...) 
-	tryCatch(get(as.character(desc(x)), envir = .largeScaleRChunks),
-		 error = function(e) {
-			 resolve(x)
-			 osrvGet(x)
-		 })
 format.chunkStub	<- function(x, ...) format(preview(x))
 print.chunkStub 	<- function(x, ...) {
 	cat("Chunk Reference with Descriptor", format(desc(x)), "\n")
-	resolve(x)
-	print(preview(x))
+	if (resolved(x)) print(preview(x)) else cat("unresolved\n")
 }
 
 resolve.chunkStub <- function(x, ...) {
-	if (!resolution(x)) {
+	if (!resolved(x)) {
 		info("Chunk not yet resolved. Resolving...")
 		access(x)
-		resolution(x) <- TRUE
+		resolved(x) <- TRUE
 	} 
 }
