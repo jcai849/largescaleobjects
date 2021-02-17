@@ -66,4 +66,4 @@ size.error		<- function(x) NULL
 
 preview.error		<- identity
 
-resolve.default <- function(x, ...) identity
+resolve.default		<- identity

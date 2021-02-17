@@ -36,7 +36,7 @@ unstub.distObjStub <- function(arg, target) {
 
 	info("arg and target unaligned; aligning arg")
 	toAlign <- alignment(arg, target) 
-	Stub <- lapply(toAlign$Stub, emerge)
+	Stub <- lapply(toAlign$Stub, unstub)
 
 	combined <- if (length(Stub) == 1) {
 		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))

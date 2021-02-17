@@ -48,6 +48,7 @@ resolve.distObjStub <- function(x) {
 	names(froms) <- NULL
 	from(x) <- froms
 	resolved(x) <- TRUE
+	x
 }
 
 print.distObjStub <- function(x, ...) {
@@ -79,7 +80,7 @@ Complex.distObjStub <- function(z)
 			   list(z=z))
 
 Summary.distObjStub <- function(..., na.rm = FALSE) {
-	mapped <- emerge(do.call.distObjStub(.Generic,
+	mapped <- unstub(do.call.distObjStub(.Generic,
 					    c(list(...), list(na.rm=I(na.rm)))))
 	do.call(.Generic, 
 		c(list(mapped), list(na.rm=na.rm)))
@@ -89,10 +90,10 @@ Summary.distObjStub <- function(..., na.rm = FALSE) {
 	do.call.distObjStub("$", list(x=x, name=I(name)))
 
 table.distObjStub <- function(...)
-	emerge(do.call.distObjStub("table",
+	unstub(do.call.distObjStub("table",
 				  list(...)))
 
 dim.distObjStub <- function(x) {
-	dims <- sapply(chunk(do.call.distObjStub("dim", list(x=x))), emerge)
+	dims <- sapply(chunk(do.call.distObjStub("dim", list(x=x))), unstub)
 	c(sum(dims[1,]), dims[,1][-1])
 }

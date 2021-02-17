@@ -58,4 +58,5 @@ resolve.chunkStub <- function(x, ...) {
 		access(x)
 		resolved(x) <- TRUE
 	} 
+	x
 }

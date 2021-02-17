@@ -1,5 +1,7 @@
-kill <- function(chunk) {
-	do.call.chunkStub("q", list(save="no"), chunk)
+kill <- function(procdesc) {
+	procChunk <- structure(new.env(), class="chunkStub")
+	desc(procChunk) <- paste0("process/", procdesc)
+	do.call.chunkStub("q", list(save="no"), procChunk)
 	invisible(NULL)
 }
 
@@ -9,10 +11,8 @@ clearComms <- function()
 
 .Last <- function() {
 	info("Shutting down cluster")
-	workers <- rediscc::redis.get(commsConn(), "process") - 1
-	if (length(workers)) {
-		for (proc in seq(workers))
-			kill(root())
-	}
+	procs <- rediscc::redis.get(commsConn(), "process")
+	for (proc in procs)
+		kill(proc)
 	clearComms()
 }
