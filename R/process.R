@@ -8,6 +8,16 @@ process <- function(host=Sys.info()["nodename"], port=port(), user=NULL, pass=NU
 	x
 }
 
+logProcess <- function(host=Sys.info()["nodename"], port=514L, init=FALSE) {
+	if (init) {
+		system2("ssh",  c(host, "ulogd", "-u", port))
+	}
+	ulog.init(path=paste0("tcp://", host, ":", port))
+	x <- process(host, port)
+	class(x) <- "logProcess"
+	assign("logProcess", x, envir=.largeScaleRProcesses)
+}
+
 commsProcess <- function(host=Sys.info()["nodename"], port=6379L, user=NULL,
 			 pass=NULL, dbpass=NULL, init=FALSE, verbose=TRUE) {
 	tryCatch(get("verbose", envir=.largeScaleRConfig), error = function(e)
@@ -64,6 +74,8 @@ workerProcess <- function(host=Sys.info()["nodename"],
 	command <- c("R", "-e", 
 		     paste0("largeScaleR::worker(comms=", 
 			    deparse1(get("commsProcess", 
+					envir=.largeScaleRProcesses)), 
+			    ",log=",deparse1(get("logProcess", 
 					envir=.largeScaleRProcesses)), 
 			    ",host=", deparse1(host),
 			    ",port=", deparse1(port),
