@@ -1,10 +1,12 @@
-worker <- function(comms, host, port, desc, stopOnError, verbose) {
+worker <- function(comms, log, host, port) {
 
 	library("largeScaleR")
-
 	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
-		     user(comms), pass(comms), dbpass(comms), FALSE, verbose)
-	userProcess(host, port, desc, verbose)
+		     user(comms), pass(comms), dbpass(comms), FALSE)
+	logProcess(largeScaleR::host(log), largeScaleR::port(log), FALSE)
+	userProcess(host, port)
+	init()
+
 	repeat {
 		keys <- queue(c(ls(.largeScaleRChunks), ls(.largeScaleRKeys)))
 		request <- read(keys)

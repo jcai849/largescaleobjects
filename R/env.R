@@ -5,14 +5,22 @@
 .largeScaleRKeys	<- new.env()
 
 assign("/", "/", envir=.largeScaleRKeys)
-assign("workerProcesses", new.env(), envir=.largeScaleRProcesses)
+assign("uninitialisedProcesses", new.env(), envir=.largeScaleRProcesses)
+
+uninitialisedProcesses	<- function() get("uninitialisedProcesses",
+						envir = .largeScaleRProcesses)
+getCommsProcess		<- function() get("commsProcess",
+						envir = .largeScaleRProcesses)
+getUserProcess		<- function() get("userProcess",
+					 	envir = .largeScaleRProcesses)
+getLogProcess		<- function() get("logProcess",
+						envir = .largeScaleRProcesses)
+getCommsConn		<- function() get("commsConn", 
+						envir = .largeScaleRConn)
 
 addChunk <- function(cd, val) {
-	info("Added chunk with descriptor:", 
-	     format(cd), "in chunk table")
 	assign(as.character(cd), val, envir = .largeScaleRChunks)
 	osrv::put(as.character(cd), serialize(val, NULL))
 	val
 }
 
-commsConn <- function() get("commsConn", envir=.largeScaleRConn)
