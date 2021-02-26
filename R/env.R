@@ -5,9 +5,9 @@
 .largeScaleRKeys	<- new.env()
 
 assign("/", "/", envir=.largeScaleRKeys)
-assign("uninitialisedProcesses", new.env(), envir=.largeScaleRProcesses)
+assign("unexecutedProcesses", new.env(), envir=.largeScaleRProcesses)
 
-uninitialisedProcesses	<- function() get("uninitialisedProcesses",
+unexecutedProcesses	<- function() get("unexecutedProcesses",
 						envir = .largeScaleRProcesses)
 getCommsProcess		<- function() get("commsProcess",
 						envir = .largeScaleRProcesses)

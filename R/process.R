@@ -1,3 +1,15 @@
+execute <- function(...) {
+	if (missing(...)) {
+		# order: 1. log 2. comms 3. user 4. worker
+		lapply(mget(ls(unexecutedProcesses()),
+			    envir=unexecutedProcesses()), execute)
+	} else if {
+		(length(list(...)) == 1) UseMethod("execute") 
+	} else lapply(list(...), execute)
+}
+
+execute.character <- function(file, ...) source(file, echo=TRUE)
+
 process <- function(host=Sys.info()["nodename"], port=port(), 
 		    user=NULL, pass=NULL, start=NULL) {
 	x <- list()
@@ -10,28 +22,19 @@ process <- function(host=Sys.info()["nodename"], port=port(),
 	x
 }
 
-init <- function(...)
-	if (missing(...)) {
-		# order: 1. log 2. comms 3. user 4. worker
-		lapply(mget(ls(uninitialisedProcesses()),
-			    envir=uninitialisedProcesses()), init)
-	} else if {
-		(length(list(...)) == 1) UseMethod("init") 
-	} else lapply(list(...), init)
-
 logProcess <- function(host=Sys.info()["nodename"], port=514L, start=FALSE) {
 	x <- process(host, port, start=start)
 	class(x) <- "logProcess"
 
-	assign("1.logProcess", x, envir=uninitialisedProcesses())
+	assign("1.logProcess", x, envir=unexecutedProcesses())
 }
 
-init.logProcess <- function(x, ...) {
+execute.logProcess <- function(x, ...) {
 	if (start(x)) system2("ssh",  c(host(x), "ulogd", "-u", port(x)),
 			      stdout=FALSE, stderr=FALSE,  wait=FALSE)
-	ulog.init(path=paste0("udp://", host(x), ":", port(x)))
+	ulog::ulog.init(path=paste0("udp://", host(x), ":", port(x)))
 
-	rm("1.logProcess", envir=uninitialisedProcesses())
+	rm("1.logProcess", envir=unexecutedProcesses())
 	assign("logProcess", x, envir=.largeScaleRProcesses)
 }
 
@@ -42,10 +45,10 @@ commsProcess <- function(host=Sys.info()["nodename"], port=6379L, user=NULL,
 	desc(x) <- "comms"
 	dbpass(x) <- dbpass
 
-	assign("2.commsProcess", x, envir=uninitialisedProcesses())
+	assign("2.commsProcess", x, envir=unexecutedProcesses())
 }
 
-init.commsProcess <- function(x, ...) {
+execute.commsProcess <- function(x, ...) {
 	if (start(x))
 		system2("ssh", c(host(x), "redis-server"),
 			stdout=FALSE, stderr=FALSE,  wait=FALSE)
@@ -54,7 +57,7 @@ init.commsProcess <- function(x, ...) {
 				      password=dbpass(x))
 	assign("commsConn", rsc, envir=.largeScaleRConn)
 
-	rm("2.commsProcess", envir=uninitialisedProcesses())
+	rm("2.commsProcess", envir=unexecutedProcesses())
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
@@ -63,10 +66,10 @@ userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port()) {
 	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
 
-	assign("3.userProcess", x, envir=uninitialisedProcesses())
+	assign("3.userProcess", x, envir=unexecutedProcesses())
 }
 
-init.userProcess <- function(x, ...) {
+execute.userProcess <- function(x, ...) {
 	desc(x) <- desc("process")
 	osrv::start(port=port)
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
@@ -74,7 +77,7 @@ init.userProcess <- function(x, ...) {
 	assign(paste0("/host/", host(x)),
 	       NULL, envir=.largeScaleRKeys)
 
-	rm("3.userProcess", envir=uninitialisedProcesses())
+	rm("3.userProcess", envir=unexecutedProcesses())
 	assign("userProcess", x, envir=.largeScaleRProcesses)
 }
 
@@ -90,11 +93,11 @@ workerProcess <- function(host=Sys.info()["nodename"],
 
 	attr(x, "count", exact = TRUE) <- workerCounter()
 	assign(paste0(attr(x, "count", exact=TRUE), ".workerProcess"), x,
-	       envir=uninitialisedProcesses())
+	       envir=unexecutedProcesses())
 }
 
-init.workerProcess <- function(x, ...) {
-	rm(paste0(count, ".workerProcess"), envir=uninitialisedProcesses())
+execute.workerProcess <- function(x, ...) {
+	rm(paste0(count, ".workerProcess"), envir=unexecutedProcesses())
 	if (!start(x)) return()
 	count <- attr(x, "count")
 	attr(x, "count") <- NULL

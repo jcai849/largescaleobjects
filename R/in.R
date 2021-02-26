@@ -1,3 +1,10 @@
+localCSV <- function(loc) {
+	x <- list()
+	class(x) <- "localCSV"
+	loc(x) <- loc
+	x
+}
+
 read.localCSV <- function(x, col_types, max.line=65536L, max.size=33554432L,
 			  strict=TRUE, skip=0L, nrows=-1L, quote="") {
 	chunkStubs <- list()
@@ -15,12 +22,6 @@ read.localCSV <- function(x, col_types, max.line=65536L, max.size=33554432L,
 	distObjStub(chunkStubs)
 }
 
-localCSV <- function(loc) {
-	x <- list()
-	class(x) <- "localCSV"
-	loc(x) <- loc
-	x
-}
 loc.localCSV <- function(x) x$loc
 `loc<-.localCSV` <- function(x, value) {x$loc <- value; x}
 print.localCSV <- function(x) cat("localCSV at file location", loc(x))
