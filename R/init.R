@@ -72,7 +72,7 @@ userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port()) {
 
 register.userProcess <- function(x, ...) {
 	desc(x) <- desc("process")
-	osrv::execute(port=port)
+	osrv::start(port=port)
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)
 	assign(paste0("/host/", host(x)),
