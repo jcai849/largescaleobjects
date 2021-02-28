@@ -6,12 +6,11 @@ kill <- function(procdesc) {
 }
 
 clearComms <- function() 
-	rediscc::redis.rm(commsConn(),
-			  rediscc::redis.keys(commsConn(), "*"))
+	rediscc::redis.rm(getCommsConn(),
+			  rediscc::redis.keys(getCommsConn(), "*"))
 
 .Last <- function() {
-	info("Shutting down cluster")
-	procs <- rediscc::redis.get(commsConn(), "process")
+	procs <- rediscc::redis.get(getCommsConn(), "process")
 	for (proc in procs)
 		kill(proc)
 	clearComms()

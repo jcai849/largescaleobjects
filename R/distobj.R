@@ -2,7 +2,6 @@
 
 distObjStub <- function(x) {
 	stopifnot(all(sapply(x, is.chunkStub)))
-	info("Producing new distributed object stub")
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x

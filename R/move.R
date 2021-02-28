@@ -30,11 +30,9 @@ unstub.distObjStub <- function(arg, target) {
 	toSame <- which(to(arg) == to(target))
 	if (identical(as.vector(fromSame), as.vector(toSame)) &&
 	    length(fromSame) == 1 && length(toSame) == 1) {
-		info("arg and target already aligned; emerging arg")
 		return(unstub(chunkStub(arg)[[fromSame]]))
 	}
 
-	info("arg and target unaligned; aligning arg")
 	toAlign <- alignment(arg, target) 
 	Stub <- lapply(toAlign$Stub, unstub)
 
@@ -145,13 +143,9 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
-	info("Getting the chunk referenced by chunk descriptor", format(desc(x)), 
-	     "from port", format(port(x)), 
-	     "at host", format(host(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)
 	v <- unserialize(sv)
-	info("Received chunk of size:", format(size(v)))
 	v
 }

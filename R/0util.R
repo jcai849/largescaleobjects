@@ -17,24 +17,6 @@ unAsIs <- function(x) {
 	x
 }
 
-info <- function(...) {
-	if (is.verbose()) {
-		op <- options(digits.secs = 6)
-		tryCatch(cat("[ ", 
-			     get("procDesc", envir = .largeScaleRConn),
-			     "] "),
-			 error=function(e){})
-		cat(format(Sys.time(), "%H:%M:%OS6"), " ")
-		for (item in list(...)) {
-			if (is.vector(item) && length(item) == 1) {
-				cat(" ", format(item))
-			} else {cat("\n"); print(item)}
-		}
-		cat("\n")
-		options(op)
-	}
-}
-
 combine.default 	<- c
 combine.data.frame 	<- rbind
 combine.matrix	 	<- rbind

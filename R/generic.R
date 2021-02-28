@@ -46,8 +46,7 @@ desc.default <- function(type) {
 	typelist <- c("process", "chunk")
 	stopifnot(type %in% typelist)
 
-	desc <- rediscc::redis.inc(commsConn(), type)
-	info("Attained ", type, " descriptor: ", desc)
+	desc <- rediscc::redis.inc(getCommsConn(), type)
 	desc
 }
 

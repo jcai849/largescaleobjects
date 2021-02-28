@@ -1,8 +1,6 @@
 # Instantiate
 
 chunkStub.integer <- function(cd)  {
-	info("Producing new chunk stub with",
-	     "chunk Descriptor:", format(cd)) 
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
@@ -54,7 +52,6 @@ print.chunkStub 	<- function(x, ...) {
 
 resolve.chunkStub <- function(x, ...) {
 	if (!resolved(x)) {
-		info("Chunk not yet resolved. Resolving...")
 		access(x)
 		resolved(x) <- TRUE
 	} 

@@ -25,7 +25,7 @@ process <- function(host=Sys.info()["nodename"], port=port(),
 
 logProcess <- function(host=Sys.info()["nodename"], port=514L, execute=FALSE) {
 	x <- process(host, port, execute=execute)
-	class(x) <- "logProcess"
+	class(x) <- c("logProcess", class(x))
 
 	assign("1.logProcess", x, envir=unregisteredProcesses())
 }
@@ -84,7 +84,7 @@ register.userProcess <- function(x, ...) {
 
 workerCounter <- local({
 	count <- 3
-	function() {count <<- count+1; as.character(count)}
+	function() {count <<- count+1; count}
 })
 
 workerProcess <- function(host=Sys.info()["nodename"],
@@ -92,7 +92,7 @@ workerProcess <- function(host=Sys.info()["nodename"],
 	x <- process(host, port, user, pass, execute)
 	class(x) <- c("workerProcess", class(x))
 
-	attr(x, "count", exact = TRUE) <- workerCounter()
+	attr(x, "count") <- workerCounter()
 	assign(paste0(attr(x, "count", exact=TRUE), ".workerProcess"), x,
 	       envir=unregisteredProcesses())
 }
@@ -100,7 +100,7 @@ workerProcess <- function(host=Sys.info()["nodename"],
 register.workerProcess <- function(x, ...) {
 	rm(paste0(count, ".workerProcess"), envir=unregisteredProcesses())
 	if (!execute(x)) return()
-	count <- attr(x, "count")
+	count <- attr(x, "count", exact = TRUE)
 	attr(x, "count") <- NULL
 
 	loc <- paste0(if (!is.null(user(x))) paste0(user(x), '@') else  NULL, host(x))

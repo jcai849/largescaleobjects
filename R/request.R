@@ -20,7 +20,7 @@ do.call.distObjStub <- function(what, args) {
 send <- function(..., loc) {
 	m <- msg(...)
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	rediscc::redis.push(commsConn(), loc, serializedMsg)
+	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
 }
 
 access <- function(x) {
@@ -33,20 +33,20 @@ access <- function(x) {
 }
 
 inform <- function(cd) 
-	rediscc::redis.inc(commsConn(), paste0(cd, "interest"))
+	rediscc::redis.inc(getCommsConn(), paste0(cd, "interest"))
 
 checkKey <- function(cd) 
-	!is.null(rediscc::redis.get(commsConn(), paste0(cd, "avail")))
+	!is.null(rediscc::redis.get(getCommsConn(), paste0(cd, "avail")))
 
 clean <- function(cd)
-	rediscc::redis.dec(commsConn(), paste0(cd, "interest"))
+	rediscc::redis.dec(getCommsConn(), paste0(cd, "interest"))
 
 populate <- function(x) {
 	cd		<- desc(x)
-	preview(x)	<- rediscc::redis.get(commsConn(), paste0(cd, "preview"))
+	preview(x)	<- rediscc::redis.get(getCommsConn(), paste0(cd, "preview"))
 	if (inherits(preview(x), "error")) stop(preview(x))	
-	size(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "size"))
-	host(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "host"))
-	port(x)		<- rediscc::redis.get(commsConn(), paste0(cd, "port"))
+	size(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "size"))
+	host(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "host"))
+	port(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "port"))
 	NULL
 }
