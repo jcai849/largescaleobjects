@@ -6,7 +6,6 @@ importFrom("utils", "hasName")
 # 0util.R
 export("envGet")
 export("envSet")
-export("info")
 export("is.AsIs")
 export("is.distributed")
 export("is.verbose")
