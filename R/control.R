@@ -1,8 +1,6 @@
-kill <- function(procdesc) {
-	procChunk <- structure(new.env(), class="chunkStub")
-	desc(procChunk) <- paste0("process/", procdesc)
-	do.call.chunkStub("q", list(save="no"), procChunk)
-	invisible(NULL)
+kill <- function(chunk) {
+	do.call.chunkStub("q", list(save="no"), chunk)
+	return()
 }
 
 clearComms <- function() 
@@ -10,8 +8,9 @@ clearComms <- function()
 			  rediscc::redis.keys(getCommsConn(), "*"))
 
 .Last <- function() {
-	procs <- rediscc::redis.get(getCommsConn(), "process")
-	for (proc in procs)
-		kill(proc)
+	workers <- as.integer(rediscc::redis.get(getCommsConn(), 
+						 "process")) - 1
+	for (proc in seq(workers))
+		kill(root())
 	clearComms()
 }

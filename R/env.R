@@ -8,15 +8,20 @@ assign("/", "/", envir=.largeScaleRKeys)
 assign("unregisteredProcesses", new.env(), envir=.largeScaleRProcesses)
 
 unregisteredProcesses	<- function() get("unregisteredProcesses",
-						envir = .largeScaleRProcesses)
+						envir = .largeScaleRProcesses,
+						inherits=FALSE)
 getCommsProcess		<- function() get("commsProcess",
-						envir = .largeScaleRProcesses)
+						envir = .largeScaleRProcesses,
+						inherits=FALSE)
 getUserProcess		<- function() get("userProcess",
-					 	envir = .largeScaleRProcesses)
+					 	envir = .largeScaleRProcesses,
+						inherits=FALSE)
 getLogProcess		<- function() get("logProcess",
-						envir = .largeScaleRProcesses)
+						envir = .largeScaleRProcesses,
+						inherits=FALSE)
 getCommsConn		<- function() get("commsConn", 
-						envir = .largeScaleRConn)
+						envir = .largeScaleRConn,
+						inherits=FALSE)
 
 addChunk <- function(cd, val) {
 	assign(as.character(cd), val, envir = .largeScaleRChunks)

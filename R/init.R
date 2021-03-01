@@ -1,5 +1,5 @@
-init <- function(file, ...) {
-	source(file, echo=TRUE)
+init <- function(file) {
+	if (!missing(file)) source(file, echo=TRUE)
 	# order: 1. log 2. comms 3. user 4. worker
 	lapply(mget(ls(unregisteredProcesses()),
 		    envir=unregisteredProcesses()), register)
@@ -72,7 +72,7 @@ userProcess <- function(host=Sys.info()["nodename"], port=largeScaleR::port()) {
 
 register.userProcess <- function(x, ...) {
 	desc(x) <- desc("process")
-	osrv::start(port=port)
+	osrv::start(port=port(x))
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)
 	assign(paste0("/host/", host(x)),
@@ -88,7 +88,7 @@ workerCounter <- local({
 })
 
 workerProcess <- function(host=Sys.info()["nodename"],
-			  port=largeScaleR::port(), user=NULL, pass=NULL, execute=TRUE) {
+			  port=NULL, user=NULL, pass=NULL, execute=TRUE) {
 	x <- process(host, port, user, pass, execute)
 	class(x) <- c("workerProcess", class(x))
 
@@ -98,10 +98,10 @@ workerProcess <- function(host=Sys.info()["nodename"],
 }
 
 register.workerProcess <- function(x, ...) {
-	rm(paste0(count, ".workerProcess"), envir=unregisteredProcesses())
 	if (!execute(x)) return()
 	count <- attr(x, "count", exact = TRUE)
 	attr(x, "count") <- NULL
+	rm(list=paste0(count, ".workerProcess"), envir=unregisteredProcesses())
 
 	loc <- paste0(if (!is.null(user(x))) paste0(user(x), '@') else  NULL, host(x))
 	command <- c("R", "-e", 

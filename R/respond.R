@@ -1,10 +1,11 @@
 worker <- function(comms, log, host, port) {
 
 	library("largeScaleR")
+
 	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
 		     user(comms), pass(comms), dbpass(comms), FALSE)
 	logProcess(largeScaleR::host(log), largeScaleR::port(log), FALSE)
-	userProcess(host, port)
+	userProcess(host, if (is.null(port)) largeScaleR::port() else port)
 	init()
 
 	repeat {
@@ -23,19 +24,15 @@ worker <- function(comms, log, host, port) {
 queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
-	info("Awaiting message on queues:", format(x))
-	while (is.null(serializedMsg <- rediscc::redis.pop(getCommsConn(), x,
-							   timeout=10))) {}
-	m <- unserialize(charToRaw(serializedMsg))
-	info("Received message")
-	m
+	while (is.null(serializedMsg <- 
+		rediscc::redis.pop(getCommsConn(), x, timeout=10))) {}
+	unserialize(charToRaw(serializedMsg))
 }
 
 evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
-	info("Performing requested function")
-	chunk <- do.call(fun, args, envir=.GlobalEnv)
+	do.call(fun, args, envir=.GlobalEnv)
 }
 
 respond <- function(cd, chunk) {
