@@ -24,6 +24,7 @@ worker <- function(comms, log, host, port) {
 queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
+	ulog::ulog(paste0(c("reading queues", x)))
 	while (is.null(serializedMsg <- 
 		rediscc::redis.pop(getCommsConn(), x, timeout=10))) {}
 	unserialize(charToRaw(serializedMsg))
@@ -32,6 +33,7 @@ read.queue <- function(x) {
 evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
+	ulog::ulog(paste("evaluating", format(fun)))
 	do.call(fun, args, envir=.GlobalEnv)
 }
 
@@ -48,15 +50,18 @@ post <- function(cd, chunk) {
 		     size 	= size(chunk),
 		     host	= host(selfProcess),
 		     port	= port(selfProcess))
+	ulog::ulog(paste("posting information on chunk", format(cd)))
 	rediscc::redis.set(getCommsConn(), paste0(cd, names(keys)), keys)
 }
 
 checkInterest <- function(cd) {
+	ulog::ulog(paste("checking interest for", format(cd)))
 	interest <- rediscc::redis.get(getCommsConn(), paste0(cd, "interest"))
 	if (is.null(interest)) 0L else as.integer(interest)
 }
 
 respondInterest <- function(cd, interest) {
+	ulog::ulog(paste("responding to interest for", format(cd)))
 	if (interest == 0L) return()
 	for (i in seq(interest))
 		send(complete = TRUE, loc=paste0(cd, "response"))

@@ -1,4 +1,5 @@
 findTarget <- function(args) {
+	ulog::ulog("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
 	sizes <- lengths(lapply(args[dist], chunkStub))
@@ -10,6 +11,7 @@ findTarget <- function(args) {
 unstub.default <- function(arg, target) arg
 
 unstub.chunkStub <- function(arg, target)
+	ulog::ulog(paste("unstubbing", format(arg), "to", format(target)))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 	errot = function(e) {
 		resolve(arg)
@@ -17,6 +19,7 @@ unstub.chunkStub <- function(arg, target)
 	})
 
 unstub.distObjStub <- function(arg, target) {
+	ulog::ulog(paste("unstubbing", format(arg), "to", format(target)))
 	if (missing(target)) {
 		chunks <- lapply(chunkStub(arg), unstub)
 		names(chunks) <- NULL
@@ -50,6 +53,7 @@ unstub.distObjStub <- function(arg, target) {
 # stub dispatches on target
 
 stub.distObjStub <- function(arg, target) {
+	ulog::ulog(paste("stubbing", format(arg), "to", format(target)))
 	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
@@ -62,10 +66,12 @@ stub.distObjStub <- function(arg, target) {
 }
 
 stub.chunkStub <- function(arg, target) 
+	ulog::ulog(paste("stubbing", format(arg), "to", format(target)))
 	do.call.chunkStub("identity", list(arg), target = target)
 
 # scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
+	ulog::ulog(paste("stubbing", format(arg), "over", format(target), "chunks"))
 	chunks <- split(arg, cut(seq(size(arg)), breaks=target))
 	chunkStubs <- lapply(chunks, function(chunk)
 			     do.call.chunkStub("identity", list(chunk),
@@ -143,6 +149,8 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
+	ulog::ulog(paste("retrieving chunk of descriptor", format(desc(x)),
+			 "via osrv from host", format(host(x))))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)

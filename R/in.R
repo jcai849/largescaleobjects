@@ -25,3 +25,4 @@ read.localCSV <- function(x, col_types, max.line=65536L, max.size=33554432L,
 loc.localCSV <- function(x) x$loc
 `loc<-.localCSV` <- function(x, value) {x$loc <- value; x}
 print.localCSV <- function(x) cat("localCSV at file location", loc(x))
+format.localCSV <- function(x) paste("localCSV at file location", loc(x))

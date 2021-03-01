@@ -39,6 +39,7 @@ distObjSet <- function(fun) function(x, value) {
 
 resolve.distObjStub <- function(x) {
 	if (resolved(x)) return(resolved(x))
+	ulog::ulog("resolving distObjStub")
 	distObjDo(resolve, logical)(x)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
@@ -59,6 +60,15 @@ print.distObjStub <- function(x, ...) {
 		print(chunkStub(x)[[1]])
 	} else cat("unresolved\n")
 }
+
+format.distObjStub <- function(x, ...) paste(
+	"Distributed Object Stub with", format(length(chunkStub(x))), 
+	    "chunk stubs.", 
+	if (resolved(x)) {
+		paste(
+		"with total size", format(sum(size(x))), "\n", 
+		"First chunk:\n", format(chunkStub(x)[[1]]))
+	} else cat("unresolved.\n")
 
 # User-level
 

@@ -77,6 +77,7 @@ register.userProcess <- function(x, ...) {
 	       NULL, envir=.largeScaleRKeys)
 	assign(paste0("/host/", host(x)),
 	       NULL, envir=.largeScaleRKeys)
+	ulog::ulog(paste("initialising user process with descriptor", format(desc(x))))
 
 	rm("3.userProcess", envir=unregisteredProcesses())
 	assign("userProcess", x, envir=.largeScaleRProcesses)
@@ -120,6 +121,13 @@ print.process <- function(x) {
 		    host(x), "and port", port(x), "under descriptor", desc(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
+}
+
+format.process <- function(x) {
+	paste("largeScaleR communications process at host",
+		    host(x), "and port", format(port(x)), "under descriptor", desc(x), 
+	if (!is.null(user(x)))
+		 paste("At user", user(x)) else NULL)
 }
 
 desc.process <- function(x) x$desc
