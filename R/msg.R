@@ -12,9 +12,8 @@ print.msg <- function(x) {
 	}
 }
 
-format.msg <- function(x) {
-	paste("Message with components:" sapply(names(x), format), sep="\n")
-}
+format.msg <- function(x) 
+	paste("Message with components:", sapply(names(x), format), sep="\n")
 
 fun.msg		<- function(x) x$fun
 args.msg	<- function(x) x$args

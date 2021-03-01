@@ -76,17 +76,17 @@ S3method("to", "distObjStub")
 S3method("to<-", "distObjStub")
 
 # env.R
-export(".largeScaleRConfig")
 export(".largeScaleRChunks")
+export(".largeScaleRConfig")
 export(".largeScaleRConn")
-export(".largeScaleRProcesses")
 export(".largeScaleRKeys")
+export(".largeScaleRProcesses")
 export("addChunk")
 export("getCommsConn")
-export("unregisteredProcesses")
 export("getCommsProcess")
-export("getUserProcess")
 export("getLogProcess")
+export("getUserProcess")
+export("unregisteredProcesses")
 
 # generic.R
 export("args")

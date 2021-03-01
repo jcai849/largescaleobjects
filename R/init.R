@@ -33,7 +33,8 @@ logProcess <- function(host=Sys.info()["nodename"], port=514L, execute=FALSE) {
 register.logProcess <- function(x, ...) {
 	if (execute(x)) system2("ssh",  c(host(x), "ulogd", "-u", port(x)),
 			      stdout=FALSE, stderr=FALSE,  wait=FALSE)
-	ulog::ulog.init(path=paste0("udp://", host(x), ":", port(x)))
+	ulog::ulog.init(path=paste0("udp://", host(x), ":",
+				    as.character(port(x))))
 
 	rm("1.logProcess", envir=unregisteredProcesses())
 	assign("logProcess", x, envir=.largeScaleRProcesses)

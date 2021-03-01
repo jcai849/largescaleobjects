@@ -47,7 +47,7 @@ desc.default <- function(type) {
 	stopifnot(type %in% typelist)
 
 	desc <- rediscc::redis.inc(getCommsConn(), type)
-	ulog::ulog(paste("attained descriptor", as.character(desc)))
+	ulog::ulog(paste("attained", type, "descriptor", format(desc)))
 	desc
 }
 

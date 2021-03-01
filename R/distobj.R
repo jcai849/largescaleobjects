@@ -68,7 +68,7 @@ format.distObjStub <- function(x, ...) paste(
 		paste(
 		"with total size", format(sum(size(x))), "\n", 
 		"First chunk:\n", format(chunkStub(x)[[1]]))
-	} else cat("unresolved.\n")
+	} else cat("unresolved.\n"))
 
 # User-level
 

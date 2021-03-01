@@ -37,20 +37,23 @@ access <- function(x) {
 	populate(x)
 }
 
-inform <- function(cd) 
+inform <- function(cd) {
 	ulog::ulog(paste("informing interest queue for chunk descriptor",
 			 format(cd)))
 	rediscc::redis.inc(getCommsConn(), paste0(cd, "interest"))
+}
 
-checkKey <- function(cd) 
+checkKey <- function(cd) {
 	ulog::ulog(paste("checking availability of chunk descriptor",
 			 format(cd)))
 	!is.null(rediscc::redis.get(getCommsConn(), paste0(cd, "avail")))
+}
 
-clean <- function(cd)
+clean <- function(cd) {
 	ulog::ulog(paste("clearing interest for chunk descriptor",
 			 format(cd)))
 	rediscc::redis.dec(getCommsConn(), paste0(cd, "interest"))
+}
 
 populate <- function(x) {
 	ulog::ulog(paste("populating stub for chunk descriptor", format(cd)))

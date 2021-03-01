@@ -10,13 +10,14 @@ findTarget <- function(args) {
 
 unstub.default <- function(arg, target) arg
 
-unstub.chunkStub <- function(arg, target)
+unstub.chunkStub <- function(arg, target) {
 	ulog::ulog(paste("unstubbing", format(arg), "to", format(target)))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 	errot = function(e) {
 		resolve(arg)
 		osrvGet(arg)
 	})
+}
 
 unstub.distObjStub <- function(arg, target) {
 	ulog::ulog(paste("unstubbing", format(arg), "to", format(target)))
@@ -65,9 +66,10 @@ stub.distObjStub <- function(arg, target) {
 	x
 }
 
-stub.chunkStub <- function(arg, target) 
+stub.chunkStub <- function(arg, target) {
 	ulog::ulog(paste("stubbing", format(arg), "to", format(target)))
 	do.call.chunkStub("identity", list(arg), target = target)
+}
 
 # scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
