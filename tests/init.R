@@ -1,4 +1,4 @@
 library(largeScaleR)
 
-init("config.R")
+init("config")
 .Last()

@@ -1,13 +1,12 @@
-- init
-- init from scratch
-- read csv and send
-- distObj : asIs local
-- distObj : equal local
-- distObj : smaller local
-- distObj : larger local
-- distObj : equal distObj
-- distObj : smaller distObj
-- distObj : larger distObj
-- distObj : unresolved distObj
-- unresolved distObj : unresolved distObj
-
+[X] init
+[-] init from scratch
+[-] read csv and send
+[-] distObj : asIs local
+[-] distObj : equal local
+[-] distObj : smaller local
+[-] distObj : larger local
+[-] distObj : equal distObj
+[-] distObj : smaller distObj
+[-] distObj : larger distObj
+[-] distObj : unresolved distObj
+[-] unresolved distObj : unresolved distObj

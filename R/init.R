@@ -1,8 +1,14 @@
-init <- function(file) {
-	if (!missing(file)) source(file, echo=TRUE)
+init <- function(x) {
+	if (missing(x)) {
 	# order: 1. log 2. comms 3. user 4. worker
 	lapply(mget(ls(unregisteredProcesses()),
 		    envir=unregisteredProcesses()), register)
+	} else UseMethod("init")
+}
+
+init.character <- function(x) {
+	invisible(source(x, echo=FALSE))
+	init()
 }
 
 register <- function(...) {
@@ -33,9 +39,7 @@ logProcess <- function(host=Sys.info()["nodename"], port=514L, execute=FALSE) {
 register.logProcess <- function(x, ...) {
 	if (execute(x)) system2("ssh",  c(host(x), "ulogd", "-u", port(x)),
 			      stdout=FALSE, stderr=FALSE,  wait=FALSE)
-	ulog::ulog.init(path=paste0("udp://", host(x), ":",
-				    as.character(port(x))))
-
+	init(x)
 	rm("1.logProcess", envir=unregisteredProcesses())
 	assign("logProcess", x, envir=.largeScaleRProcesses)
 }
@@ -84,10 +88,7 @@ register.userProcess <- function(x, ...) {
 	assign("userProcess", x, envir=.largeScaleRProcesses)
 }
 
-workerCounter <- local({
-	count <- 3
-	function() {count <<- count+1; count}
-})
+workerCounter <- counterMaker(3, 1)
 
 workerProcess <- function(host=Sys.info()["nodename"],
 			  port=NULL, user=NULL, pass=NULL, execute=TRUE) {

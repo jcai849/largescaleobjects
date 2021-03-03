@@ -13,9 +13,17 @@ print.msg <- function(x) {
 }
 
 format.msg <- function(x) 
-	paste("Message with components:", sapply(names(x), format), sep="\n")
+	paste0(c("Message with components:", sapply(names(x), format)),
+	       collapse="\n")
 
 fun.msg		<- function(x) x$fun
 args.msg	<- function(x) x$args
 target.msg	<- function(x) x$target
 desc.msg	<- function(x) x$desc
+
+send <- function(..., loc) {
+	m <- msg(...)
+	ulog::ulog(paste("sending msg to ", format(loc), ":\n", format(m)))
+	serializedMsg <- rawToChar(serialize(m, NULL, T))
+	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
+}

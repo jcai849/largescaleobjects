@@ -67,3 +67,5 @@ respondInterest <- function(cd, interest) {
 		send(complete = TRUE, loc=paste0(cd, "response"))
 	return()
 }
+
+preview.error <- identity

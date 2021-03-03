@@ -1,5 +1,4 @@
-userProcess(host=	"localhost",
-	    port=	port())
+userProcess(host=	"localhost")
 
 logProcess(host=	"localhost",
 	   port=	514L,
@@ -10,13 +9,10 @@ commsProcess(host=	"localhost",
 	     execute=	FALSE)
 
 workerProcess(host=	"localhost",
-	      port=	port(),
 	      execute=	TRUE)
 
 workerProcess(host=	"localhost",
-	      port=	port(),
 	      execute=	TRUE)
 
 workerProcess(host=	"localhost",
-	      port=	port(),
 	      execute=	TRUE)

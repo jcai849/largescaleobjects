@@ -20,13 +20,6 @@ do.call.distObjStub <- function(what, args) {
 	distObjStub(cs)
 }
 
-send <- function(..., loc) {
-	m <- msg(...)
-	ulog::ulog(paste("sending msg:", format(m), "to", format("loc")))
-	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
-}
-
 access <- function(x) {
 	cd <- desc(x)
 	ulog::ulog(paste("accessing chunk with descriptor", format(cd)))
@@ -64,4 +57,10 @@ populate <- function(x) {
 	host(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "host"))
 	port(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "port"))
 	NULL
+}
+
+is.AsIs <- function(x) inherits(x, "AsIs")
+unAsIs <- function(x) {
+	class(x) <- class(x)[!class(x) == "AsIs"]
+	x
 }

@@ -18,7 +18,7 @@ root <- function() {
 
 # Inherit
 
-is.chunkStub <- largeScaleR:::isA("chunkStub")
+is.chunkStub <- function(x) inherits(x, "chunkStub")
 
 # Get
 

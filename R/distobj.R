@@ -11,7 +11,8 @@ distObjStub <- function(x) {
 
 # Inherit
 
-is.distObjStub <- largeScaleR:::isA("distObjStub")
+is.distObjStub <- function(x) inherits(x, "distObjStub")
+is.distributed <- function(x) is.distObjStub(x) | is.chunkStub(x)
 
 # Get
 
