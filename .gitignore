@@ -2,3 +2,4 @@ tags
 *.o
 *.so
 *.swp
+dump.rdb
