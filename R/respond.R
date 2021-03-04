@@ -5,7 +5,7 @@ worker <- function(comms, log, host, port) {
 	commsProcess(largeScaleR::host(comms), largeScaleR::port(comms),
 		     user(comms), pass(comms), dbpass(comms), FALSE)
 	logProcess(largeScaleR::host(log), largeScaleR::port(log), FALSE)
-	userProcess(host, if (is.null(port)) largeScaleR::port() else port)
+	userProcess(host, if (missing(port)) largeScaleR::port() else port)
 	init()
 
 	repeat {
@@ -14,8 +14,7 @@ worker <- function(comms, log, host, port) {
 		result <- tryCatch(evaluate(fun(request), args(request),
 					    target(request),
 					    largeScaleR::desc(request)), 
-				   error = if (stopOnError) function(e) stop(e)
-					   else identity)
+				   error =  identity)
 		addChunk(largeScaleR::desc(request), result)
 		respond(largeScaleR::desc(request), result)
 	}
@@ -24,7 +23,7 @@ worker <- function(comms, log, host, port) {
 queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
-	ulog::ulog(paste0(c("reading queues", x)))
+	log(paste("reading queues: ", paste(x, collapse="\n"), sep="\n"))
 	while (is.null(serializedMsg <- 
 		rediscc::redis.pop(getCommsConn(), x, timeout=10))) {}
 	unserialize(charToRaw(serializedMsg))
@@ -33,7 +32,7 @@ read.queue <- function(x) {
 evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
-	ulog::ulog(paste("evaluating", format(fun)))
+	log(paste("evaluating", format(fun)))
 	do.call(fun, args, envir=.GlobalEnv)
 }
 
@@ -50,22 +49,20 @@ post <- function(cd, chunk) {
 		     size 	= size(chunk),
 		     host	= host(selfProcess),
 		     port	= port(selfProcess))
-	ulog::ulog(paste("posting information on chunk", format(cd)))
+	log(paste("posting information on chunk", format(cd)))
 	rediscc::redis.set(getCommsConn(), paste0(cd, names(keys)), keys)
 }
 
 checkInterest <- function(cd) {
-	ulog::ulog(paste("checking interest for", format(cd)))
+	log(paste("checking interest for", format(cd)))
 	interest <- rediscc::redis.get(getCommsConn(), paste0(cd, "interest"))
 	if (is.null(interest)) 0L else as.integer(interest)
 }
 
 respondInterest <- function(cd, interest) {
-	ulog::ulog(paste("responding to interest for", format(cd)))
+	log(paste("responding to interest for", format(cd)))
 	if (interest == 0L) return()
 	for (i in seq(interest))
 		send(complete = TRUE, loc=paste0(cd, "response"))
 	return()
 }
-
-preview.error <- identity

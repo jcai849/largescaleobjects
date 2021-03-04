@@ -4,6 +4,7 @@ chunkStub.integer <- function(cd)  {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
+	preview(cs) <- "/"
 	resolved(cs) <- FALSE
 	cs
 }
@@ -12,6 +13,7 @@ root <- function() {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- "/" 
+	preview(cs) <- "/"
 	resolved(cs) <- TRUE
 	cs
 }

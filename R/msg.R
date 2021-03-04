@@ -12,10 +12,19 @@ print.msg <- function(x) {
 	}
 }
 
-format.msg <- function(x) 
-	paste0(c("Message with components:", sapply(names(x), format)),
+format.msg <- function(x) {
+	previews <- sapply(x, preview)
+	paste0(c("Message with components:", 
+		 paste(names(previews), previews, sep=": ", collapse="\n")),
 	       collapse="\n")
+}
 
+preview.function <- function(x) format(args(x))[1]
+preview.list	<- function(x) {
+	previews <- sapply(x, preview)
+	paste(names(previews), previews, sep=": ", collapse="; ")
+}
+preview.default <- identity
 fun.msg		<- function(x) x$fun
 args.msg	<- function(x) x$args
 target.msg	<- function(x) x$target
@@ -23,7 +32,7 @@ desc.msg	<- function(x) x$desc
 
 send <- function(..., loc) {
 	m <- msg(...)
-	ulog::ulog(paste("sending msg to ", format(loc), ":\n", format(m)))
+	log(paste("sending msg to ", format(loc), ":\n", format(m)))
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
 }

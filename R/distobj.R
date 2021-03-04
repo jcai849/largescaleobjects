@@ -40,7 +40,7 @@ distObjSet <- function(fun) function(x, value) {
 
 resolve.distObjStub <- function(x) {
 	if (resolved(x)) return(resolved(x))
-	ulog::ulog("resolving distObjStub")
+	log("resolving distObjStub")
 	distObjDo(resolve, logical)(x)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL

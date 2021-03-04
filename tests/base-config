@@ -1,0 +1,9 @@
+userProcess(host=	"localhost")
+
+logProcess(host=	"localhost",
+	   port=	514L,
+	   execute=	FALSE)
+
+commsProcess(host=	"localhost",
+	     port=	6379L,
+	     execute=	FALSE)
