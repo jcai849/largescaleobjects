@@ -1,6 +1,5 @@
 [X] init
-[-] init from scratch
-[-] read csv and send
+[X] read csv and send
 [-] distObj : asIs local
 [-] distObj : equal local
 [-] distObj : smaller local

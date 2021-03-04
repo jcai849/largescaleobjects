@@ -32,7 +32,7 @@ read.queue <- function(x) {
 evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
-	log(paste("evaluating", format(fun)))
+	log(paste("evaluating", paste(format(fun), collapse="\n")))
 	do.call(fun, args, envir=.GlobalEnv)
 }
 

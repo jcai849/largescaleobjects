@@ -41,7 +41,7 @@ distObjSet <- function(fun) function(x, value) {
 resolve.distObjStub <- function(x) {
 	if (resolved(x)) return(resolved(x))
 	log("resolving distObjStub")
-	distObjDo(resolve, logical)(x)
+	lapply(chunkStub(x), resolve)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
 	to(x) <- tos

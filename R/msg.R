@@ -24,7 +24,7 @@ preview.list	<- function(x) {
 	previews <- sapply(x, preview)
 	paste(names(previews), previews, sep=": ", collapse="; ")
 }
-preview.default <- identity
+
 fun.msg		<- function(x) x$fun
 args.msg	<- function(x) x$args
 target.msg	<- function(x) x$target

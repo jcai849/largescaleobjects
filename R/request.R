@@ -1,6 +1,6 @@
 do.call.chunkStub <- function(what, args, target) {
-	log(paste("requesting", format(what), 
-			 "from target", format(desc(target))))
+	log(paste("requesting", paste(format(what), collapse="\n"), 
+		  "from target", format(desc(target))))
 	stopifnot(is.list(args))
 	cd <- desc("chunk")
 	send(fun	= what, 
@@ -49,8 +49,8 @@ clean <- function(cd) {
 }
 
 populate <- function(x) {
-	log(paste("populating stub for chunk descriptor", format(cd)))
 	cd		<- desc(x)
+	log(paste("populating stub for chunk descriptor", format(cd)))
 	preview(x)	<- rediscc::redis.get(getCommsConn(), paste0(cd, "preview"))
 	if (inherits(preview(x), "error")) stop(preview(x))	
 	size(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "size"))

@@ -11,21 +11,23 @@ findTarget <- function(args) {
 unstub.default <- function(arg, target) arg
 
 unstub.chunkStub <- function(arg, target) {
-	log(paste("unstubbing", format(arg), "to", format(target)))
+	log(paste("unstubbing", paste(format(arg), collapse="\n")))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
-	errot = function(e) {
-		resolve(arg)
-		osrvGet(arg)
-	})
+		 error = function(e) {
+			 resolve(arg)
+			 osrvGet(arg)
+		 })
 }
 
 unstub.distObjStub <- function(arg, target) {
-	log(paste("unstubbing", format(arg), "to", format(target)))
 	if (missing(target)) {
 		chunks <- lapply(chunkStub(arg), unstub)
 		names(chunks) <- NULL
 		return(do.call(combine, chunks))
 	}
+
+	log(paste("unstubbing", paste(format(arg), collapse="\n"), 
+		  "to", paste(format(target), collapse="\n")))
 
 	resolve(target)
 	resolve(arg)
