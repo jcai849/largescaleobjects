@@ -56,7 +56,7 @@ print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.")
 	if (resolved(x)) {
-		cat("with total size", format(sum(size(x))), "\n")
+		cat(" Total size: ", format(sum(size(x))), "\n")
 		cat("First chunk head:\n")
 		print(chunkStub(x)[[1]])
 	} else cat("unresolved\n")
@@ -67,7 +67,7 @@ format.distObjStub <- function(x, ...) paste(
 	    "chunk stubs.", 
 	if (resolved(x)) {
 		paste(
-		"with total size", format(sum(size(x))), "\n", 
+		" Total size:", format(sum(size(x))), "\n", 
 		"First chunk:\n", format(chunkStub(x)[[1]]))
 	} else cat("unresolved.\n"))
 

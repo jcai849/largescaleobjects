@@ -13,7 +13,8 @@ print.msg <- function(x) {
 }
 
 format.msg <- function(x) {
-	previews <- sapply(x, preview)
+	previews <- sapply(x, function(x) tryCatch(preview(x),
+						   error=function(e) ""))
 	paste0(c("Message with components:", 
 		 paste(names(previews), previews, sep=": ", collapse="\n")),
 	       collapse="\n")
@@ -24,7 +25,6 @@ preview.list	<- function(x) {
 	previews <- sapply(x, preview)
 	paste(names(previews), previews, sep=": ", collapse="; ")
 }
-
 fun.msg		<- function(x) x$fun
 args.msg	<- function(x) x$args
 target.msg	<- function(x) x$target

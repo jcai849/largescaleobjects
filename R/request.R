@@ -13,8 +13,11 @@ do.call.chunkStub <- function(what, args, target) {
 
 do.call.distObjStub <- function(what, args) {
 	log(paste("requesting", format(what)))
+	## distribute the non-distributed
 	target <- findTarget(args)
 	args <- lapply(args, stub, target=target)
+	##
+	target <- findTarget(args)
 	cs <- lapply(chunkStub(target), 
 		     function(t) do.call.chunkStub(what, args, t))
 	distObjStub(cs)

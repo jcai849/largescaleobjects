@@ -5,5 +5,4 @@ largeScaleR::worker(comms=structure(list(host = "localhost", port = 6379L,
 		    log=structure(list(host = "localhost", port = 514L,
 				       execute = FALSE),
 				  class = c("logProcess", "process")),
-		    host="localhost",
-		    port=NULL)
+		    host="localhost")

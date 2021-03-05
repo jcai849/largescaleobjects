@@ -45,7 +45,8 @@ respond <- function(cd, chunk) {
 post <- function(cd, chunk) {
 	selfProcess <- get("userProcess", envir = .largeScaleRProcesses)
 	keys <- list(avail	= TRUE,
-		     preview 	= preview(chunk),
+		     preview 	= tryCatch(preview(chunk), error=function(e)
+						"no preview"),
 		     size 	= size(chunk),
 		     host	= host(selfProcess),
 		     port	= port(selfProcess))

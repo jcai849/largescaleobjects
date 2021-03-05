@@ -2,8 +2,8 @@ findTarget <- function(args) {
 	log("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
-	sizes <- lengths(lapply(args[dist], chunkStub))
-	args[dist][[which.max(sizes)]] # most dispersed
+	sizes <- sapply(args[dist], function(x) sum(size(x)))
+	args[dist][[which.max(sizes)]] # largest
 }
 
 # unstub dispatches on arg
@@ -56,7 +56,8 @@ unstub.distObjStub <- function(arg, target) {
 # stub dispatches on target
 
 stub.distObjStub <- function(arg, target) {
-	log(paste("stubbing", format(arg), "to", format(target)))
+	log(paste("stubbing", paste(format(arg), collapse="\n"), 
+		  "to", paste(format(target), collapse="\n")))
 	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
@@ -69,17 +70,23 @@ stub.distObjStub <- function(arg, target) {
 }
 
 stub.chunkStub <- function(arg, target) {
-	log(paste("stubbing", format(arg), "to", format(target)))
+	log(paste("stubbing", paste(format(arg), collapse="\n"),
+		  "to", paste(format(target), collapse="\n")))
 	do.call.chunkStub("identity", list(arg), target = target)
 }
 
 # scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
-	log(paste("stubbing", format(arg), "over", format(target), "chunks"))
-	chunks <- split(arg, cut(seq(size(arg)), breaks=target))
-	chunkStubs <- lapply(chunks, function(chunk)
+	stopifnot(target > 0)
+	log(paste("stubbing", paste(format(arg), collapse="\n"), "over", 
+		  paste(format(target), collapse="\n"), "chunks"))
+	chunks <- if (target == 1) {
+		list(arg) 
+		} else split(arg, cut(seq(size(arg)), breaks=target))
+	chunkStubs <- sapply(chunks, function(chunk)
 			     do.call.chunkStub("identity", list(chunk),
-					       root()))
+					       root()),
+			     simplify = FALSE, USE.NAMES = FALSE)
 	distObjStub(chunkStubs)
 }
 stub.numeric <- stub.integer
@@ -130,6 +137,17 @@ alignment <- function(arg, target) {
 	toAlign$TAIL$TO <- tailToRel
 
 	toAlign
+}
+
+index <- function(x, i) {
+       ndim <- if (is.null(dim(x))) 1L else length(dim(x))
+       l <- as.list(quote(x[]))[3]
+       eval(as.call(
+                    c(list(quote(`[`)),
+                      list(quote(x)),
+                      list(quote(i)),
+                      rep(l, ndim-1L))
+                    ))
 }
 
 osrvCmd <- function(s, cmd) {
