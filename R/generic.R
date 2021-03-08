@@ -1,4 +1,5 @@
 chunkStub	<- function(x, ...) UseMethod("chunkStub", x)
+isEndPosition	<- function(x, ...) UseMethod("isEndPosition", x)
 colTypes	<- function(x, ...) UseMethod("colTypes", x)
 combine		<- function(...) UseMethod("combine", ..1)
 dbpass		<- function(x, ...) UseMethod("dbpass", x)
@@ -22,6 +23,7 @@ unstub		<- function(arg, target) UseMethod("unstub", arg)
 user		<- function(x, ...) UseMethod("user", x)
 
 `chunkStub<-` 	<- function(x, value) UseMethod("chunkStub<-", x)
+`isEndPosition<-`<- function(x, value) UseMethod("isEndPosition<-", x)
 `colTypes<-` 	<- function(x, value) UseMethod("colTypes<-", x)
 `dbpass<-` 	<- function(x, value) UseMethod("dbpass<-", x)
 `desc<-` 	<- function(x, value) UseMethod("desc<-", x)

@@ -6,6 +6,7 @@ distObjStub <- function(x) {
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
 	resolved(dos) <- FALSE
+	isEndPosition(dos) <- c(rep(FALSE, length(x)-1), TRUE)
 	dos
 }
 
@@ -23,6 +24,7 @@ resolved.distObjStub	<- largeScaleR:::envGet("resolved")
 size.distObjStub 	<- distObjDo(size, integer)
 to.distObjStub		<- distObjDo(to,   integer)
 from.distObjStub 	<- distObjDo(from, integer)
+isEndPosition.distObjStub<- distObjDo(isEndPosition, integer)
 
 # Set
 
@@ -35,6 +37,7 @@ distObjSet <- function(fun) function(x, value) {
 `resolved<-.distObjStub`	<- largeScaleR:::envSet("resolved")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
+`isEndPosition<-.distObjStub`	<- distObjSet(`isEndPosition<-`)
 
 # Other methods
 
@@ -56,10 +59,10 @@ print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.")
 	if (resolved(x)) {
-		cat(" Total size: ", format(sum(size(x))), "\n")
-		cat("First chunk head:\n")
+		cat(" Total size", format(sum(size(x))), "\n")
+		cat("First chunk stub:\n")
 		print(chunkStub(x)[[1]])
-	} else cat("unresolved\n")
+	} else cat(" Chunks unresolved\n")
 }
 
 format.distObjStub <- function(x, ...) paste(
@@ -69,7 +72,7 @@ format.distObjStub <- function(x, ...) paste(
 		paste(
 		" Total size:", format(sum(size(x))), "\n", 
 		"First chunk:\n", format(chunkStub(x)[[1]]))
-	} else cat("unresolved.\n"))
+	} else cat(" Chunks unresolved.\n"))
 
 # User-level
 

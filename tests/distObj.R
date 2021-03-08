@@ -16,7 +16,6 @@ stopifnot(identical(unstub(x+1:3),
 		    1:30+1:3))
 
 # larger sized local
-debug(do.call.distObjStub)
 stopifnot(identical(unstub(x+1:300), 1:30+1:300))
 
 # equal sized distObj

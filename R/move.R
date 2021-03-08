@@ -2,8 +2,8 @@ findTarget <- function(args) {
 	log("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
-	sizes <- sapply(args[dist], function(x) sum(size(x)))
-	args[dist][[which.max(sizes)]] # largest
+	sizes <- lengths(lapply(args[dist], chunkStub))
+	args[dist][[which.max(sizes)]] # most dispersed
 }
 
 # unstub dispatches on arg
@@ -21,7 +21,8 @@ unstub.chunkStub <- function(arg, target) {
 
 unstub.distObjStub <- function(arg, target) {
 	if (missing(target)) {
-		chunks <- lapply(chunkStub(arg), unstub)
+		chunks <- sapply(chunkStub(arg), unstub, 
+				 simplify=FALSE, USE.NAMES=FALSE)
 		names(chunks) <- NULL
 		return(do.call(combine, chunks))
 	}
@@ -40,7 +41,9 @@ unstub.distObjStub <- function(arg, target) {
 	}
 
 	toAlign <- alignment(arg, target) 
-	Stub <- lapply(toAlign$Stub, unstub)
+	Stub <- sapply(toAlign$Stub, unstub,
+		       simplify=FALSE, USE.NAMES=FALSE)
+	names(Stub) <- NULL
 
 	combined <- if (length(Stub) == 1) {
 		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
@@ -63,7 +66,8 @@ stub.distObjStub <- function(arg, target) {
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
 	chunks <- mapply(stub,
 			 splits, chunkStub(target)[seq(length(splits))],
-			 SIMPLIFY = FALSE)
+			 SIMPLIFY = FALSE, USE.NAMES=FALSE)
+	names(chunks) <- NULL
 	x <- distObjStub(chunks)
 	resolve(x)
 	x
@@ -83,10 +87,12 @@ stub.integer <- function(arg, target) {
 	chunks <- if (target == 1) {
 		list(arg) 
 		} else split(arg, cut(seq(size(arg)), breaks=target))
+	names(chunks) <- NULL
 	chunkStubs <- sapply(chunks, function(chunk)
 			     do.call.chunkStub("identity", list(chunk),
 					       root()),
 			     simplify = FALSE, USE.NAMES = FALSE)
+	names(chunkStubs) <- NULL
 	distObjStub(chunkStubs)
 }
 stub.numeric <- stub.integer

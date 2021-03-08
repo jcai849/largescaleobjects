@@ -25,36 +25,44 @@ is.chunkStub <- function(x) inherits(x, "chunkStub")
 # Get
 
 desc.chunkStub		<- largeScaleR:::envGet("desc")
-resolved.chunkStub	<- largeScaleR:::envGet("resolved")
+from.chunkStub 		<- largeScaleR:::envGet("from")
 host.chunkStub		<- largeScaleR:::envGet("host")
+isEndPosition.chunkStub <- largeScaleR:::envGet("isEndPosition")
 port.chunkStub		<- largeScaleR:::envGet("port")
 preview.chunkStub	<- largeScaleR:::envGet("preview")
-to.chunkStub 		<- largeScaleR:::envGet("to")
-from.chunkStub 		<- largeScaleR:::envGet("from")
+resolved.chunkStub	<- largeScaleR:::envGet("resolved")
 size.chunkStub 		<- largeScaleR:::envGet("size")
+to.chunkStub 		<- largeScaleR:::envGet("to")
 
 # Set
 
 `desc<-.chunkStub`	<- largeScaleR:::envSet("desc")
-`preview<-.chunkStub` 	<- largeScaleR:::envSet("preview")
-`resolved<-.chunkStub`<- largeScaleR:::envSet("resolved")
-`to<-.chunkStub` 	<- largeScaleR:::envSet("to")
 `from<-.chunkStub`	<- largeScaleR:::envSet("from")
-`size<-.chunkStub` 	<- largeScaleR:::envSet("size")
-`port<-.chunkStub` 	<- largeScaleR:::envSet("port")
 `host<-.chunkStub` 	<- largeScaleR:::envSet("host")
+`isEndPosition<-.chunkStub`<- largeScaleR:::envSet("isEndPosition")
+`port<-.chunkStub` 	<- largeScaleR:::envSet("port")
+`preview<-.chunkStub` 	<- largeScaleR:::envSet("preview")
+`resolved<-.chunkStub`	<- largeScaleR:::envSet("resolved")
+`size<-.chunkStub` 	<- largeScaleR:::envSet("size")
+`to<-.chunkStub` 	<- largeScaleR:::envSet("to")
 
 # Other methods
 
-format.chunkStub	<- function(x, ...)
-	paste("Chunk Reference with Descriptor:", format(desc(x)), "\n", 
-	      if (resolved(x)) 
-		      paste(format(preview(x)), collapse="\n") else 
-			      " unresolved")
+format.chunkStub	<- function(x, ...) {
+	paste("Chunk Reference with Descriptor:", format(desc(x)), 
+	      if (resolved(x)) {
+		      paste("and size:", format(size(x)), 
+			    "\n", "Preview:", "\n", format(preview(x)), "...\n",
+			    collapse="\n") 
+	      } else ". Chunk unresolved\n")
+}
 
 print.chunkStub 	<- function(x, ...) {
-	cat("Chunk Reference with Descriptor", format(desc(x)), "\n")
-	if (resolved(x)) print(preview(x)) else cat("unresolved\n")
+	cat("Chunk Reference with Descriptor", format(desc(x)))
+	if (resolved(x)) {
+		cat(" and size", format(size(x)), 
+		    "\n", "Preview:", "\n", format(preview(x)), "...\n")
+	} else cat(". Chunk unresolved\n")
 }
 
 resolve.chunkStub <- function(x, ...) {
