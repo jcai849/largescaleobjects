@@ -7,6 +7,8 @@
 assign("/", "/", envir=.largeScaleRKeys)
 assign("unregisteredProcesses", new.env(), envir=.largeScaleRProcesses)
 
+reg.finalizer(.largeScaleRProcesses, largeScaleR::.Last, onexit=TRUE)
+
 unregisteredProcesses	<- function() get("unregisteredProcesses",
 						envir = .largeScaleRProcesses,
 						inherits=FALSE)
