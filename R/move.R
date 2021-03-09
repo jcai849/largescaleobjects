@@ -2,8 +2,8 @@ findTarget <- function(args) {
 	ulog::ulog("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
-	sizes <- lengths(lapply(args[dist], chunkStub))
-	args[dist][[which.max(sizes)]] # most dispersed
+	sizes <- sapply(args[dist], size)
+	args[dist][[which.max(sizes)]] # largest
 }
 
 # unstub dispatches on arg
