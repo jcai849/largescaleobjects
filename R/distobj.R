@@ -5,7 +5,7 @@ distObjStub <- function(x) {
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
-	resolved(dos) <- FALSE
+	cached(dos) <- FALSE
 	dos
 }
 
@@ -18,7 +18,7 @@ is.distObjStub <- largeScaleR:::isA("distObjStub")
 distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
 
 chunkStub.distObjStub	<- largeScaleR:::envGet("chunk")
-resolved.distObjStub	<- largeScaleR:::envGet("resolved")
+cached.distObjStub	<- largeScaleR:::envGet("cached")
 size.distObjStub 	<- distObjDo(size, integer)
 to.distObjStub		<- distObjDo(to,   integer)
 from.distObjStub 	<- distObjDo(from, integer)
@@ -31,44 +31,44 @@ distObjSet <- function(fun) function(x, value) {
 }
 
 `chunkStub<-.distObjStub`	<- largeScaleR:::envSet("chunk")
-`resolved<-.distObjStub`	<- largeScaleR:::envSet("resolved")
+`cached<-.distObjStub`		<- largeScaleR:::envSet("cached")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 
 # Other methods
 
-resolve.distObjStub <- function(x) {
-	if (resolved(x)) return(resolved(x))
-	ulog::ulog("resolving distObjStub")
-	distObjDo(resolve, logical)(x)
+cache.distObjStub <- function(x) {
+	if (cached(x)) return(cached(x))
+	ulog::ulog("caching distObjStub")
+	distObjDo(cache, logical)(x)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
 	to(x) <- tos
 	froms <- c(1L, to(x)[-length(to(x))] + 1L)
 	names(froms) <- NULL
 	from(x) <- froms
-	resolved(x) <- TRUE
+	cached(x) <- TRUE
 	x
 }
 
 print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.")
-	if (resolved(x)) {
+	if (cached(x)) {
 		cat("with total size", format(sum(size(x))), "\n")
 		cat("First chunk head:\n")
 		print(chunkStub(x)[[1]])
-	} else cat("unresolved\n")
+	} else cat("uncached\n")
 }
 
 format.distObjStub <- function(x, ...) paste(
 	"Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.", 
-	if (resolved(x)) {
+	if (cached(x)) {
 		paste(
 		"with total size", format(sum(size(x))), "\n", 
 		"First chunk:\n", format(chunkStub(x)[[1]]))
-	} else cat("unresolved.\n"))
+	} else cat("uncached.\n"))
 
 # User-level
 

@@ -48,4 +48,4 @@ size.error		<- function(x) NULL
 
 preview.error		<- identity
 
-resolve.default		<- identity
+cache.default		<- identity

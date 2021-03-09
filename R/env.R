@@ -28,7 +28,7 @@ getCommsConn		<- function() get("commsConn",
 addChunk <- function(cd, val) {
 	ulog::ulog(paste("assigning as descriptor", cd, "chunk of size",
 			 size(val), "using",
-			 format(object.size(val), units="Mb"), "Mb"))
+			 format(object.size(val), units="b"), "bytes"))
 	assign(as.character(cd), val, envir = .largeScaleRChunks)
 	ulog::ulog("storing chunk in osrv")
 	osrv::put(as.character(cd), serialize(val, NULL))

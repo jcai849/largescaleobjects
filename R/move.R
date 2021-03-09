@@ -14,7 +14,7 @@ unstub.chunkStub <- function(arg, target) {
 	ulog::ulog(paste("unstubbing", format(arg), "to", format(target)))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 	errot = function(e) {
-		resolve(arg)
+		cache(arg)
 		osrvGet(arg)
 	})
 }
@@ -27,8 +27,8 @@ unstub.distObjStub <- function(arg, target) {
 		return(do.call(combine, chunks))
 	}
 
-	resolve(target)
-	resolve(arg)
+	cache(target)
+	cache(arg)
 
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
@@ -62,7 +62,7 @@ stub.distObjStub <- function(arg, target) {
 			 splits, chunkStub(target)[seq(length(splits))],
 			 SIMPLIFY = FALSE)
 	x <- distObjStub(chunks)
-	resolve(x)
+	cache(x)
 	x
 }
 
