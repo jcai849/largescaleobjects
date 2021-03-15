@@ -49,16 +49,11 @@ to.chunkStub 		<- largeScaleR:::envGet("to")
 # Other methods
 
 format.chunkStub	<- function(x, ...) {
-	paste("Chunk Reference with Descriptor:", format(desc(x)), 
-	      if (resolved(x)) {
-		      paste("and size:", format(size(x)), 
-			    "\n", "Preview:", "\n", format(preview(x)), "...\n",
-			    collapse="\n") 
-	      } else ". Chunk unresolved\n")
+	paste("Chunk Stub", format(desc(x)))
 }
 
 print.chunkStub 	<- function(x, ...) {
-	cat("Chunk Reference with Descriptor", format(desc(x)))
+	cat("Chunk stub with Descriptor", format(desc(x)))
 	if (resolved(x)) {
 		cat(" and size", format(size(x)), 
 		    "\n", "Preview:", "\n", format(preview(x)), "...\n")
