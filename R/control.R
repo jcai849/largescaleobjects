@@ -10,11 +10,3 @@ clearComms <- function() {
 	rediscc::redis.rm(getCommsConn(),
 			  rediscc::redis.keys(getCommsConn(), "*"))
 }
-
-.Last <- function() {
-	workers <- as.integer(rediscc::redis.get(getCommsConn(), 
-						 "process")) - 1
-	for (proc in seq(workers))
-		kill(root())
-	clearComms()
-}

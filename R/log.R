@@ -1,5 +1,4 @@
-init.logProcess <- function(x) ulog::ulog.init(paste0("udp://127.0.0.1:", port(x)))
-# change to host(x)
+init.logProcess <- function(x) ulog::ulog.init(paste0("udp://", host(x), ":", port(x)))
 
 log <- function(x) ulog::ulog(paste(logCounter(), ". ", paste(x, sep=";"), collapse=". "))
 

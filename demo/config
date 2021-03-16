@@ -1,0 +1,19 @@
+userProcess(host=	"localhost")
+
+logProcess()
+
+commsProcess(host=	"localhost",
+	     port=	6379L,
+	     execute=	FALSE)
+
+workerProcess(host=	"localhost",
+	      execute=	TRUE)
+
+workerProcess(host=	"localhost",
+	      execute=	TRUE)
+
+workerProcess(host=	"localhost",
+	      execute=	TRUE)
+
+workerProcess(host=	"localhost",
+	      execute=	TRUE)

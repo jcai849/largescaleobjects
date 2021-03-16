@@ -5,7 +5,7 @@ distObjStub <- function(x) {
 	dos <- new.env()
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
-	resolved(dos) <- FALSE
+	cached(dos) <- FALSE
 	isEndPosition(dos) <- c(rep(FALSE, length(x)-1), TRUE)
 	dos
 }
@@ -20,7 +20,7 @@ is.distributed <- function(x) is.distObjStub(x) | is.chunkStub(x)
 distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
 
 chunkStub.distObjStub	<- largeScaleR:::envGet("chunk")
-resolved.distObjStub	<- largeScaleR:::envGet("resolved")
+cached.distObjStub	<- largeScaleR:::envGet("cached")
 size.distObjStub 	<- distObjDo(size, integer)
 to.distObjStub		<- distObjDo(to,   integer)
 from.distObjStub 	<- distObjDo(from, integer)
@@ -34,45 +34,45 @@ distObjSet <- function(fun) function(x, value) {
 }
 
 `chunkStub<-.distObjStub`	<- largeScaleR:::envSet("chunk")
-`resolved<-.distObjStub`	<- largeScaleR:::envSet("resolved")
+`cached<-.distObjStub`	<- largeScaleR:::envSet("cached")
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 `isEndPosition<-.distObjStub`	<- distObjSet(`isEndPosition<-`)
 
 # Other methods
 
-resolve.distObjStub <- function(x) {
-	if (resolved(x)) return(resolved(x))
+cache.distObjStub <- function(x) {
+	if (cached(x)) return(cached(x))
 	log("resolving distObjStub")
-	lapply(chunkStub(x), resolve)
+	lapply(chunkStub(x), cache)
 	tos <- cumsum(size(x))
 	names(tos) <- NULL
 	to(x) <- tos
 	froms <- c(1L, to(x)[-length(to(x))] + 1L)
 	names(froms) <- NULL
 	from(x) <- froms
-	resolved(x) <- TRUE
+	cached(x) <- TRUE
 	x
 }
 
 print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.")
-	if (resolved(x)) {
+	if (cached(x)) {
 		cat(" Total size", format(sum(size(x))), "\n")
 		cat("First chunk stub:\n")
 		print(chunkStub(x)[[1]])
-	} else cat(" Chunks unresolved\n")
+	} else cat(" Chunks uncached\n")
 }
 
 format.distObjStub <- function(x, ...) paste(
 	"Distributed Object Stub with", format(length(chunkStub(x))), 
 	    "chunk stubs.", 
-	if (resolved(x)) {
+	if (cached(x)) {
 		paste(
 		" Total size:", format(sum(size(x))), "\n", 
 		"First chunk:\n", format(chunkStub(x)[[1]]))
-	} else cat(" Chunks unresolved.\n"))
+	} else cat(" Chunks uncached.\n"))
 
 # User-level
 

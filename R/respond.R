@@ -23,7 +23,7 @@ worker <- function(comms, log, host, port) {
 queue <- function(x) {class(x) <- "queue"; x}
 
 read.queue <- function(x) {
-	log(paste("reading queues: ", paste(x, collapse="\n"), sep="\n"))
+	log(paste("reading queues: ", paste(x, collapse="; "), sep="; "))
 	while (is.null(serializedMsg <- 
 		rediscc::redis.pop(getCommsConn(), x, timeout=10))) {}
 	unserialize(charToRaw(serializedMsg))

@@ -29,7 +29,7 @@ process <- function(host="localhost", port=largeScaleR::port(),
 	x
 }
 
-logProcess <- function(host="localhost", port=514L, execute=FALSE) {
+logProcess <- function(host="127.0.0.1", port=5140L, execute=FALSE) {
 	x <- process(host, port, execute=execute)
 	class(x) <- c("logProcess", class(x))
 
@@ -83,8 +83,8 @@ userProcess <- function(host="localhost", port=largeScaleR::port()) {
 }
 
 register.userProcess <- function(x, ...) {
-	log(paste0("registering userProcess: ", format(x)))
 	desc(x) <- desc("process")
+	log(paste0("registering userProcess: ", format(x)))
 	osrv::start(port=port(x))
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)

@@ -5,7 +5,7 @@ chunkStub.integer <- function(cd)  {
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
 	preview(cs) <- "/"
-	resolved(cs) <- FALSE
+	cached(cs) <- FALSE
 	cs
 }
 
@@ -14,7 +14,7 @@ root <- function() {
 	class(cs) <- "chunkStub"
 	desc(cs) <- "/" 
 	preview(cs) <- "/"
-	resolved(cs) <- TRUE
+	cached(cs) <- TRUE
 	cs
 }
 
@@ -30,7 +30,7 @@ host.chunkStub		<- largeScaleR:::envGet("host")
 isEndPosition.chunkStub <- largeScaleR:::envGet("isEndPosition")
 port.chunkStub		<- largeScaleR:::envGet("port")
 preview.chunkStub	<- largeScaleR:::envGet("preview")
-resolved.chunkStub	<- largeScaleR:::envGet("resolved")
+cached.chunkStub	<- largeScaleR:::envGet("cached")
 size.chunkStub 		<- largeScaleR:::envGet("size")
 to.chunkStub 		<- largeScaleR:::envGet("to")
 
@@ -42,7 +42,7 @@ to.chunkStub 		<- largeScaleR:::envGet("to")
 `isEndPosition<-.chunkStub`<- largeScaleR:::envSet("isEndPosition")
 `port<-.chunkStub` 	<- largeScaleR:::envSet("port")
 `preview<-.chunkStub` 	<- largeScaleR:::envSet("preview")
-`resolved<-.chunkStub`	<- largeScaleR:::envSet("resolved")
+`cached<-.chunkStub`	<- largeScaleR:::envSet("cached")
 `size<-.chunkStub` 	<- largeScaleR:::envSet("size")
 `to<-.chunkStub` 	<- largeScaleR:::envSet("to")
 
@@ -54,16 +54,18 @@ format.chunkStub	<- function(x, ...) {
 
 print.chunkStub 	<- function(x, ...) {
 	cat("Chunk stub with Descriptor", format(desc(x)))
-	if (resolved(x)) {
+	if (cached(x)) {
 		cat(" and size", format(size(x)), 
-		    "\n", "Preview:", "\n", format(preview(x)), "...\n")
-	} else cat(". Chunk unresolved\n")
+		    "\n", "Preview:", "\n")
+		(preview(x))
+		cat("...")
+	} else cat(". Chunk uncached\n")
 }
 
-resolve.chunkStub <- function(x, ...) {
-	if (!resolved(x)) {
+cache.chunkStub <- function(x, ...) {
+	if (!cached(x)) {
 		access(x)
-		resolved(x) <- TRUE
+		cached(x) <- TRUE
 	} 
 	x
 }

@@ -11,10 +11,10 @@ findTarget <- function(args) {
 unstub.default <- function(arg, target) arg
 
 unstub.chunkStub <- function(arg, target) {
-	log(paste("unstubbing", paste(format(arg), collapse="\n")))
+	log(paste("unstubbing", paste(format(arg), collapse=";")))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 		 error = function(e) {
-			 resolve(arg)
+			 cache(arg)
 			 osrvGet(arg)
 		 })
 }
@@ -27,11 +27,11 @@ unstub.distObjStub <- function(arg, target) {
 		return(do.call(combine, chunks))
 	}
 
-	log(paste("unstubbing", paste(format(arg), collapse="\n"), 
-		  "to", paste(format(target), collapse="\n")))
+	log(paste("unstubbing", paste(format(arg), collapse=";"), 
+		  "to", paste(format(target), collapse=";")))
 
-	resolve(target)
-	resolve(arg)
+	cache(target)
+	cache(arg)
 
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
@@ -59,8 +59,8 @@ unstub.distObjStub <- function(arg, target) {
 # stub dispatches on target
 
 stub.distObjStub <- function(arg, target) {
-	log(paste("stubbing", paste(format(arg), collapse="\n"), 
-		  "to", paste(format(target), collapse="\n")))
+	log(paste("stubbing", paste(format(arg), collapse=";"), 
+		  "to", paste(format(target), collapse=";")))
 	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
 	if (is.AsIs(arg)) return(unAsIs(arg))
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
@@ -69,21 +69,21 @@ stub.distObjStub <- function(arg, target) {
 			 SIMPLIFY = FALSE, USE.NAMES=FALSE)
 	names(chunks) <- NULL
 	x <- distObjStub(chunks)
-	resolve(x)
+	cache(x)
 	x
 }
 
 stub.chunkStub <- function(arg, target) {
-	log(paste("stubbing", paste(format(arg), collapse="\n"),
-		  "to", paste(format(target), collapse="\n")))
+	log(paste("stubbing", paste(format(arg), collapse=";"),
+		  "to", paste(format(target), collapse=";")))
 	do.call.chunkStub("identity", list(arg), target = target)
 }
 
 # scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
 	stopifnot(target > 0)
-	log(paste("stubbing", paste(format(arg), collapse="\n"), "over", 
-		  paste(format(target), collapse="\n"), "chunks"))
+	log(paste("stubbing", paste(format(arg), collapse=";"), "over", 
+		  paste(format(target), collapse=";"), "chunks"))
 	chunks <- if (target == 1) {
 		list(arg) 
 		} else split(arg, cut(seq(size(arg)), breaks=target))

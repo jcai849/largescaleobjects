@@ -16,8 +16,8 @@ format.msg <- function(x) {
 	previews <- sapply(x, function(x) tryCatch(preview(x),
 						   error=function(e) ""))
 	paste0(c("Message with components:", 
-		 paste(names(previews), previews, sep=": ", collapse="\n")),
-	       collapse="\n")
+		 paste(names(previews), previews, sep=": ", collapse="; ")),
+	       collapse="; ")
 }
 
 preview.function <- function(x) format(args(x))[1]
@@ -32,7 +32,7 @@ desc.msg	<- function(x) x$desc
 
 send <- function(..., loc) {
 	m <- msg(...)
-	log(paste("sending msg to ", format(loc), ":\n", format(m)))
+	log(paste("sending msg to ", format(loc), ": ", format(m)))
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
 }

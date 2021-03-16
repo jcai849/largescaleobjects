@@ -6,6 +6,17 @@
 
 assign("/", "/", envir=.largeScaleRKeys)
 assign("unregisteredProcesses", new.env(), envir=.largeScaleRProcesses)
+final <- function(e) {
+	if (identical(ls(e), "unregisteredProcesses")) return()
+	workers <- as.integer(rediscc::redis.get(getCommsConn(),
+						 "process")) - 1
+	for (proc in seq(workers))
+		kill(root())
+	clearComms()
+}
+reg.finalizer(.largeScaleRProcesses,
+	      final,
+	      onexit=TRUE)
 
 unregisteredProcesses	<- function() get("unregisteredProcesses",
 						envir = .largeScaleRProcesses,
