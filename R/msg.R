@@ -32,7 +32,6 @@ desc.msg	<- function(x) x$desc
 
 send <- function(..., loc) {
 	m <- msg(...)
-	log(paste("sending msg to ", format(loc), ": ", format(m)))
 	serializedMsg <- rawToChar(serialize(m, NULL, T))
 	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
 }

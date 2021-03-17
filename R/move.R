@@ -27,12 +27,6 @@ unstub.distObjStub <- function(arg, target) {
 		return(do.call(combine, chunks))
 	}
 
-	log(paste("unstubbing", paste(format(arg), collapse=";"), 
-		  "to", paste(format(target), collapse=";")))
-
-	cache(target)
-	cache(arg)
-
 	fromSame <- which(from(arg) == from(target)) 
 	toSame <- which(to(arg) == to(target))
 	if (identical(as.vector(fromSame), as.vector(toSame)) &&

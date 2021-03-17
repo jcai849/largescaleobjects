@@ -57,8 +57,8 @@ print.chunkStub 	<- function(x, ...) {
 	if (cached(x)) {
 		cat(" and size", format(size(x)), 
 		    "\n", "Preview:", "\n")
-		(preview(x))
-		cat("...")
+		print(preview(x))
+		cat("...\n")
 	} else cat(". Chunk uncached\n")
 }
 
