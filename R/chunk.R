@@ -4,8 +4,6 @@ chunkStub.integer <- function(cd)  {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
-	preview(cs) <- "/"
-	cached(cs) <- FALSE
 	cs
 }
 
@@ -13,8 +11,6 @@ root <- function() {
 	cs <- new.env()
 	class(cs) <- "chunkStub"
 	desc(cs) <- "/" 
-	preview(cs) <- "/"
-	cached(cs) <- TRUE
 	cs
 }
 
@@ -24,15 +20,34 @@ is.chunkStub <- function(x) inherits(x, "chunkStub")
 
 # Get
 
-desc.chunkStub		<- largeScaleR:::envGet("desc")
-from.chunkStub 		<- largeScaleR:::envGet("from")
-host.chunkStub		<- largeScaleR:::envGet("host")
-isEndPosition.chunkStub <- largeScaleR:::envGet("isEndPosition")
-port.chunkStub		<- largeScaleR:::envGet("port")
-preview.chunkStub	<- largeScaleR:::envGet("preview")
-cached.chunkStub	<- largeScaleR:::envGet("cached")
-size.chunkStub 		<- largeScaleR:::envGet("size")
-to.chunkStub 		<- largeScaleR:::envGet("to")
+access.chunk <- function(field, alt=requestfield) {
+	function(x) {
+	tryCatch(get(field, x, inherits=FALSE), 
+		 error = function(e) alt(field, x))
+	}
+}
+requestField.chunk <- function(field, x) {
+	do.call.chunkStub(function(x, xStub, field) {
+				  send(get(field)(x),
+				       paste0(field, desc(xStub)))
+		 },
+		 list(x, I(x), I(field)), 
+		 save=FALSE)
+	response <- receive(paste0(field, desc(x)))
+	eval(substitute(field(x) <- response, 
+		   list(field=str2lang(field))))
+}
+
+desc.chunkStub		<- access.chunk("desc")
+host.chunkStub		<- access.chunk("host")
+port.chunkStub		<- access.chunk("port")
+preview.chunkStub	<- access.chunk("preview")
+size.chunkStub 		<- access.chunk("size")
+from.chunkStub 		<- access.chunk("from", stop)
+to.chunkStub 		<- access.chunk("to", stop)
+
+host.default <- function(x) host(getUserProcess())
+port.default <- function(x) port(getUserProcess())
 
 # Set
 
@@ -54,18 +69,8 @@ format.chunkStub	<- function(x, ...) {
 
 print.chunkStub 	<- function(x, ...) {
 	cat("Chunk stub with Descriptor", format(desc(x)))
-	if (cached(x)) {
-		cat(" and size", format(size(x)), 
-		    "\n", "Preview:", "\n")
-		print(preview(x))
-		cat("...\n")
-	} else cat(". Chunk uncached\n")
-}
-
-cache.chunkStub <- function(x, ...) {
-	if (!cached(x)) {
-		access(x)
-		cached(x) <- TRUE
-	} 
-	x
+	cat(" and size", format(size(x)), 
+	    "\n", "Preview:", "\n")
+	print(preview(x))
+	cat("...\n")
 }

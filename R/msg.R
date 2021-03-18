@@ -1,3 +1,15 @@
+send <- function(..., loc) {
+	m <- msg(...)
+	serializedMsg <- rawToChar(serialize(m, NULL, T))
+	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
+}
+
+receive <- function(loc) {
+        while (is.null(serializedMsg <-
+                rediscc::redis.pop(getCommsConn(), loc, timeout=10))) {}
+        unserialize(charToRaw(serializedMsg))
+}
+
 msg <- function(...) {
 	m <- list(...)
 	class(m) <- "msg"
@@ -12,26 +24,9 @@ print.msg <- function(x) {
 	}
 }
 
-format.msg <- function(x) {
-	previews <- sapply(x, function(x) tryCatch(preview(x),
-						   error=function(e) ""))
-	paste0(c("Message with components:", 
-		 paste(names(previews), previews, sep=": ", collapse="; ")),
-	       collapse="; ")
-}
-
-preview.function <- function(x) format(args(x))[1]
-preview.list	<- function(x) {
-	previews <- sapply(x, preview)
-	paste(names(previews), previews, sep=": ", collapse="; ")
-}
-fun.msg		<- function(x) x$fun
-args.msg	<- function(x) x$args
-target.msg	<- function(x) x$target
-desc.msg	<- function(x) x$desc
-
-send <- function(..., loc) {
-	m <- msg(...)
-	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
-}
+getMsg		<- function(field) function(x) x[[field]]
+fun.msg		<- getMsg("fun")
+args.msg	<- getMsg("args")
+target.msg	<- getMsg("target")
+desc.msg	<- getMsg("desc")
+save.msg	<- getMsg("save")

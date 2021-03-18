@@ -2,8 +2,8 @@ findTarget <- function(args) {
 	log("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
-	sizes <- lengths(lapply(args[dist], chunkStub))
-	args[dist][[which.max(sizes)]] # most dispersed
+	sizes <- lapply(args[dist], function(x) sum(size(x)))
+	args[dist][[which.max(sizes)]] # largest 
 }
 
 # unstub dispatches on arg
@@ -13,10 +13,7 @@ unstub.default <- function(arg, target) arg
 unstub.chunkStub <- function(arg, target) {
 	log(paste("unstubbing", paste(format(arg), collapse=";")))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
-		 error = function(e) {
-			 cache(arg)
-			 osrvGet(arg)
-		 })
+		 error = function(e) osrvGet(arg))
 }
 
 unstub.distObjStub <- function(arg, target) {
@@ -27,19 +24,12 @@ unstub.distObjStub <- function(arg, target) {
 		return(do.call(combine, chunks))
 	}
 
-	fromSame <- which(from(arg) == from(target)) 
-	toSame <- which(to(arg) == to(target))
-	if (identical(as.vector(fromSame), as.vector(toSame)) &&
-	    length(fromSame) == 1 && length(toSame) == 1) {
-		return(unstub(chunkStub(arg)[[fromSame]]))
-	}
-
 	toAlign <- alignment(arg, target) 
 	Stub <- sapply(toAlign$Stub, unstub,
 		       simplify=FALSE, USE.NAMES=FALSE)
 	names(Stub) <- NULL
 
-	combined <- if (length(Stub) == 1) {
+	if (length(Stub) == 1) {
 		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
 	} else do.call(combine, 
 		       c(list(index(Stub[[1]], seq(toAlign$HEAD$FROM, 
@@ -47,7 +37,6 @@ unstub.distObjStub <- function(arg, target) {
 			 Stub[-c(1, length(Stub))], 
 			 list(index(Stub[[length(Stub)]], seq(toAlign$TAIL$FROM,
 							    toAlign$TAIL$TO)))))
-	combined
 }
 
 # stub dispatches on target
@@ -171,8 +160,6 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
-	log(paste("retrieving chunk of descriptor", format(desc(x)),
-			 "via osrv from host", format(host(x))))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)

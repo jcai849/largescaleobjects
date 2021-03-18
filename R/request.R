@@ -1,65 +1,25 @@
-do.call.chunkStub <- function(what, args, target) {
-	log(paste("requesting", paste(format(what), collapse="\n"), 
-		  "from target", format(desc(target))))
+do.call.chunkStub <- function(what, args, target, save=TRUE) {
 	stopifnot(is.list(args))
 	cd <- desc("chunk")
 	send(fun	= what, 
 	     args	= args,
 	     target	= target,
 	     desc	= cd,
-	     loc	= desc(target))
+	     loc	= desc(target),
+	     save	= save)
 	chunkStub(cd)
 }
 
-do.call.distObjStub <- function(what, args) {
-	log(paste("requesting", format(what)))
+do.call.distObjStub <- function(what, args, save=TRUE) {
+	for (arg in args) fillMetaData(arg)
 	## distribute the non-distributed
 	target <- findTarget(args)
 	args <- lapply(args, stub, target=target)
 	##
 	target <- findTarget(args)
 	cs <- lapply(chunkStub(target), 
-		     function(t) do.call.chunkStub(what, args, t))
+		     function(t) do.call.chunkStub(what, args, t, save))
 	distObjStub(cs)
-}
-
-access <- function(x) {
-	cd <- desc(x)
-	log(paste("accessing chunk with descriptor", format(cd)))
-	inform(cd)
-	if (!checkKey(cd))
-		read(queue(paste0(cd, "response")))
-	clean(cd)
-	populate(x)
-}
-
-inform <- function(cd) {
-	log(paste("informing interest queue for chunk descriptor",
-			 format(cd)))
-	rediscc::redis.inc(getCommsConn(), paste0(cd, "interest"))
-}
-
-checkKey <- function(cd) {
-	log(paste("checking availability of chunk descriptor",
-			 format(cd)))
-	!is.null(rediscc::redis.get(getCommsConn(), paste0(cd, "avail")))
-}
-
-clean <- function(cd) {
-	log(paste("clearing interest for chunk descriptor",
-			 format(cd)))
-	rediscc::redis.dec(getCommsConn(), paste0(cd, "interest"))
-}
-
-populate <- function(x) {
-	cd		<- desc(x)
-	log(paste("populating stub for chunk descriptor", format(cd)))
-	preview(x)	<- rediscc::redis.get(getCommsConn(), paste0(cd, "preview"))
-	if (inherits(preview(x), "error")) stop(preview(x))	
-	size(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "size"))
-	host(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "host"))
-	port(x)		<- rediscc::redis.get(getCommsConn(), paste0(cd, "port"))
-	NULL
 }
 
 is.AsIs <- function(x) inherits(x, "AsIs")

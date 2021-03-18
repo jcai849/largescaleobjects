@@ -1,7 +1,7 @@
 userProcess(host=	"localhost")
 
 logProcess(host=	"localhost",
-	   port=	514L,
+	   port=	5140L,
 	   execute=	FALSE)
 
 commsProcess(host=	"localhost",
