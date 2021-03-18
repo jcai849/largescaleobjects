@@ -41,7 +41,8 @@ distObjSet <- function(fun) function(x, value) {
 	x
 }
 
-`chunkStub<-.distObjStub`	<- largeScaleR:::envSet("chunk")
+`chunkStub<-.distObjStub`	<- function(x, value) 
+	{assign("chunk", value, x); x}
 `to<-.distObjStub`		<- distObjSet(`to<-`)
 `from<-.distObjStub`		<- distObjSet(`from<-`)
 `isEndPosition<-.distObjStub`	<- distObjSet(`isEndPosition<-`)
@@ -62,18 +63,11 @@ access.distObjStub <- function(field)
 
 print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 
-	    "chunk stubs.")
-	cat(" Total size", format(sum(size(x))), "\n")
+	    "chunk stubs.\n")
+#	cat(" Total size", format(sum(size(x))), "\n")
 	cat("First chunk stub:\n")
 	print(chunkStub(x)[[1]])
 }
-
-format.distObjStub <- function(x, ...) paste(
-	"Distributed Object Stub with", format(length(chunkStub(x))), 
-	    "chunk stubs.", 
-		paste(
-		" Total size:", format(sum(size(x))), "\n", 
-		"First chunk:\n", format(chunkStub(x)[[1]])))
 
 # User-level
 

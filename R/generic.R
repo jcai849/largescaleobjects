@@ -1,4 +1,5 @@
 chunkStub	<- function(x, ...) UseMethod("chunkStub", x)
+access		<- function(x, ...) UseMethod("access", x)
 colTypes	<- function(x, ...) UseMethod("colTypes", x)
 combine		<- function(...) UseMethod("combine", ..1)
 dbpass		<- function(x, ...) UseMethod("dbpass", x)
@@ -13,7 +14,9 @@ pass		<- function(x, ...) UseMethod("pass", x)
 preview		<- function(x, ...) UseMethod("preview", x)
 quotes		<- function(x, ...) UseMethod("quotes", x)
 read		<- function(x, ...) UseMethod("read", x)
+requestField	<- function(field, x, ...) UseMethod("requestField", x)
 size		<- function(x, ...) UseMethod("size", x)
+store		<- function(x, ...) UseMethod("store", x)
 stub		<- function(arg, target) UseMethod("stub", target)
 target		<- function(x, ...) UseMethod("target", x)
 to		<- function(x, ...) UseMethod("to", x)
@@ -50,7 +53,6 @@ desc.default <- function(type) {
 	stopifnot(type %in% typelist)
 
 	desc <- rediscc::redis.inc(getCommsConn(), type)
-	log(paste("attained", type, "descriptor", format(desc)))
 	desc
 }
 

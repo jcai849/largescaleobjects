@@ -3,14 +3,10 @@ useDynLib(largeScaleR, C_port)
 importFrom("utils", "head")
 importFrom("utils", "hasName")
 
-# 0util.R
-export("counterMaker")
-export("getLocal")
-export("envSet")
-
 # chunk.R
 export("root")
 S3method("chunkStub", "integer")
+S3method("access", "chunkStub")
 S3method("desc", "chunkStub")
 S3method("desc<-", "chunkStub")
 S3method("from", "chunkStub")
@@ -26,6 +22,7 @@ S3method("print", "chunkStub")
 S3method("size", "chunkStub")
 S3method("size<-", "chunkStub")
 S3method("to", "chunkStub")
+S3method("requestField", "chunkStub")
 S3method("to<-", "chunkStub")
 
 # control.R
@@ -69,6 +66,7 @@ export("unregisteredProcesses")
 
 # generic.R
 export("args")
+export("requestField")
 export("chunkStub")
 export("chunkStub<-")
 export("colTypes")
@@ -102,6 +100,7 @@ export("read")
 export("size")
 export("size<-")
 export("stub")
+export("store")
 export("table")
 export("target")
 export("to")
@@ -148,6 +147,7 @@ S3method("args", "msg")
 S3method("desc", "msg")
 S3method("fun", "msg")
 S3method("print", "msg")
+S3method("store", "msg")
 S3method("preview", "default")
 S3method("target", "msg")
 
@@ -193,8 +193,7 @@ S3method("size", "error")
 S3method("size", "matrix")
 
 # log.R
-export("log")
-export("logCounter")
+export("stateLog")
 S3method("init", "logProcess")
 
 # request.R

@@ -37,9 +37,7 @@ logProcess <- function(host="127.0.0.1", port=5140L, execute=FALSE) {
 }
 
 register.logProcess <- function(x, ...) {
-	log(paste0("registering logProcess: ", format(x)))
 	if (execute(x)) {
-		log("executing logprocess")
 		system2("ssh",  c(host(x), "ulogd", "-u", port(x)),
 			      stdout=FALSE, stderr=FALSE,  wait=FALSE)
 	}
@@ -59,9 +57,7 @@ commsProcess <- function(host="localhost", port=6379L, user=NULL,
 }
 
 register.commsProcess <- function(x, ...) {
-	log(paste0("registering commsProcess: ", format(x)))
 	if (execute(x)) {
-	log(paste0("executing commsProcess: ", format(x)))
 		system2("ssh", c(host(x), "redis-server"),
 			stdout=FALSE, stderr=FALSE,  wait=FALSE)
 	}
@@ -84,7 +80,6 @@ userProcess <- function(host="localhost", port=largeScaleR::port()) {
 
 register.userProcess <- function(x, ...) {
 	desc(x) <- desc("process")
-	log(paste0("registering userProcess: ", format(x)))
 	osrv::start(port=port(x))
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)
@@ -94,6 +89,12 @@ register.userProcess <- function(x, ...) {
 	rm("3.userProcess", envir=unregisteredProcesses())
 	assign("userProcess", x, envir=.largeScaleRProcesses)
 }
+
+counterMaker <- function(initial, step)
+	local({
+		count <- initial
+		function() {count <<- count + step; count}
+	})
 
 workerCounter <- counterMaker(3, 1)
 
@@ -108,9 +109,7 @@ workerProcess <- function(host="localhost",
 }
 
 register.workerProcess <- function(x, ...) {
-	log(paste0("registering workerProcess: ", format(x)))
 	if (!execute(x)) return()
-	log(paste0("executing workerProcess: ", format(x)))
 	count <- attr(x, "count", exact = TRUE)
 	attr(x, "count") <- NULL
 	rm(list=paste0(count, ".workerProcess"), envir=unregisteredProcesses())

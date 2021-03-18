@@ -1,4 +1,4 @@
-do.call.chunkStub <- function(what, args, target, save=TRUE) {
+do.call.chunkStub <- function(what, args, target, store=TRUE) {
 	stopifnot(is.list(args))
 	cd <- desc("chunk")
 	send(fun	= what, 
@@ -6,11 +6,11 @@ do.call.chunkStub <- function(what, args, target, save=TRUE) {
 	     target	= target,
 	     desc	= cd,
 	     loc	= desc(target),
-	     save	= save)
+	     store	= store)
 	chunkStub(cd)
 }
 
-do.call.distObjStub <- function(what, args, save=TRUE) {
+do.call.distObjStub <- function(what, args, store=TRUE) {
 	for (arg in args) fillMetaData(arg)
 	## distribute the non-distributed
 	target <- findTarget(args)
@@ -18,12 +18,18 @@ do.call.distObjStub <- function(what, args, save=TRUE) {
 	##
 	target <- findTarget(args)
 	cs <- lapply(chunkStub(target), 
-		     function(t) do.call.chunkStub(what, args, t, save))
+		     function(t) do.call.chunkStub(what, args, t, store))
 	distObjStub(cs)
 }
 
-is.AsIs <- function(x) inherits(x, "AsIs")
-unAsIs <- function(x) {
-	class(x) <- class(x)[!class(x) == "AsIs"]
-	x
+requestField.chunkStub <- function(field, x) {
+	do.call.chunkStub(what=function(field, xStub)
+				  send(get(field)(unstub(xStub)), 
+				       paste0(field, desc(xStub))),
+			  args=list(field=I(field), xStub=I(x)),
+			  target=x,
+			  store=FALSE)
+        response <- receive(paste0(field, desc(x)))
+        eval(substitute(field(x) <- response,
+                   list(field=str2lang(field))))
 }

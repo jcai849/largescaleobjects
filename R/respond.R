@@ -15,7 +15,7 @@ worker <- function(comms, log, host, port) {
 					    target(request),
 					    largeScaleR::desc(request)), 
 				   error =  identity)
-		if (save(request))
+		if (store(request))
 			addChunk(largeScaleR::desc(request), result)
 	}
 }
@@ -23,6 +23,5 @@ worker <- function(comms, log, host, port) {
 evaluate <- function(fun, args, target, cd) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
-	log(paste("evaluating", paste(format(fun), collapse="\n")))
 	do.call(fun, args, envir=.GlobalEnv)
 }

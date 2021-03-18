@@ -1,17 +1,23 @@
 findTarget <- function(args) {
-	log("finding target")
 	dist <- vapply(args, is.distObjStub, logical(1))
 	if (!any(dist)) return(root())
 	sizes <- lapply(args[dist], function(x) sum(size(x)))
 	args[dist][[which.max(sizes)]] # largest 
 }
 
+is.AsIs <- function(x) inherits(x, "AsIs")
+unAsIs <- function(x) {
+	class(x) <- class(x)[!class(x) == "AsIs"]
+	x
+}
+
 # unstub dispatches on arg
 
 unstub.default <- function(arg, target) arg
 
+unstub.AsIs <- unAsIs
+
 unstub.chunkStub <- function(arg, target) {
-	log(paste("unstubbing", paste(format(arg), collapse=";")))
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 		 error = function(e) osrvGet(arg))
 }
@@ -42,10 +48,10 @@ unstub.distObjStub <- function(arg, target) {
 # stub dispatches on target
 
 stub.distObjStub <- function(arg, target) {
-	log(paste("stubbing", paste(format(arg), collapse=";"), 
-		  "to", paste(format(target), collapse=";")))
-	if (is.distObjStub(arg) || is.chunkStub(arg)) return(arg)
-	if (is.AsIs(arg)) return(unAsIs(arg))
+	if (is.distObjStub(arg) ||
+	    is.chunkStub(arg)   ||
+	    is.AsIs(arg))
+		return(arg)
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
 	chunks <- mapply(stub,
 			 splits, chunkStub(target)[seq(length(splits))],
@@ -57,16 +63,12 @@ stub.distObjStub <- function(arg, target) {
 }
 
 stub.chunkStub <- function(arg, target) {
-	log(paste("stubbing", paste(format(arg), collapse=";"),
-		  "to", paste(format(target), collapse=";")))
 	do.call.chunkStub("identity", list(arg), target = target)
 }
 
 # scatter into <target>-many pieces over the general cluster
 stub.integer <- function(arg, target) {
 	stopifnot(target > 0)
-	log(paste("stubbing", paste(format(arg), collapse=";"), "over", 
-		  paste(format(target), collapse=";"), "chunks"))
 	chunks <- if (target == 1) {
 		list(arg) 
 		} else split(arg, cut(seq(size(arg)), breaks=target))
