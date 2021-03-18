@@ -1,8 +1,9 @@
 library(largeScaleR)
 userProcess(host="localhost")
+commsProcess(host="localhost", port=6379L, execute=FALSE)
 logProcess(host="localhost", port=5140L, execute=FALSE)
 init()
 
-x <- stub(1:30, 3)
-y <- stub(1:20, 2)
-z = x + y
+x <- stub(data.frame(a=rnorm(1E4), b=rnorm(1E4)), 1)
+debug(requestField)
+size(x)
