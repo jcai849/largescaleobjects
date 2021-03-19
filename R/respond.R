@@ -11,16 +11,16 @@ worker <- function(comms, log, host, port) {
 	repeat {
 		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
 		request <- receive(keys)
-		result <- tryCatch(evaluate(fun(request), args(request),
-					    target(request),
-					    largeScaleR::desc(request)), 
+		result <- tryCatch(evaluate(fun(request), 
+					    args(request),
+					    target(request)), 
 				   error =  identity)
 		if (store(request))
 			addChunk(largeScaleR::desc(request), result)
 	}
 }
 
-evaluate <- function(fun, args, target, cd) {
+evaluate <- function(fun, args, target) {
 	stopifnot(is.list(args))
 	args <- lapply(args, unstub, target=target)
 	do.call(fun, args, envir=.GlobalEnv)

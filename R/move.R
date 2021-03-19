@@ -15,7 +15,7 @@ unAsIs <- function(x) {
 
 unstub.default <- function(arg, target) arg
 
-unstub.AsIs <- unAsIs
+unstub.AsIs <- function(arg, target) unAsIs(arg)
 
 unstub.chunkStub <- function(arg, target) {
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),

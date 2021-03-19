@@ -8,58 +8,12 @@ distObjStub <- function(x) {
 	dos
 }
 
-# Inherit
-
 is.distObjStub <- function(x) inherits(x, "distObjStub")
 is.distributed <- function(x) is.distObjStub(x) | is.chunkStub(x)
 
-# Get
+chunkStub.distObjStub <- function(x) get("chunk", x, inherit=F)
 
-distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
-
-chunkStub.distObjStub	<- function(x) get("chunk", x, inherit=F)
-size.distObjStub 	<- distObjDo(size, integer)
-to.distObjStub		<- function(x) 
-	tryCatch(distObjDo(to, integer),
-		 error = function(e) {
-			 to(x) <- cumsum(size(x))
-			 to(x)
-		 })
-from.distObjStub 	<- function(x)
-	tryCatch(distObjDo(from, integer),
-		 error = function(e) {
-			 from(x) <- c(1L, to(x)[-length(to(x))] + 1L)
-			 from(x)
-		 })
-fillMetaData.distObjStub <- function(x) {size(x); to(x); from(x); return()}
-fillMetaData.default <- identity
-
-# Set
-
-distObjSet <- function(fun) function(x, value) {
-	mapply(fun, chunkStub(x), value)
-	x
-}
-
-`chunkStub<-.distObjStub`	<- function(x, value) 
-	{assign("chunk", value, x); x}
-`to<-.distObjStub`		<- distObjSet(`to<-`)
-`from<-.distObjStub`		<- distObjSet(`from<-`)
-`isEndPosition<-.distObjStub`	<- distObjSet(`isEndPosition<-`)
-
-# Other methods
-
-access.distObjStub <- function(field)
-	function(x) {
-	lapply(chunkStub(x), access)
-	tos <- cumsum(size(x))
-	names(tos) <- NULL
-	to(x) <- tos
-	froms <- c(1L, to(x)[-length(to(x))] + 1L)
-	names(froms) <- NULL
-	from(x) <- froms
-	x
-}
+preview.distObjStub <- function(x, ...) lapply(chunkStub(x), preview)
 
 print.distObjStub <- function(x, ...) {
 	cat("Distributed Object Stub with", format(length(chunkStub(x))), 

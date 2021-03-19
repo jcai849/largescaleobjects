@@ -25,8 +25,14 @@ print.msg <- function(x) {
 }
 
 getMsg		<- function(field) function(x) x[[field]]
-fun.msg		<- getMsg("fun")
 args.msg	<- getMsg("args")
-target.msg	<- getMsg("target")
 desc.msg	<- getMsg("desc")
+from.msg	<- getMsg("from")
+fun.msg		<- getMsg("fun")
+host.msg	<- getMsg("host")
+port.msg	<- getMsg("port")
+preview.msg	<- getMsg("preview")
+size.msg	<- getMsg("size")
 store.msg	<- getMsg("store")
+target.msg	<- getMsg("target")
+to.msg		<- getMsg("to")
