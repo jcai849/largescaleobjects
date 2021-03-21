@@ -162,6 +162,7 @@ osrvCmd <- function(s, cmd) {
 }
 
 osrvGet <- function(x) {
+	stateLog(paste("RCV", desc(x)))
 	s <- socketConnection(host(x), port=port(x), open="a+b")
 	sv <- osrvCmd(s, paste0("GET", " ", desc(x), "\n"))
 	close(s)

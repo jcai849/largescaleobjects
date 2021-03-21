@@ -5,6 +5,7 @@ send <- function(..., loc) {
 }
 
 receive <- function(loc) {
+	stateLog("WTQ")
         while (is.null(serializedMsg <-
                 rediscc::redis.pop(getCommsConn(), loc, timeout=10))) {}
         unserialize(charToRaw(serializedMsg))
