@@ -1,4 +1,3 @@
-debug(largeScaleR::evaluate)
 largeScaleR::worker(comms=structure(list(host = "localhost", port = 6379L,
 					 execute = FALSE, desc = "comms"),
 				    class = c("commsProcess", "process")),
