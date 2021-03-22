@@ -16,7 +16,8 @@ worker <- function(comms, log, host, port) {
 	repeat {
 		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
 		request <- receive(keys)
-		stateLog(paste("WRK", desc(request)))
+		stateLog(paste("WRK", desc(getUserProcess()),
+			       desc(request))) # WRK X Y - Working at worker X on chunk Y
 		result <- tryCatch(evaluate(fun(request), 
 					    args(request),
 					    target(request)), 

@@ -5,7 +5,7 @@ send <- function(..., loc) {
 }
 
 receive <- function(loc) {
-	stateLog("WTQ")
+	stateLog(paste("WTQ", desc(getUserProcess()))) # WTQ X - Waiting on queues at worker X
         while (is.null(serializedMsg <-
                 rediscc::redis.pop(getCommsConn(), loc, timeout=10))) {}
         unserialize(charToRaw(serializedMsg))

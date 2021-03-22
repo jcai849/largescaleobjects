@@ -88,7 +88,7 @@ register.userProcess <- function(x, ...) {
 
 	rm("3.userProcess", envir=unregisteredProcesses())
 	assign("userProcess", x, envir=.largeScaleRProcesses)
-	stateLog("CON")
+	stateLog(paste("CON", desc(getUserProcess()))) # CON X - New worker connected
 }
 
 counterMaker <- function(initial, step)

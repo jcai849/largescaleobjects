@@ -37,7 +37,8 @@ getCommsConn		<- function() get("commsConn",
 addChunk <- function(cd, val) {
 	assign(as.character(cd), val, envir = .largeScaleRChunks)
 	osrv::put(as.character(cd), serialize(val, NULL))
-	stateLog(paste("SVD", as.character(cd)))
+	stateLog(paste("SVD", desc(getUserProcess()), 
+		       as.character(cd))) # SVD X Y - Saving at worker X, chunk Y
 	val
 }
 
