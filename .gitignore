@@ -3,3 +3,4 @@ tags
 *.so
 *.swp
 dump.rdb
+a.out
