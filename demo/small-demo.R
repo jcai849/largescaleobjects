@@ -18,14 +18,8 @@ write.table(COVID, fileLoc,, F, ",",, "",,F,F)
 CSVfile <- localCSV(loc=fileLoc, colTypes=cols,header=FALSE,quote="")
 
 # distribute data
-Rprof(filename="master.out",
-      append=TRUE,
-      memory.profiling=TRUE,
-      line.profiling=TRUE,
-      filter.callframes=TRUE)
 distCOVID <- read(CSVfile, max.size=100*1024) #100Kb
 distnCases <- stub(nCases, 10)
 k=distCOVID$lockdowns * distnCases
 preview(k)
 final(1)
-Rprof(NULL)
