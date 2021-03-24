@@ -138,7 +138,6 @@ S3method("read", "localCSV")
 # move.R
 export("alignment")
 export("findTarget")
-export("osrvCmd")
 export("osrvGet")
 export("is.AsIs")
 export("unAsIs")
