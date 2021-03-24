@@ -8,11 +8,6 @@ worker <- function(comms, log, host, port) {
 	userProcess(host, if (missing(port)) largeScaleR::port() else port)
 	init()
 
-	Rprof(filename=paste0(Sys.getpid(), ".out"),
-	      append=TRUE,
-	      memory.profiling=TRUE,
-	      line.profiling=TRUE,
-	      filter.callframes=TRUE)
 	repeat {
 		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
 		request <- receive(keys)
