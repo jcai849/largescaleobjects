@@ -1,11 +1,11 @@
-.largeScaleRConfig	<- new.env()
-.largeScaleRChunks	<- new.env()
-.largeScaleRConn	<- new.env()
-.largeScaleRProcesses	<- new.env()
-.largeScaleRKeys	<- new.env()
+.largeScaleRConfig	<- new.env(TRUE, emptyenv())
+.largeScaleRChunks	<- new.env(TRUE, emptyenv())
+.largeScaleRConn	<- new.env(TRUE, emptyenv())
+.largeScaleRProcesses	<- new.env(TRUE, emptyenv())
+.largeScaleRKeys	<- new.env(TRUE, emptyenv())
 
 assign("/", "/", envir=.largeScaleRKeys)
-assign("unregisteredProcesses", new.env(), envir=.largeScaleRProcesses)
+assign("unregisteredProcesses", new.env(TRUE, emptyenv()), envir=.largeScaleRProcesses)
 final <- function(e) {
 	if (identical(ls(e), "unregisteredProcesses")) return()
 	workers <- as.integer(rediscc::redis.get(getCommsConn(),

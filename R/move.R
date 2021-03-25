@@ -58,7 +58,6 @@ stub.distObjStub <- function(arg, target) {
 			 SIMPLIFY = FALSE, USE.NAMES=FALSE)
 	names(chunks) <- NULL
 	x <- distObjStub(chunks)
-	cache(x)
 	x
 }
 

@@ -54,7 +54,7 @@ requestField.chunkStub <- function(field, x) {
 					  target=x,
 					  store=FALSE),
 			list(fieldSym = fieldSym,
-			     commQueue = commQueue ))
+			     commQueue = commQueue))
 	names(request$what[[3]])[2] <- field # parse tree hack
 	eval(request)
 	commQueue
