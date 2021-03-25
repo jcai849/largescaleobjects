@@ -6,7 +6,6 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <error.h>
 
 #define SA struct sockaddr
 #define MAX_LINE 1024
@@ -107,12 +106,12 @@ void fillModel(void)
 					waiting(args[0]);
 					break;
 				default: 
-					error(1, 0, "Operation not recognised");
+					printf("Operation not recognised");
 					exit(1);
 			}
 			break;
 		default: 
-			error(1, 0, "Operation not recognised");
+			printf("Operation not recognised");
 			exit(1);
 	}
 	showModel();
@@ -147,7 +146,7 @@ void getArgs(int *args)
 	argbLoc = strtok(NULL, " ");
 	if (argbLoc != NULL) {
 		args[1] = atoi(argbLoc);
-	}
+	} else args[1] = 0;
 }
 
 void addWorker(int w)
@@ -190,7 +189,7 @@ Worker *findWorker(int w)
 			return &model.workers[i];
 		}
 	}
-	error(1, 0, "Worker not found");
+	printf("Worker not found");
 	exit(1);
 }
 

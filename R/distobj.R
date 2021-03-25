@@ -2,7 +2,7 @@
 
 distObjStub <- function(x) {
 	stopifnot(all(sapply(x, is.chunkStub)))
-	dos <- new.env()
+	dos <- new.env(TRUE, emptyenv())
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
 	dos
@@ -43,7 +43,8 @@ Complex.distObjStub <- function(z)
 
 Summary.distObjStub <- function(..., na.rm = FALSE) {
 	mapped <- unstub(do.call.distObjStub(.Generic,
-					    c(list(...), list(na.rm=I(na.rm)))))
+					    c(list(...), list(na.rm=I(na.rm))),
+					    store=FALSE))
 	do.call(.Generic, 
 		c(list(mapped), list(na.rm=na.rm)))
 }

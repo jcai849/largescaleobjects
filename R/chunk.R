@@ -1,14 +1,14 @@
 # Instantiate
 
 chunkStub.integer <- function(cd)  {
-	cs <- new.env()
+	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkStub"
 	desc(cs) <- cd 
 	cs
 }
 
 root <- function() {
-	cs <- new.env()
+	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkStub"
 	desc(cs) <- "/" 
 	cs

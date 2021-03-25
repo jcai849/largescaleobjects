@@ -28,5 +28,3 @@ size.matrix	 	<- nrow
 size.error		<- function(x) NULL
 
 preview.error		<- identity
-
-cache.default		<- identity

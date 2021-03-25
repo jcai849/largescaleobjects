@@ -22,4 +22,3 @@ distCOVID <- read(CSVfile, max.size=100*1024) #100Kb
 distnCases <- stub(nCases, 10)
 k=distCOVID$lockdowns * distnCases
 preview(k)
-final(1)
