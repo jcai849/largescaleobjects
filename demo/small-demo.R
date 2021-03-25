@@ -21,7 +21,10 @@ CSVfile <- localCSV(loc=fileLoc, colTypes=cols,header=FALSE,quote="")
 trace(send)
 trace(stub)
 trace(unstub)
+Rprof(filename="slow-master", interval = 0.001, memory.profiling=T,
+      line.profiling=T, gc.profiling=T, filter.callframes=T)
 distCOVID <- read(CSVfile, max.size=100*1024) #100Kb
 distnCases <- stub(nCases, 10)
 k=distCOVID$lockdowns * distnCases
 preview(k)
+Rprof(NULL)

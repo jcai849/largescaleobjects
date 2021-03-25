@@ -5,8 +5,8 @@ access.chunkStub <- function(x, field, alt=requestField) {
 		 error = function(e) {
 			 alt(field, x)
 			 commQueue <- paste0(field, desc(x))
-			 fieldSym <- str2lang(field)
 			 response <- receive(commQueue)
+			 fieldSym <- str2lang(field)
 			 eval(substitute({
 				 fieldSym(x) <- fieldSym(response)
 				 fieldSym(response)},
@@ -16,33 +16,31 @@ access.chunkStub <- function(x, field, alt=requestField) {
 
 access.distObjStub <- function(x, field, type=character) {
 	chunks <- chunkStub(x)
-	tryCatch(sapply(chunks, function(chunk) get(field, chunk, inherits=FALSE)),
-			error = function(e) {
-				nChunks <- length(chunks)
-				fields <- type(nChunks)
-				commQueues <- character(nChunks)
-				for (i in seq(nChunks)) {
-					chunk <- chunks[[i]]
-					tryCatch(fields[i] <- get(field, chunk, inherits=FALSE),
-						 error = function(e) {
-							 requestField(field, chunk)
-							 commQueues[i] <- paste0(field, desc(chunk))
-						 }) 
-				}
-				if (!identical(commQueues, character(nChunks))){
-					fieldSym <- str2lang(field)
-					for (i in seq(nChunks)) {
-						if (!identical(commQueues[i], character(1))) {
-							response <- receive(commQueues[i])
-							eval(substitute({
-								fields[[i]] <- fieldSym(response)
-								fieldSym(chunks[[i]]) <- fields[[i]]
-							}, list(fieldSym = fieldSym)))
-						}
-					}
-				}
-				fields
-			})
+	nChunks <- length(chunks)
+	fields <- type(nChunks)
+	commQueues <- character(nChunks)
+	for (i in 1:nChunks) {
+		chunk <- chunks[[i]]
+		if (exists(field, chunk, inherits=FALSE)) {
+			fields[i] <- get(field, chunk, inherits=FALSE)
+		} else {
+			requestField(field, chunk)
+			commQueues[i] <- paste0(field, desc(chunk))
+		}
+	}
+	if (!identical(commQueues, character(nChunks))){
+		fieldSym <- str2lang(field)
+		for (i in 1:nChunks) {
+			if (!identical(commQueues[i], character(1))) {
+				response <- receive(commQueues[i])
+				eval(substitute({
+					fields[[i]] <- fieldSym(response)
+					fieldSym(chunks[[i]]) <- fields[[i]]
+				}, list(fieldSym = fieldSym)))
+			}
+		}
+	}
+	fields
 }
 
 requestField.chunkStub <- function(field, x) {
@@ -75,7 +73,7 @@ desc.distObjStub	<- distObjDo(desc, integer)
 from.chunkStub 		<- function(x) access(x, "from", stop)
 from.distObjStub 	<- function(x)
 	tryCatch(sapply(chunkStub(x),
-			function(chunk) get(chunk, "from", inherits=FALSE)),
+			function(chunk) get("from", chunk, inherits=FALSE)),
 		 error = function(e) {
 			 from(x) <- c(1L, to(x)[-length(to(x))] + 1L)
 			 from(x)
@@ -93,7 +91,7 @@ size.distObjStub 	<- function(x) access(x, "size", type=integer)
 to.chunkStub 		<- function(x) access(x, "to", stop)
 to.distObjStub		<- function(x) 
 	tryCatch(sapply(chunkStub(x),
-			function(chunk) get(chunk, "to", inherits=FALSE)),
+			function(chunk) get("to", chunk, inherits=FALSE)),
 		 error = function(e) {
 			 to(x) <- cumsum(size(x))
 			 to(x)

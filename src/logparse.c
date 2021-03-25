@@ -146,7 +146,7 @@ void getArgs(int *args)
 	argbLoc = strtok(NULL, " ");
 	if (argbLoc != NULL) {
 		args[1] = atoi(argbLoc);
-	}
+	} else args[1] = 0;
 }
 
 void addWorker(int w)
