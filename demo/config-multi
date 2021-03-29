@@ -1,0 +1,54 @@
+userProcess(host=	"10.3.1.1")
+
+logProcess(host=	"10.3.1.1")
+
+commsProcess(host=	"10.3.1.1",
+	     execute=	FALSE)
+
+workerProcess(host=	"10.3.1.17",	# hadoop1
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.2",	# hadoop2
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.5",	# hadoop3
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.3",	# hadoop4
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.15",	# hadoop5
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.8",	# hadoop6
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.7",	# hadoop7
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.9",	# hadoop8
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.17",	# hadoop1
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.2",	# hadoop2
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.5",	# hadoop3
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.3",	# hadoop4
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.15",	# hadoop5
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.8",	# hadoop6
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.7",	# hadoop7
+	      execute=	TRUE)
+
+workerProcess(host=	"10.3.1.9",	# hadoop8
+	      execute=	TRUE)
