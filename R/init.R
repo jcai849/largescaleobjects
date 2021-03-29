@@ -33,7 +33,7 @@ logProcess <- function(host="127.0.0.1", port=5140L, execute=FALSE) {
 	x <- process(host, port, execute=execute)
 	class(x) <- c("logProcess", class(x))
 
-	assign("1.logProcess", x, envir=unregisteredProcesses())
+	assign("01.logProcess", x, envir=unregisteredProcesses())
 }
 
 register.logProcess <- function(x, ...) {
@@ -42,7 +42,7 @@ register.logProcess <- function(x, ...) {
 			      stdout=FALSE, stderr=FALSE,  wait=FALSE)
 	}
 	init(x)
-	rm("1.logProcess", envir=unregisteredProcesses())
+	rm("01.logProcess", envir=unregisteredProcesses())
 	assign("logProcess", x, envir=.largeScaleRProcesses)
 }
 
@@ -53,7 +53,7 @@ commsProcess <- function(host="localhost", port=6379L, user=NULL,
 	desc(x) <- "comms"
 	dbpass(x) <- dbpass
 
-	assign("2.commsProcess", x, envir=unregisteredProcesses())
+	assign("02.commsProcess", x, envir=unregisteredProcesses())
 }
 
 register.commsProcess <- function(x, ...) {
@@ -66,7 +66,7 @@ register.commsProcess <- function(x, ...) {
 				      password=dbpass(x))
 	assign("commsConn", rsc, envir=.largeScaleRConn)
 
-	rm("2.commsProcess", envir=unregisteredProcesses())
+	rm("02.commsProcess", envir=unregisteredProcesses())
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
@@ -75,7 +75,7 @@ userProcess <- function(host="localhost", port=largeScaleR::port()) {
 	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
 
-	assign("3.userProcess", x, envir=unregisteredProcesses())
+	assign("03.userProcess", x, envir=unregisteredProcesses())
 }
 
 register.userProcess <- function(x, ...) {
@@ -87,7 +87,7 @@ register.userProcess <- function(x, ...) {
 	assign(paste0("/host/", host(x)),
 	       NULL, envir=.largeScaleRKeys)
 
-	rm("3.userProcess", envir=unregisteredProcesses())
+	rm("03.userProcess", envir=unregisteredProcesses())
 	assign("userProcess", x, envir=.largeScaleRProcesses)
 	stateLog(paste("CON", desc(getUserProcess()))) # CON X - New worker connected
 }
