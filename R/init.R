@@ -80,7 +80,8 @@ userProcess <- function(host="localhost", port=largeScaleR::port()) {
 
 register.userProcess <- function(x, ...) {
 	desc(x) <- desc("process")
-	osrv::start(port=port(x))
+	while (!tryCatch(osrv::start(port=port(x)), 
+			 error = function(e) FALSE)){}
 	assign(paste0("/process/", as.character(largeScaleR::desc(x))),
 	       NULL, envir=.largeScaleRKeys)
 	assign(paste0("/host/", host(x)),
