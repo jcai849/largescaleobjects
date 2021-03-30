@@ -106,12 +106,12 @@ void fillModel(void)
 					waiting(args[0]);
 					break;
 				default: 
-					printf("Operation not recognised");
+					printf("Operation %s not recognised", op);
 					exit(1);
 			}
 			break;
 		default: 
-			printf("Operation not recognised");
+			printf("Operation %s not recognised", op);
 			exit(1);
 	}
 	showModel();
@@ -189,7 +189,7 @@ Worker *findWorker(int w)
 			return &model.workers[i];
 		}
 	}
-	printf("Worker not found");
+	printf("Worker %d not found", w);
 	exit(1);
 }
 
