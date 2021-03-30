@@ -43,8 +43,8 @@ S3method("to<-", "distObjStub")
 
 # chunk.R
 export("root")
+export("is.chunkStub")
 S3method("chunkStub", "integer")
-S3method("is", "chunkStub")
 S3method("print", "chunkStub")
 
 # control.R
@@ -54,6 +54,7 @@ export("clearComms")
 # distobj.R
 export("distObjStub")
 export("is.distributed")
+export("is.distObjStub")
 S3method("$", "distObjStub")
 S3method("Complex", "distObjStub")
 S3method("Math", "distObjStub")
@@ -62,7 +63,6 @@ S3method("Summary", "distObjStub")
 S3method("chunkStub", "distObjStub")
 S3method("chunkStub<-", "distObjStub")
 S3method("dim", "distObjStub")
-S3method("is", "distObjStub")
 S3method("print", "distObjStub")
 S3method("preview", "distObjStub")
 S3method("table", "distObjStub")

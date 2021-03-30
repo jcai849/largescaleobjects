@@ -1,7 +1,7 @@
 library(largeScaleR)
 init("config")
 
-x <- resolve(stub(1:30, 3))
+x <- stub(1:30, 3)
 
 # AsIs local
 stopifnot(identical(unstub(x+I(1:3)), 
@@ -23,7 +23,3 @@ stopifnot(identical(unstub(x+1:300), 1:30+1:300))
 # smaller sized distObj
 
 # larger sized distObj
-
-# unresolved distObj
-
-# unresolved : unresolved distObj

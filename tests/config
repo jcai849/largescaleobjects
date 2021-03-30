@@ -1,8 +1,6 @@
 userProcess(host=	"localhost")
 
-logProcess(host=	"localhost",
-	   port=	5140L,
-	   execute=	FALSE)
+logProcess(port=	5140L)
 
 commsProcess(host=	"localhost",
 	     port=	6379L,
