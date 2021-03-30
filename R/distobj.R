@@ -1,7 +1,6 @@
 # Instantiate
 
 distObjStub <- function(x) {
-	stopifnot(all(sapply(x, is.chunkStub)))
 	dos <- new.env(TRUE, emptyenv())
 	class(dos) <- "distObjStub"
 	chunkStub(dos) <- x
