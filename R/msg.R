@@ -17,7 +17,7 @@ msg <- function(...) {
 	m
 }
 
-print.msg <- function(x) {
+print.msg <- function(x, ...) {
 	cat("Message with components:\n")
 	for (n in names(x)) {
 		cat("\t", n, ":\n")
@@ -25,7 +25,7 @@ print.msg <- function(x) {
 	}
 }
 
-getMsg		<- function(field) function(x) x[[field]]
+getMsg		<- function(field) function(x, ...) x[[field]]
 args.msg	<- getMsg("args")
 desc.msg	<- getMsg("desc")
 from.msg	<- getMsg("from")

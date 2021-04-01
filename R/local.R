@@ -1,6 +1,6 @@
-combine.default		<- c
-combine.data.frame 	<- rbind
-combine.matrix	 	<- rbind
+combine.default		<- function(...) c(...)
+combine.data.frame 	<- function(...) rbind(...)
+combine.matrix	 	<- function(...) rbind(...)
 combine.table <- function(...) {
 	tabs <- list(...)
 	chunknames <- lapply(tabs, dimnames)
@@ -22,9 +22,10 @@ combine.table <- function(...) {
 	NULL})
 	as.table(wholearray)
 }
-size.default 		<- length
-size.data.frame 	<- nrow
-size.matrix	 	<- nrow
-size.error		<- function(x) NULL
+size.default 		<- function(...) length(...)
+size.data.frame 	<- function(...) nrow(...)
+size.matrix	 	<- function(...) nrow(...)
+size.error		<- function(...) NULL
 
-preview.error		<- identity
+preview.error		<- function(...) identity(...)
+preview.default		<- function(...) utils::head(...)

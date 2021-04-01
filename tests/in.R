@@ -67,3 +67,4 @@ CSVfile <- localCSV(loc=fileLoc4,
 distDF <- read(CSVfile, max.size=1024^2)
 undistDF <- unstub(distDF)
 stopifnot(all.equal(undistDF, df))
+final(1)

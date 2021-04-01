@@ -11,11 +11,11 @@ header		<- function(x, ...) UseMethod("header", x)
 host		<- function(x, ...) UseMethod("host", x)
 loc		<- function(x, ...) UseMethod("loc", x)
 pass		<- function(x, ...) UseMethod("pass", x)
-preview		<- function(x, ...) UseMethod("preview", x)
+preview		<- function(...) UseMethod("preview", ..1)
 quotes		<- function(x, ...) UseMethod("quotes", x)
 read		<- function(x, ...) UseMethod("read", x)
 requestField	<- function(field, x, ...) UseMethod("requestField", x)
-size		<- function(x, ...) UseMethod("size", x)
+size		<- function(...) UseMethod("size", ..1)
 store		<- function(x, ...) UseMethod("store", x)
 stub		<- function(arg, target) UseMethod("stub", target)
 target		<- function(x, ...) UseMethod("target", x)
@@ -48,19 +48,26 @@ port 		<- function(x, ...) {
 
 desc <- function(x, ...) UseMethod("desc", x)
 
-desc.default <- function(type) {
+desc.default <- function(x, ...) {
 	typelist <- c("process", "chunk")
-	stopifnot(type %in% typelist)
+	stopifnot(x %in% typelist)
 
-	desc <- rediscc::redis.inc(getCommsConn(), type)
+	desc <- rediscc::redis.inc(getCommsConn(), x)
 	desc
 }
 
 # masking
-args		<- function(name) UseMethod("args", name)
-args.default	<- base::args
+args		<- function(...) UseMethod("args", ..1)
+args.default	<- function(...) base::args(...)
 table		<- function(...) UseMethod("table", ..1)
-table.default	<- base::table
+table.default	<- function(...) base::table(...)
 dim		<- function(x) UseMethod("dim", x)
-dim.default	<- base::dim
-preview.default	<- utils::head
+dim.default	<- function(x) base::dim(x)
+length		<- function(x) UseMethod("length", x)
+length.default	<- function(x) base::length(x)
+nrow		<- function(x) UseMethod("nrow", x)
+nrow.default	<- function(x) base::nrow(x)
+ncol		<- function(x) UseMethod("ncol", x)
+ncol.default	<- function(x) base::ncol(x)
+colnames	<- function(x, ...) UseMethod("colnames", x)
+colnames.default<- function(x, ...) base::colnames(x, ...)

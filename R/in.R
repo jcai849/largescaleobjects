@@ -34,13 +34,13 @@ read.localCSV <- function(x, max.line=65536L,
 	distObjStub(chunkStubs)
 }
 
-loc.localCSV <- function(x) x$loc
-colTypes.localCSV <- function(x) x$colTypes
-header.localCSV <- function(x) x$header
-quotes.localCSV <- function(x) x$quotes
+loc.localCSV <- function(x, ...) x$loc
+colTypes.localCSV <- function(x, ...) x$colTypes
+header.localCSV <- function(x, ...) x$header
+quotes.localCSV <- function(x, ...) x$quotes
 `loc<-.localCSV` <- function(x, value) {x$loc <- value; x}
 `colTypes<-.localCSV` <- function(x, value) {x$colTypes <- value; x}
 `header<-.localCSV` <- function(x, value) {x$header <- value; x}
 `quotes<-.localCSV` <- function(x, value) {x$quotes <- value; x}
-print.localCSV <- function(x) cat("localCSV at file location", loc(x), "\n")
-format.localCSV <- function(x) paste("localCSV at file location", loc(x))
+print.localCSV <- function(x, ...) cat("localCSV at file location", loc(x), "\n")
+format.localCSV <- function(x, ...) paste("localCSV at file location", loc(x))

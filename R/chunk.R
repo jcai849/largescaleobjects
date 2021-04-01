@@ -1,9 +1,9 @@
 # Instantiate
 
-chunkStub.integer <- function(cd)  {
+chunkStub.integer <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkStub"
-	desc(cs) <- cd 
+	desc(cs) <- x 
 	cs
 }
 
@@ -27,3 +27,8 @@ print.chunkStub 	<- function(x, ...) {
 #	print(preview(x))
 #	cat("...\n")
 }
+
+ncol.chunkStub <- function(x)
+	unstub(do.call.chunkStub("ncol", list(x), x))
+colnames.chunkStub <- function(x, ...)
+	unstub(do.call.chunkStub("colnames", list(x), x))

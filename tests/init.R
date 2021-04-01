@@ -1,3 +1,0 @@
-library(largeScaleR)
-
-init("config")

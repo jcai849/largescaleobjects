@@ -129,7 +129,7 @@ register.workerProcess <- function(x, ...) {
 		stdout=FALSE, stderr=FALSE,  wait=FALSE)
 }
 
-print.process <- function(x) {
+print.process <- function(x, ...) {
 	print(paste("largeScaleR communications process at host",
 		    host(x), "and port", port(x), "under descriptor", desc(x)))
 	if (!is.null(user(x)))
@@ -143,13 +143,13 @@ format.process <- function(x) {
 		 paste("At user", user(x)) else NULL)
 }
 
-desc.process <- function(x) x$desc
-host.process <- function(x) x$host
-pass.process <- function(x) x$pass
-port.process <- function(x) x$port
-execute.process <- function(x) x$execute
-user.process <- function(x) x$user
-dbpass.commsProcess <- function(x) x$dbpass
+desc.process <- function(x, ...) x$desc
+host.process <- function(x, ...) x$host
+pass.process <- function(x, ...) x$pass
+port.process <- function(x, ...) x$port
+execute.process <- function(x, ...) x$execute
+user.process <- function(x, ...) x$user
+dbpass.commsProcess <- function(x, ...) x$dbpass
 
 `desc<-.process` <- function(x, value) { x$desc <- value; x}
 `host<-.process` <- function(x, value) { x$host <- value; x }

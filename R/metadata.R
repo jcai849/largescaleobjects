@@ -1,9 +1,9 @@
 ################################# Populate  ################################
 
-access.chunkStub <- function(x, field, alt=requestField) {
+access.chunkStub <- function(x, field) {
 	tryCatch(get(field, x, inherits=FALSE), 
 		 error = function(e) {
-			 alt(field, x)
+			 requestField(field, x)
 			 commQueue <- paste0(field, desc(x))
 			 response <- receive(commQueue)
 			 fieldSym <- str2lang(field)
@@ -43,7 +43,7 @@ access.distObjStub <- function(x, field, type=character) {
 	fields
 }
 
-requestField.chunkStub <- function(field, x) {
+requestField.chunkStub <- function(field, x, ...) {
 	commQueue <- paste0(field, desc(x))
 	fieldSym <- str2lang(field)
 	request <- substitute(
@@ -60,38 +60,36 @@ requestField.chunkStub <- function(field, x) {
 	commQueue
 }
 
-fillMetaData.distObjStub <- function(x) 
-	{size(x); to(x); from(x); host(x); port(x); return()}
-fillMetaData.default <- function(x) NULL
+fillMetaData.distObjStub <- function(x, ...) 
+	{size(x); to(x); from(x); host(x); port(x); x}
+fillMetaData.default <- function(x, ...) NULL
 
 ################################# Get  ################################
 
-distObjDo <- function(fun, rtype) function(x) vapply(chunkStub(x), fun, rtype(1))
+distObjDo <- function(fun, rtype) function(x, ...) vapply(chunkStub(x), fun, rtype(1))
 
-desc.chunkStub		<- function(x) access(x, "desc")
+desc.chunkStub		<- function(x, ...) access(x, "desc")
 desc.distObjStub	<- distObjDo(desc, integer)
-from.chunkStub 		<- function(x) access(x, "from", stop)
-from.distObjStub 	<- function(x)
-	tryCatch(sapply(chunkStub(x),
-			function(chunk) get("from", chunk, inherits=FALSE)),
+from.chunkStub 		<- function(x, ...) get("from", x, inherits=FALSE)
+from.distObjStub 	<- function(x, ...)
+	tryCatch(sapply(chunkStub(x), function(chunk) from(chunk)),
 		 error = function(e) {
 			 from(x) <- c(1L, to(x)[-length(to(x))] + 1L)
 			 from(x)
 		 })
-host.chunkStub		<- function(x) access(x, "host")
-host.default 		<- function(x) host(getUserProcess())
-host.distObjStub 	<- function(x) access(x, "host", type=character)
-port.chunkStub		<- function(x) access(x, "port")
-port.default 		<- function(x) port(getUserProcess())
-port.distObjStub	<- function(x) access(x, "port", type=integer)
-preview.chunkStub	<- function(x) access(x, "preview")
-preview.distObjStub	<- function(x) access(chunkStub(x)[[1]], "preview")
-size.chunkStub 		<- function(x) access(x, "size")
-size.distObjStub 	<- function(x) access(x, "size", type=integer)
-to.chunkStub 		<- function(x) access(x, "to", stop)
-to.distObjStub		<- function(x) 
-	tryCatch(sapply(chunkStub(x),
-			function(chunk) get("to", chunk, inherits=FALSE)),
+host.chunkStub		<- function(x, ...) access(x, "host")
+host.default 		<- function(x, ...) host(getUserProcess())
+host.distObjStub 	<- function(x, ...) access(x, "host", type=character)
+port.chunkStub		<- function(x, ...) access(x, "port")
+port.default 		<- function(x, ...) port(getUserProcess())
+port.distObjStub	<- function(x, ...) access(x, "port", type=integer)
+preview.chunkStub	<- function(x, ...) access(x, "preview")
+preview.distObjStub	<- function(x, ...) access(chunkStub(x)[[1]], "preview")
+size.chunkStub 		<- function(x, ...) access(x, "size")
+size.distObjStub 	<- function(x, ...) access(x, "size", type=integer)
+to.chunkStub 		<- function(x, ...) get("to", x, inherits=FALSE)
+to.distObjStub		<- function(x, ...) 
+	tryCatch(sapply(chunkStub(x), function(chunk) to(chunk)),
 		 error = function(e) {
 			 to(x) <- cumsum(size(x))
 			 to(x)

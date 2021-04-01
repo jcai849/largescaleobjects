@@ -7,6 +7,8 @@
 assign("/", "/", envir=.largeScaleRKeys)
 assign("unregisteredProcesses", new.env(TRUE, emptyenv()), envir=.largeScaleRProcesses)
 final <- function(e) {
+	if (identical(ls(.largeScaleRConn), character(0))) return()
+	stateLog(paste("EXT", desc(getUserProcess()))) # EXT X - Exiting at worker X
 	if (identical(ls(e), "unregisteredProcesses")) return()
 	workers <- as.integer(rediscc::redis.get(getCommsConn(),
 						 "process")) - 1

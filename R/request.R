@@ -15,6 +15,7 @@ do.call.distObjStub <- function(what, args, store=TRUE) {
 	## distribute the non-distributed
 	target <- findTarget(args)
 	args <- lapply(args, stub, target=target)
+	for (arg in args) fillMetaData(arg)
 	##
 	target <- findTarget(args)
 	cs <- lapply(chunkStub(target), 
