@@ -1,16 +1,6 @@
-userProcess(host=	"localhost")
-
-logProcess(port=	5140L)
-
-commsProcess(host=	"localhost",
-	     port=	6379L,
-	     execute=	FALSE)
-
-workerProcess(host=	"localhost",
-	      execute=	TRUE)
-
-workerProcess(host=	"localhost",
-	      execute=	TRUE)
-
-workerProcess(host=	"localhost",
-	      execute=	TRUE)
+userProcess()
+logProcess()
+commsProcess()
+workerProcess()
+workerProcess()
+workerProcess()
