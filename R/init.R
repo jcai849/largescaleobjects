@@ -17,7 +17,7 @@ register <- function(...) {
 	} else lapply(list(...), register)
 }
 
-process <- function(host="localhost", port=largeScaleR::port(), 
+process <- function(host="127.0.0.1", port=largeScaleR::port(), 
 		    user=NULL, pass=NULL, execute=NULL) {
 	x <- list()
 	class(x) <- "process"
@@ -46,7 +46,7 @@ register.logProcess <- function(x, ...) {
 	assign("logProcess", x, envir=.largeScaleRProcesses)
 }
 
-commsProcess <- function(host="localhost", port=6379L, user=NULL,
+commsProcess <- function(host="127.0.0.1", port=6379L, user=NULL,
 			 pass=NULL, dbpass=NULL, execute=FALSE) {
 	x <- process(host, port, user, pass, execute)
 	class(x) <- c("commsProcess", class(x))
@@ -70,7 +70,7 @@ register.commsProcess <- function(x, ...) {
 	assign("commsProcess", x, envir=.largeScaleRProcesses)
 }
 
-userProcess <- function(host="localhost", port=largeScaleR::port()) {
+userProcess <- function(host="127.0.0.1", port=largeScaleR::port()) {
 
 	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
@@ -100,7 +100,7 @@ counterMaker <- function(initial, step)
 
 workerCounter <- counterMaker(3, 1)
 
-workerProcess <- function(host="localhost",
+workerProcess <- function(host="127.0.0.1",
 			  port=NULL, user=NULL, pass=NULL, execute=TRUE) {
 	x <- process(host, port, user, pass, execute)
 	class(x) <- c("workerProcess", class(x))
