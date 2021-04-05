@@ -5,3 +5,4 @@ tags
 dump.rdb
 a.out
 *.out
+symbols.rds
