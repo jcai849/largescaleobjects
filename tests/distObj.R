@@ -3,44 +3,81 @@ library(largeScaleR)
 init("config")
 
 x <- 1:30
-distX <- stub(x, 3)
-distIris <- stub(iris, 10)
 
 # movement
 
+distX <- stub(x, 3)
+distIris <- stub(iris, 10)
 stopifnot(identical(unstub(distX), x))
 stopifnot(identical(unstub(distIris), iris))
 
-# interactions
+# Ops & Interactions
 
-## AsIs local
-stopifnot(identical(unstub(distX+I(1:3)), 
-		    x+rep(1:3, length.out=10)))
+stopifnot(identical(unstub(-distX), -x))
 
-## Equal size local
-stopifnot(identical(unstub(distX+1:30), 
-		    x++1:30))
+## DistX prior
+### AsIs local
+stopifnot(identical(unstub(distX + I(1:3)), 
+		    x + rep(1:3, length.out=10)))
+### Equal size local
+stopifnot(identical(unstub(distX + 1:30), 
+		    x + 1:30))
+### Smaller sized local
+stopifnot(identical(unstub(distX + 1:3),
+		    x + 1:3))
+### larger sized local
+stopifnot(identical(unstub(distX + 1:300),
+		    x + 1:300))
+### equal sized distObj
+stopifnot(identical(unstub(distX + stub(1:30, 4)),
+		    x + 1:30))
+### smaller sized distObj
+stopifnot(identical(unstub(distX + stub(1:3, 2)),
+		    x + 1:3))
+### larger sized distObj
+stopifnot(identical(unstub(distX + stub(1:300, 10)),
+		    x + 1:300))
 
-## Smaller sized local
-stopifnot(identical(unstub(distX+1:3),
-		    x+1:3))
+## DistX posterior
+### AsIs local
+stopifnot(identical(unstub(I(1:3) + distX), 
+		    rep(1:3, length.out=10) + x))
+### Equal size local
+stopifnot(identical(unstub(1:30 + distX), 
+		    1:30 + x))
+### Smaller sized local
+stopifnot(identical(unstub(1:3 + distX),
+		    1:3 + x))
+### larger sized local
+stopifnot(identical(unstub(1:300 + distX),
+		    1:300 + x))
+### equal sized distObj
+stopifnot(identical(unstub(stub(1:30, 4) + distX),
+		    1:30 + x))
+### smaller sized distObj
+stopifnot(identical(unstub(stub(1:3, 2) + distX),
+		    1:3 + x))
+### larger sized distObj
+stopifnot(identical(unstub(stub(1:300, 10) + distX),
+		    1:300 + x))
 
-## larger sized local
-stopifnot(identical(unstub(distX+1:300),
-		    x+1:300))
+# Summary
+stopifnot(identical(sum(distX), sum(1:30)))
+# Math
+stopifnot(identical(unstub(abs(distX)), abs(x)))
+#Complex
+stopifnot(identical(unstub(Re(distX)), Re(x)))
+# Print
+print(distX)
 
-## equal sized distObj
+# custom methods
 
-## smaller sized distObj
-
-## larger sized distObj
-
-# methods
-
-stopifnot(identical(unstub(distX), x))
-stopifnot(identical(unstub(distIris), iris))
+## table FIX stalling at metadata access
+#table(distIris$Species)
 ## length
 stopifnot(identical(length(distX), length(x)))
+## dim
+stopifnot(identical(dim(distIris), dim(iris)))
 ## nrow
 stopifnot(identical(nrow(distIris), nrow(iris)))
 ## ncol
@@ -50,11 +87,10 @@ stopifnot(identical(colnames(distIris), colnames(iris)))
 ## cbind
 stopifnot(identical(unstub(cbind(distIris, distIris)),
 		    cbind(iris, iris)))
-## rbind ## TODO testing reveals differences in rownames - fix
-# stopifnot(identical(unstub(rbind(distIris, distIris)),
-# 		    rbind(iris, iris)))
-# ## c
-# stopifnot(identical(unstub(c(distX, distX)),
-# 		    c(x, x)))
+
+## rbind FIX differences in rownames
+rbind(distIris, distIris)
+## c
+c(distX, distX)
 
 final(1)
