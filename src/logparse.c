@@ -14,6 +14,7 @@
 #define MAX_WORKERS 16
 #define OP_LEN 3
 #define DEFAULT_UDP_PORT 5140
+#define Streq(x, y) (strcmp((x), (y)) == 0)
 
 typedef struct {
 	int desc;
@@ -32,8 +33,8 @@ void fillModel(void);
 void getOp(char *op);
 void getArgs(int *args);
 void addWorker(int w);
-void setState(char *action, int w, int c);
-void waiting(int w);
+void setChunkState(char *action, int w, int c);
+void setState(char *action, int w);
 void showModel(void);
 void save(int w, int c);
 
@@ -86,33 +87,22 @@ void fillModel(void)
 
 	getOp(op);
 	getArgs(args);
-	switch(op[0]) {
-		case 'C': /* CON X - New worker connected */
-			addWorker(args[0]);
-			break;
-		case 'R': /* RCV X Y - Receiving at worker X, chunk Y */
-			setState("RCV", args[0], args[1]);
-			break;
-		case 'S': /* SVD X Y - Saving at worker X, chunk Y */
-			setState("SVD", args[0], args[1]);
-			save(args[0], args[1]);
-			break;
-		case 'W':
-			switch(op[1]) {
-				case 'R': /* WRK X Y - Working at worker X on chunk Y */
-					setState("WRK", args[0], args[1]);
-					break;
-				case 'T': /* WTQ X - Waiting on queues at worker X */
-					waiting(args[0]);
-					break;
-				default: 
-					printf("Operation %s not recognised", op);
-					exit(1);
-			}
-			break;
-		default: 
-			printf("Operation %s not recognised", op);
-			exit(1);
+	if (Streq(op, "CON"))               /* CON X - New worker connected */
+	{
+		addWorker(args[0]);
+	} else if (Streq(op, "RCV") ||      /* RCV X Y - Receiving at worker X, chunk Y */
+			Streq(op, "SVD") || /* SVD X Y - Saving at worker X, chunk Y */
+			Streq(op, "WRK"))   /* WRK X Y - Working at worker X on chunk Y */ 
+	{
+		setChunkState(op, args[0], args[1]);
+		if (Streq(op, "SVD"))  save(args[0], args[1]);
+	} else if (Streq(op, "WTQ") ||      /* WTQ X - Waiting on queues at worker X */
+			Streq(op, "EXT"))   /* EXT X - Process exited at worker X */
+	{
+		setState(op, args[0]);
+	} else {
+		printf("Operation %s not recognised", op);
+		exit(1);
 	}
 	showModel();
 }
@@ -158,19 +148,19 @@ void addWorker(int w)
 	strcpy(worker.state, "BGN");
 	model.workers[model.nWorkers] = worker;
 	model.nWorkers++;
-
 }
-void setState(char *action, int w, int c)
+
+void setChunkState(char *action, int w, int c)
 {
 	Worker *worker;
 	worker = findWorker(w);
 	sprintf(worker->state, "%s %d", action, c);
 }
-void waiting(int w)
+void setState(char *action, int w)
 {
 	Worker *worker;
 	worker = findWorker(w);
-	strcpy(worker->state, "WTQ");
+	strcpy(worker->state, action);
 }
 
 void save(int w, int c)
