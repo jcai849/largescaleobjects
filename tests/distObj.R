@@ -72,8 +72,8 @@ print(distX)
 
 # custom methods
 
-## table FIX stalling at metadata access
-#table(distIris$Species)
+## table
+table(distIris$Sepal.Length)
 ## length
 stopifnot(identical(length(distX), length(x)))
 ## dim
