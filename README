@@ -1,3 +1,9 @@
-====== Work In Progress =======
-Distributed Object System for R
-====== Work In Progress =======
+=======================  Work In Progress ==========================
+
+               =================================
+             || Distributed Object System for R ||
+               =================================
+
+Requires a running redis-server, passwordless ssh, and a unix system
+
+=======================  Work In Progress ==========================
