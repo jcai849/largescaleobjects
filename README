@@ -1,8 +1,8 @@
 =======================  Work In Progress ==========================
 
-               =================================
-             || Distributed Object System for R ||
-               =================================
+               ===================================
+             || Distributed Object Platform for R ||
+               ===================================
 
 Requires a running redis-server, passwordless ssh, and a unix system
 
