@@ -10,28 +10,28 @@ localCSV <- function(loc, colTypes, header, quotes) {
 
 read.localCSV <- function(x, max.line=65536L, 
 			  max.size=33554432L, strict=TRUE) {
-	chunkStubs <- list()
+	chunkRefs <- list()
 	cr <- iotools::chunk.reader(loc(x), max.line=max.line)
 	if (header(x) && 
 	    length(chunk <- iotools::read.chunk(cr, max.size=max.size))){
-		chunkStub <- do.call.chunkStub(iotools::dstrsplit,
+		chunkRef <- do.call.chunkRef(iotools::dstrsplit,
 					       list(x=chunk,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=1,
 						    quote=quotes(x)), root()) 
-		chunkStubs <- c(chunkStubs, chunkStub)
+		chunkRefs <- c(chunkRefs, chunkRef)
 	}
 	while(length(chunk <- iotools::read.chunk(cr, max.size=max.size))) {
-		chunkStub <- do.call.chunkStub(iotools::dstrsplit,
+		chunkRef <- do.call.chunkRef(iotools::dstrsplit,
 					       list(x=chunk,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=0,
 						    quote=quotes(x)), root()) 
-		chunkStubs <- c(chunkStubs, chunkStub)
+		chunkRefs <- c(chunkRefs, chunkRef)
 	}
-	distObjStub(chunkStubs)
+	distObjRef(chunkRefs)
 }
 
 loc.localCSV <- function(x, ...) x$loc

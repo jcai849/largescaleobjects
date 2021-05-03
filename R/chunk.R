@@ -1,34 +1,34 @@
 # Instantiate
 
-chunkStub.integer <- function(x, ...)  {
+chunkRef.integer <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
-	class(cs) <- "chunkStub"
+	class(cs) <- "chunkRef"
 	desc(cs) <- x 
 	cs
 }
 
 root <- function() {
 	cs <- new.env(TRUE, emptyenv())
-	class(cs) <- "chunkStub"
+	class(cs) <- "chunkRef"
 	desc(cs) <- "/" 
 	cs
 }
 
 # Inherit
 
-is.chunkStub <- function(x) inherits(x, "chunkStub")
+is.chunkRef <- function(x) inherits(x, "chunkRef")
 
 # Other methods
 
-print.chunkStub 	<- function(x, ...) {
-	cat("Chunk stub with Descriptor", format(desc(x)), "\n")
+print.chunkRef 	<- function(x, ...) {
+	cat("Chunk Reference with Descriptor", format(desc(x)), "\n")
 #	cat(" and size", format(size(x)), 
 #	    "\n", "Preview:", "\n")
 #	print(preview(x))
 #	cat("...\n")
 }
 
-ncol.chunkStub <- function(x)
-	unstub(do.call.chunkStub("ncol", list(x), x))
-colnames.chunkStub <- function(x, ...)
-	unstub(do.call.chunkStub("colnames", list(x), x))
+ncol.chunkRef <- function(x)
+	emerge(do.call.chunkRef("ncol", list(x), x))
+colnames.chunkRef <- function(x, ...)
+	emerge(do.call.chunkRef("colnames", list(x), x))

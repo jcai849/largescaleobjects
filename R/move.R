@@ -1,5 +1,5 @@
 findTarget <- function(args) {
-	dist <- vapply(args, is.distObjStub, logical(1))
+	dist <- vapply(args, is.distObjRef, logical(1))
 	if (!any(dist)) return(root())
 	sizes <- lapply(args[dist], function(x) sum(size(x)))
 	args[dist][[which.max(sizes)]] # largest 
@@ -11,27 +11,27 @@ unAsIs <- function(x) {
 	x
 }
 
-# unstub dispatches on arg
+# emerge dispatches on arg
 
-unstub.default <- function(arg, target) arg
+emerge.default <- function(arg, target) arg
 
-unstub.AsIs <- function(arg, target) unAsIs(arg)
+emerge.AsIs <- function(arg, target) unAsIs(arg)
 
-unstub.chunkStub <- function(arg, target) {
+emerge.chunkRef <- function(arg, target) {
 	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
 		 error = function(e) osrvGet(arg))
 }
 
-unstub.distObjStub <- function(arg, target) {
+emerge.distObjRef <- function(arg, target) {
 	if (missing(target)) {
-		chunks <- sapply(chunkStub(arg), unstub, 
+		chunks <- sapply(chunkRef(arg), emerge, 
 				 simplify=FALSE, USE.NAMES=FALSE)
 		names(chunks) <- NULL
 		return(do.call(combine, chunks))
 	}
 
 	toAlign <- alignment(arg, target) 
-	Stub <- sapply(toAlign$Stub, unstub,
+	Stub <- sapply(toAlign$Stub, emerge,
 		       simplify=FALSE, USE.NAMES=FALSE)
 	names(Stub) <- NULL
 
@@ -45,41 +45,41 @@ unstub.distObjStub <- function(arg, target) {
 							    toAlign$TAIL$TO)))))
 }
 
-# stub dispatches on target
+# distribute dispatches on target
 
-stub.distObjStub <- function(arg, target) {
-	if (is.distObjStub(arg) ||
-	    is.chunkStub(arg)   ||
+distribute.distObjRef <- function(arg, target) {
+	if (is.distObjRef(arg) ||
+	    is.chunkRef(arg)   ||
 	    is.AsIs(arg))
 		return(arg)
 	splits <- split(arg, cumsum(seq(size(arg)) %in% from(target)))
-	chunks <- mapply(stub,
-			 splits, chunkStub(target)[seq(length(splits))],
+	chunks <- mapply(distribute,
+			 splits, chunkRef(target)[seq(length(splits))],
 			 SIMPLIFY = FALSE, USE.NAMES=FALSE)
 	names(chunks) <- NULL
-	x <- distObjStub(chunks)
+	x <- distObjRef(chunks)
 	x
 }
 
-stub.chunkStub <- function(arg, target) {
-	do.call.chunkStub("identity", list(arg), target = target)
+distribute.chunkRef <- function(arg, target) {
+	do.call.chunkRef("identity", list(arg), target = target)
 }
 
 # scatter into <target>-many pieces over the general cluster
-stub.integer <- function(arg, target) {
+distribute.integer <- function(arg, target) {
 	stopifnot(target > 0)
 	chunks <- if (target == 1) {
 		list(arg) 
 		} else split(arg, cut(seq(size(arg)), breaks=target))
 	names(chunks) <- NULL
-	chunkStubs <- sapply(chunks, function(chunk)
-			     do.call.chunkStub("identity", list(chunk),
+	chunkRefs <- sapply(chunks, function(chunk)
+			     do.call.chunkRef("identity", list(chunk),
 					       root()),
 			     simplify = FALSE, USE.NAMES = FALSE)
-	names(chunkStubs) <- NULL
-	distObjStub(chunkStubs)
+	names(chunkRefs) <- NULL
+	distObjRef(chunkRefs)
 }
-stub.numeric <- stub.integer
+distribute.numeric <- distribute.integer
 
 # `alignment` returns list of form:
 #  .
@@ -91,11 +91,11 @@ stub.numeric <- stub.integer
 #      ├── FROM
 #      └── TO
 alignment <- function(arg, target) {
-	stopifnot(is.distObjStub(arg),
-		  is.chunkStub(target))
+	stopifnot(is.distObjRef(arg),
+		  is.chunkRef(target))
 
 	toAlign 	<- list()
-	argChunks	<- chunkStub(arg)
+	argChunks	<- chunkRef(arg)
 	argFrom 	<- from(arg)
 	argTo 		<- to(arg)
 	argSize 	<- sum(size(arg))

@@ -24,6 +24,6 @@ worker <- function(comms, log, host, port) {
 
 evaluate <- function(fun, args, target) {
 	stopifnot(is.list(args))
-	args <- lapply(args, unstub, target=target)
+	args <- lapply(args, emerge, target=target)
 	do.call(fun, args, envir=.GlobalEnv)
 }
