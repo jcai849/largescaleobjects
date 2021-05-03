@@ -1,19 +1,19 @@
-userProcess(host=	"localhost")
+userProcess(host=	"127.0.0.1")
 
 logProcess()
 
-commsProcess(host=	"localhost",
+commsProcess(host=	"127.0.0.1",
 	     port=	6379L,
 	     execute=	FALSE)
 
-workerProcess(host=	"localhost",
+workerProcess(host=	"127.0.0.1",
 	      execute=	TRUE)
 
-workerProcess(host=	"localhost",
+workerProcess(host=	"127.0.0.1",
 	      execute=	TRUE)
 
-workerProcess(host=	"localhost",
+workerProcess(host=	"127.0.0.1",
 	      execute=	TRUE)
 
-workerProcess(host=	"localhost",
+workerProcess(host=	"127.0.0.1",
 	      execute=	TRUE)

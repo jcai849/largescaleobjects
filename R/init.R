@@ -71,7 +71,6 @@ register.commsProcess <- function(x, ...) {
 }
 
 userProcess <- function(host="127.0.0.1", port=largeScaleR::port()) {
-
 	x <- process(host=host, port=port)
 	class(x) <- c("userProcess", class(x))
 
@@ -130,14 +129,14 @@ register.workerProcess <- function(x, ...) {
 }
 
 print.process <- function(x, ...) {
-	print(paste("largeScaleR communications process at host",
+	print(paste("largeScaleR process at host",
 		    host(x), "and port", port(x), "under descriptor", desc(x)))
 	if (!is.null(user(x)))
 		 print(paste("At user", user(x)))
 }
 
 format.process <- function(x) {
-	paste("largeScaleR communications process at host",
+	paste("largeScaleR process at host",
 		    host(x), "and port", format(port(x)), "under descriptor", desc(x), 
 	if (!is.null(user(x)))
 		 paste("At user", user(x)) else NULL)
