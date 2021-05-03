@@ -1,7 +1,7 @@
+#https://doi.org/10.7910/DVN/HG7NV7
 #cd /tmp && curl https://dataverse.harvard.edu/api/access/datafiles/1375005 flights.zip && unzip flights.zip && bunzip flights.bz2
 
 library(largeScaleR)
-debug(register)
 init("config")
 
 cols <- c("Year"="integer","Month"="integer","DayofMonth"="integer",
@@ -19,6 +19,7 @@ cols <- c("Year"="integer","Month"="integer","DayofMonth"="integer",
 flights <- read(localCSV("/tmp/1987flights.csv", header=TRUE, colTypes = cols), max.size=1024^2)
 flights
 preview(flights)
+nrow(flights)
 desc(flights)
 host(flights)
 

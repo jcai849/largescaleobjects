@@ -27,7 +27,7 @@ read.distributedCSV <- function(dcsv) {
 					   args = list(file=I(path),
 						       header = I(header(x)),
 						       colClasses = I(colClasses(x)), 
-						       quotes = I(quotes(x))), 
+						       quote = I(quotes(x))), 
 					   target = if (is.null(host)) root() else host),
 			  x=dcsv, host=host(x), path=path(x)))
 }
@@ -68,7 +68,7 @@ read.localCSV <- function(x, max.line=65536L,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=1,
-						    quotes=quotes(x)),
+						    quote=quotes(x)),
 					     root()) 
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
@@ -78,7 +78,7 @@ read.localCSV <- function(x, max.line=65536L,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=0,
-						    quotes=quotes(x)), root()) 
+						    quote=quotes(x)), root()) 
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
 	distObjRef(chunkRefs)
