@@ -19,6 +19,6 @@ CSVfile <- localCSV(loc=fileLoc, colTypes=cols,header=FALSE,quote="")
 
 # distribute data
 distCOVID <- read(CSVfile, max.size=100*1024) #100Kb
-distnCases <- stub(nCases, 18)
+distnCases <- distribute(nCases, 18)
 k=distCOVID$lockdowns * distnCases
 preview(k)

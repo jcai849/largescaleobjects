@@ -18,7 +18,7 @@ CSVfile <- localCSV(loc=fileLoc,
 		    header=FALSE, 
 		    quote="")
 distDF <- read(CSVfile)
-undistDF <- unstub(distDF)
+undistDF <- emerge(distDF)
 
 stopifnot(identical(undistDF, df))
 
@@ -33,7 +33,7 @@ CSVfile <- localCSV(loc=fileLoc2,
 		    header=TRUE, 
 		    quote="")
 distDF <- read(CSVfile)
-undistDF <- unstub(distDF)
+undistDF <- emerge(distDF)
 
 stopifnot(identical(undistDF, df))
 
@@ -51,7 +51,7 @@ CSVfile <- localCSV(loc=fileLoc3,
 		    header=TRUE, 
 		    quote="")
 distDF <- read(CSVfile, max.size=1024^2)
-undistDF <- unstub(distDF)
+undistDF <- emerge(distDF)
 stopifnot(all.equal(undistDF, df))
 
 ## no header
@@ -65,6 +65,6 @@ CSVfile <- localCSV(loc=fileLoc4,
 		    header=FALSE, 
 		    quote="")
 distDF <- read(CSVfile, max.size=1024^2)
-undistDF <- unstub(distDF)
+undistDF <- emerge(distDF)
 stopifnot(all.equal(undistDF, df))
 final(1)
