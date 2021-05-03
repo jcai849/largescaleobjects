@@ -1,9 +1,9 @@
-distributedCSV <- function(files, header, colClasses, quote) {
+distributedCSV <- function(files, header, colClasses, quotes="\"") {
 	x <- list(host=character(length(files)),
 		  path=character(length(files)),
 		  header=character(10),
 		  colclasses=character(10),
-		  quote=character(1))
+		  quotes=character(1))
 	class(x) <- "distributedCSV"
 	uri <- regmatches(x, regexec("^(?<host>.*?):(?<path>.*)", x, perl=T))
 	for (i in seq(length(uri))) {
@@ -17,7 +17,7 @@ distributedCSV <- function(files, header, colClasses, quote) {
 	}
 	colClasses(x) <- colClasses
 	header(x) <- header
-	quote(x) <- quote
+	quotes(x) <- quotes
 	x
 }
 
@@ -27,7 +27,7 @@ read.distributedCSV <- function(dcsv) {
 					   args = list(file=I(path),
 						       header = I(header(x)),
 						       colClasses = I(colClasses(x)), 
-						       quote = I(quote(x))), 
+						       quotes = I(quotes(x))), 
 					   target = if (is.null(host)) root() else host),
 			  x=dcsv, host=host(x), path=path(x)))
 }
@@ -38,22 +38,22 @@ path.distributedCSV <- function(x, ...) x$path
 desc.distributedCSV <- host
 colClasses.distributedCSV <- function(x, ...) x$colClasses
 header.distributedCSV <- function(x, ...) x$header
-quote.distributedCSV <- function(x, ...) x$quote
+quotes.distributedCSV <- function(x, ...) x$quotes
 `host<-.distributedCSV` <- function(x, value) {x$host <- value; x}
 `path<-.distributedCSV` <- function(x, value) {x$file <- value; x}
 `colClasses<-.distributedCSV` <- function(x, value) {x$colClasses <- value; x}
 `header<-.distributedCSV` <- function(x, value) {x$header <- value; x}
-`quote<-.distributedCSV` <- function(x, value) {x$quote <- value; x}
+`quotes<-.distributedCSV` <- function(x, value) {x$quotes <- value; x}
 print.distributedCSV <- function(x, ...) cat("distributedCSV at file location", file(x), "\n")
 format.distributedCSV <- function(x, ...) paste("distributedCSV at file location", file(x))
 
-localCSV <- function(file, header, colTypes, quote="") {
+localCSV <- function(file, header, colTypes, quotes="") {
 	x <- list()
 	class(x) <- "localCSV"
 	file(x) <- file
 	colTypes(x) <- colTypes
 	header(x) <- header
-	quote(x) <- quote
+	quotes(x) <- quotes
 	x
 }
 
@@ -68,7 +68,7 @@ read.localCSV <- function(x, max.line=65536L,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=1,
-						    quote=quote(x)),
+						    quotes=quotes(x)),
 					     root()) 
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
@@ -78,7 +78,7 @@ read.localCSV <- function(x, max.line=65536L,
 						    col_types=colTypes(x),
 						    sep=",", nsep=NA,
 						    strict=strict, skip=0,
-						    quote=quote(x)), root()) 
+						    quotes=quotes(x)), root()) 
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
 	distObjRef(chunkRefs)
@@ -87,10 +87,10 @@ read.localCSV <- function(x, max.line=65536L,
 file.localCSV <- function(x, ...) x$file
 colTypes.localCSV <- function(x, ...) x$colTypes
 header.localCSV <- function(x, ...) x$header
-quote.localCSV <- function(x, ...) x$quote
+quotes.localCSV <- function(x, ...) x$quotes
 `file<-.localCSV` <- function(x, value) {x$file <- value; x}
 `colTypes<-.localCSV` <- function(x, value) {x$colTypes <- value; x}
 `header<-.localCSV` <- function(x, value) {x$header <- value; x}
-`quote<-.localCSV` <- function(x, value) {x$quote <- value; x}
+`quotes<-.localCSV` <- function(x, value) {x$quotes <- value; x}
 print.localCSV <- function(x, ...) cat("localCSV at file location", file(x), "\n")
 format.localCSV <- function(x, ...) paste("localCSV at file location", file(x))
