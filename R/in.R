@@ -1,9 +1,9 @@
 distributedCSV <- function(files, header, col.names, colClasses, quotes="\"") {
 	x <- list(host=character(length(files)),
 		  path=character(length(files)),
-		  col.names=character(10),
+		  col.names=character(1),
 		  header=logical(1),
-		  colclasses=character(10),
+		  colclasses=character(1),
 		  quotes=character(1))
 	class(x) <- "distributedCSV"
 	uri <- regmatches(x, regexec("^(?<host>.*?):(?<path>.*)", x, perl=T))
@@ -13,7 +13,7 @@ distributedCSV <- function(files, header, col.names, colClasses, quotes="\"") {
 			host(x)[i] <- uri[2]
 			path(x)[i] <- uri[3]
 		} else {
-			host(x)[i] <- NULL
+			host(x)[i] <- NA_character_
 			path(x)[i] <- files
 		}
 	}
@@ -25,17 +25,21 @@ distributedCSV <- function(files, header, col.names, colClasses, quotes="\"") {
 }
 
 read.distributedCSV <- function(dcsv) {
-	distObjRef(mapply(function(x, host, path)
-			  do.call.chunkRef("read.csv", 
-					   args = list(file=I(path),
-						       header = I(header(x)),
-						       colClasses = I(colClasses(x)), 
-						       col.names = I(colNames(x)), 
-						       quote = I(quotes(x))), 
-					   target = if (is.null(host)) root() else host),
-			  x=dcsv, host=host(x), path=path(x)))
+	distObjRef(mapply(function(file, header, colClasses, col.names, quotes, target) {
+				  browser()
+				  do.call.chunkRef("read.csv", 
+						   args = list(file=I(file),
+							       header = I(header),
+							       colClasses = I(colClasses), 
+							       col.names = I(colNames), 
+							       quote = I(quotes)), 
+						   target = if (is.na(target)) root() else 
+							   structure(list(host=target), class="distributedCSV"))
+				},
+				file=path(dcsv), header=header(dcsv),
+				colClasses=colClasses(dcsv), col.names=colNames(dcsv), 
+				quotes=quotes(dcsv), target=host(dcsv)))
 }
-
 
 host.distributedCSV <- function(x, ...) x$host
 path.distributedCSV <- function(x, ...) x$path
@@ -50,8 +54,10 @@ quotes.distributedCSV <- function(x, ...) x$quotes
 `colNames<-.distributedCSV` <- function(x, value) {x$col.names <- value; x}
 `header<-.distributedCSV` <- function(x, value) {x$header <- value; x}
 `quotes<-.distributedCSV` <- function(x, value) {x$quotes <- value; x}
-print.distributedCSV <- function(x, ...) cat("distributedCSV at file location", file(x), "\n")
-format.distributedCSV <- function(x, ...) paste("distributedCSV at file location", file(x))
+print.distributedCSV <- function(x, ...) 
+	cat("distributedCSV with file path", paste(path(x), collapse="; "), 
+	    if (!is.na(host(x))) c("at host", paste(host(x), collapse="; ")) else NULL, "\n")
+format.distributedCSV <- function(x, ...) paste("distributedCSV with file location", path(x))
 
 localCSV <- function(file, header, colTypes, quotes="") {
 	x <- list()
