@@ -17,17 +17,20 @@ cols <- c("Year"="integer","Month"="integer","DayofMonth"="integer",
 	  "SecurityDelay"="integer","LateAircraftDelay"="integer")
 
 flights <- read(localCSV("/tmp/1987flights.csv", header=TRUE, colTypes = cols), max.size=1024^2)
-flights
+print(flights)
 preview(flights)
 nrow(flights)
 desc(flights)
 host(flights)
 
 isMondayFlights <- flights$DayOfWeek == 1L
+print(isMondayFlights)
+preview(isMondayFlights)
 sum(isMondayFlights)
 mondayFlights <- subset(flights, isMondayFlights)
 length(mondayFlights)
 
 cancelledMondays <- table(mondayFlights$Month, mondayFlights$Cancelled)
+print(cancelledMondays)
 
 final()

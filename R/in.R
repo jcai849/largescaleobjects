@@ -7,7 +7,8 @@ distributedCSV <- function(files, header, colClasses, quotes="\"") {
 	class(x) <- "distributedCSV"
 	uri <- regmatches(x, regexec("^(?<host>.*?):(?<path>.*)", x, perl=T))
 	for (i in seq(length(uri))) {
-		if (length(uri[[i]]) == 3) {#host found
+		if (length(uri[[i]]) == 3 && 
+		    !grepl("^(https?)|(ftp)$", uri[2])) {# non-internet host found
 			host(x)[i] <- uri[2]
 			path(x)[i] <- uri[3]
 		} else {
