@@ -1,7 +1,8 @@
-distributedCSV <- function(files, header, colClasses, quotes="\"") {
+distributedCSV <- function(files, header, col.names, colClasses, quotes="\"") {
 	x <- list(host=character(length(files)),
 		  path=character(length(files)),
-		  header=character(10),
+		  col.names=character(10),
+		  header=logical(1),
 		  colclasses=character(10),
 		  quotes=character(1))
 	class(x) <- "distributedCSV"
@@ -17,6 +18,7 @@ distributedCSV <- function(files, header, colClasses, quotes="\"") {
 		}
 	}
 	colClasses(x) <- colClasses
+	colNames(x) <- colClasses
 	header(x) <- header
 	quotes(x) <- quotes
 	x
@@ -28,6 +30,7 @@ read.distributedCSV <- function(dcsv) {
 					   args = list(file=I(path),
 						       header = I(header(x)),
 						       colClasses = I(colClasses(x)), 
+						       col.names = I(colNames(x)), 
 						       quote = I(quotes(x))), 
 					   target = if (is.null(host)) root() else host),
 			  x=dcsv, host=host(x), path=path(x)))
@@ -38,11 +41,13 @@ host.distributedCSV <- function(x, ...) x$host
 path.distributedCSV <- function(x, ...) x$path
 desc.distributedCSV <- host
 colClasses.distributedCSV <- function(x, ...) x$colClasses
+colNames.distributedCSV <- function(x, ...) x$col.names
 header.distributedCSV <- function(x, ...) x$header
 quotes.distributedCSV <- function(x, ...) x$quotes
 `host<-.distributedCSV` <- function(x, value) {x$host <- value; x}
 `path<-.distributedCSV` <- function(x, value) {x$file <- value; x}
 `colClasses<-.distributedCSV` <- function(x, value) {x$colClasses <- value; x}
+`colNames<-.distributedCSV` <- function(x, value) {x$col.names <- value; x}
 `header<-.distributedCSV` <- function(x, value) {x$header <- value; x}
 `quotes<-.distributedCSV` <- function(x, value) {x$quotes <- value; x}
 print.distributedCSV <- function(x, ...) cat("distributedCSV at file location", file(x), "\n")
