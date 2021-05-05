@@ -40,9 +40,9 @@ host(taxicab)
 isCMT <- taxicab$VendorID == 1L
 print(isCMT)
 preview(isCMT)
-sum(isCMT)
+sum(isCMT, na.rm=T)
 CMT <- subset(taxicab, isCMT)
 length(CMT)
 
-passengerLoc <- table(CMT$passenger_count, CMT$RateCodeID)
-print(passengerLoc)
+passengerRateCode <- table(CMT$passenger_count, CMT$RateCodeID)
+print(passengerRateCode)
