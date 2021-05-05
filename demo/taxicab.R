@@ -1,10 +1,11 @@
 #https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 
 library(largeScaleR)
-init("config")
+init("config-10")
 START_YEAR <- 9
 N_YEARS <- 11
 N_MONTHS <- 12
+N_CHUNKS <- 10
 files <- apply(expand.grid("https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_20",
 			  formatC(seq(START_YEAR, START_YEAR+N_YEARS), width=2,flag=0), 
 			  "-", formatC(seq(N_MONTHS), width=2, flag=0), 
@@ -13,6 +14,7 @@ files <- apply(expand.grid("https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tr
 				      function(i) seq(i,
 						      (1+N_YEARS)*N_MONTHS,
 						      N_YEARS+1))]
+files_sub <- files[seq((1+N_YEARS)*N_MONTHS - N_CHUNKS+1, (1+N_YEARS)*N_MONTHS)]
 cols <- c("VendorID"="integer", "tpep_pickup_datetime"="POSIXct",
 	  "tpep_dropoff_datetime"="POSIXct", "passenger_count"="integer",
 	  "trip_distance"="numeric", "RateCodeID"="integer",
@@ -23,7 +25,10 @@ cols <- c("VendorID"="integer", "tpep_pickup_datetime"="POSIXct",
 	  "improvement_surcharge"="numeric", "total_amount"="numeric",
 	  "congestion_surcharge"="numeric")
 
-taxi.dcsv <- distributedCSV(files[143:144], header=T, col.names=names(cols),
+
+# x = read.csv(files_sub, header=T, col.names=names(cols), colClasses=as.vector(cols))
+taxi.dcsv <- distributedCSV(files_sub, header=T,
+			    col.names=names(cols),
 			    colClasses=as.vector(cols))
 taxicab <- read(taxi.dcsv)
 print(taxicab)
