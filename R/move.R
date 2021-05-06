@@ -62,7 +62,7 @@ distribute.distObjRef <- function(arg, target) {
 }
 
 distribute.chunkRef <- function(arg, target) {
-	do.call.chunkRef("identity", list(arg), target = target)
+	do.ccall("identity", list(arg), target = target)
 }
 
 # scatter into <target>-many pieces over the general cluster
@@ -73,7 +73,7 @@ distribute.integer <- function(arg, target) {
 		} else split(arg, cut(seq(size(arg)), breaks=target))
 	names(chunks) <- NULL
 	chunkRefs <- sapply(chunks, function(chunk)
-			     do.call.chunkRef("identity", list(chunk),
+			     do.ccall("identity", list(chunk),
 					       root()),
 			     simplify = FALSE, USE.NAMES = FALSE)
 	names(chunkRefs) <- NULL

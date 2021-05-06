@@ -1,4 +1,4 @@
-do.call.chunkRef <- function(what, args, target, store=TRUE) {
+do.ccall <- function(what, args, target, store=TRUE) { #call chunkRef
 	stopifnot(is.list(args))
 	cd <- if (store) desc("chunk") else NULL
 	send(fun	= what, 
@@ -10,7 +10,7 @@ do.call.chunkRef <- function(what, args, target, store=TRUE) {
 	if (store) chunkRef(cd)
 }
 
-do.call.distObjRef <- function(what, args, store=TRUE) {
+do.dcall <- function(what, args, store=TRUE) { #call distObjRef
 	for (arg in args) fillMetaData(arg)
 	## distribute the non-distributed
 	target <- findTarget(args)
@@ -19,6 +19,6 @@ do.call.distObjRef <- function(what, args, store=TRUE) {
 	##
 	target <- findTarget(args)
 	cs <- lapply(chunkRef(target), 
-		     function(t) do.call.chunkRef(what, args, t, store))
+		     function(t) do.ccall(what, args, t, store))
 	distObjRef(cs)
 }

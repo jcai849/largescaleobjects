@@ -26,40 +26,41 @@ print.distObjRef <- function(x, ...) {
 # User-level
 
 Math.distObjRef <- function(x, ...) 
-	do.call.distObjRef(.Generic, 
+	do.dcall(.Generic, 
 			   c(list(x=x), list(...)))
 
 Ops.distObjRef <- function(e1, e2) 
 	if (missing(e2)) {
-		do.call.distObjRef(.Generic,
+		do.dcall(.Generic,
 				   list(e1=e1)) 
 	} else
-		do.call.distObjRef(.Generic,
+		do.dcall(.Generic,
 				   list(e1=e1, e2=e2))
 
 Complex.distObjRef <- function(z) 
-	do.call.distObjRef(.Generic,
+	do.dcall(.Generic,
 			   list(z=z))
 
 Summary.distObjRef <- function(..., na.rm = FALSE) {
-	mapped <- emerge(do.call.distObjRef(.Generic,
-					    c(list(...), list(na.rm=I(na.rm)))))
+	mapped <- emerge(do.dcall(.Generic,
+				  c(list(...),
+				    list(na.rm=I(na.rm)))))
 	do.call(.Generic, 
 		c(list(mapped), list(na.rm=na.rm)))
 }
 
 `$.distObjRef` <- function(x, name)
-	do.call.distObjRef("$", list(x=x, name=I(name)))
+	do.dcall("$", list(x=x, name=I(name)))
 
 table.distObjRef <- function(...)
-	emerge(do.call.distObjRef("table",
+	emerge(do.dcall("table",
 				  list(...)))
 
 subset.distObjRef <- function(x, subset, ...)
-	do.call.distObjRef("subset", c(list(x=x, subset=subset), list(...)))
+	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
 dim.distObjRef <- function(x) {
-	dims <- sapply(chunkRef(do.call.distObjRef("dim", list(x=x))), emerge)
+	dims <- sapply(chunkRef(do.dcall("dim", list(x=x))), emerge)
 	c(sum(dims[1,]), dims[,1][-1])
 }
 
@@ -67,7 +68,7 @@ length.distObjRef <- function(x) sum(size(x))
 nrow.distObjRef <- function(x) sum(size(x))
 ncol.distObjRef <- function(x) ncol(chunkRef(x)[[1]])
 colnames.distObjRef <- function(x, ...) colnames(chunkRef(x)[[1]])
-cbind.distObjRef <- function(..., deparse.level = 1) do.call.distObjRef("cbind", list(...))
+cbind.distObjRef <- function(..., deparse.level = 1) do.dcall("cbind", list(...))
 rbind.distObjRef <- function(...) combine(...)
 c.distObjRef <- function(...) combine(...)
 combine.distObjRef <- function(...) {
@@ -76,3 +77,4 @@ combine.distObjRef <- function(...) {
 	x <- distObjRef(chunks)
 	x
 }
+object.dsize <- function(x) sum(emerge(do.dcall("object.size", x)))

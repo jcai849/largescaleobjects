@@ -47,7 +47,7 @@ requestField.chunkRef <- function(field, x, ...) {
 	commQueue <- paste0(field, desc(x))
 	fieldSym <- str2lang(field)
 	request <- substitute(
-			do.call.chunkRef(what=function(x)
+			do.ccall(what=function(x)
 					  send(fieldSym=fieldSym(x), 
 					       loc=commQueue),
 					  args=list(x=x),

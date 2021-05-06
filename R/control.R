@@ -1,5 +1,5 @@
 kill <- function(chunk) {
-	do.call.chunkRef(function() {
+	do.ccall(function() {
 				  stateLog(paste("EXT", desc(getUserProcess())))
 				  quit("no")},
 			  list(), chunk)

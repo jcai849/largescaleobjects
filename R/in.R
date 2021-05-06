@@ -2,7 +2,7 @@ read.dcsv <- function(file, header=FALSE, sep=",", quote="\"", dec = ".",
 		      fill=TRUE, comment.char="", col.names, colClasses) {
 	distObjRef(mapply(function(file, header, sep, quote, dec, fill,
 				   comment.char, col.names, colClasses) {
-				  do.call.chunkRef("read.csv", 
+				  do.ccall("read.csv", 
 						   args = list(file=I(file),
 							       header=I(header),
 							       sep=I(sep),
@@ -26,7 +26,7 @@ read.lcsv <- function(file, header, colTypes, quote="", max.line=65536L,
 	cr <- iotools::chunk.reader(file, max.line=max.line)
 	if (header && 
 	    length(chunk <- iotools::read.chunk(cr, max.size=max.size))){
-		chunkRef <- do.call.chunkRef(iotools::dstrsplit,
+		chunkRef <- do.ccall(iotools::dstrsplit,
 					       list(x=chunk,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,
@@ -36,7 +36,7 @@ read.lcsv <- function(file, header, colTypes, quote="", max.line=65536L,
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
 	while(length(chunk <- iotools::read.chunk(cr, max.size=max.size))) {
-		chunkRef <- do.call.chunkRef(iotools::dstrsplit,
+		chunkRef <- do.ccall(iotools::dstrsplit,
 					       list(x=chunk,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,

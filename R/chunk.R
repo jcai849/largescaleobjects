@@ -29,6 +29,6 @@ print.chunkRef 	<- function(x, ...) {
 }
 
 ncol.chunkRef <- function(x)
-	emerge(do.call.chunkRef("ncol", list(x), x))
+	emerge(do.ccall("ncol", list(x), x))
 colnames.chunkRef <- function(x, ...)
-	emerge(do.call.chunkRef("colnames", list(x), x))
+	emerge(do.ccall("colnames", list(x), x))
