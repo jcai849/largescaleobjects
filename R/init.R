@@ -1,4 +1,4 @@
-start <- function(workers, log="127.0.0.1", comms="127.0.0.1", user="127.0.0.1") {
+start <- function(workers, user="127.0.0.1", comms=user, log=user) {
 	logProcess(log)
 	commsProcess(comms)
 	userProcess(user)
