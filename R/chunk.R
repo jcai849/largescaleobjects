@@ -1,18 +1,13 @@
 # Instantiate
 
-chunkRef.integer <- function(x, ...)  {
+chunkRef.default <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkRef"
 	desc(cs) <- x 
 	cs
 }
 
-root <- function() {
-	cs <- new.env(TRUE, emptyenv())
-	class(cs) <- "chunkRef"
-	desc(cs) <- "/" 
-	cs
-}
+root <- function() chunkRef("/")
 
 # Inherit
 

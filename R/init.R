@@ -1,3 +1,11 @@
+start <- function(workers, log="127.0.0.1", comms="127.0.0.1", user="127.0.0.1") {
+	logProcess(log)
+	commsProcess(comms)
+	userProcess(user)
+	lapply(workers, workerProcess)
+	init()
+}
+
 init <- function(x) {
 	if (missing(x)) {
 	# order: 1. log 2. comms 3. user 4. worker

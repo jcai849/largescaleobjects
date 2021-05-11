@@ -41,7 +41,7 @@ S3method("to<-", "distObjRef")
 # chunk.R
 export("root")
 export("is.chunkRef")
-S3method("chunkRef", "integer")
+S3method("chunkRef", "default")
 S3method("print", "chunkRef")
 S3method("ncol", "chunkRef")
 S3method("colnames", "chunkRef")
@@ -142,6 +142,7 @@ S3method("table", "default")
 
 # in.R
 export("read.dcsv")
+export("read.dlcsv")
 export("read.lcsv")
 
 # move.R
@@ -177,6 +178,7 @@ S3method("to", "msg")
 
 # init.R
 export("init")
+export("start")
 export("process")
 export("register")
 export("workerCounter")
