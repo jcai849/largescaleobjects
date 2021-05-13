@@ -1,6 +1,6 @@
 #https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 library(largeScaleR)
-host <- rep(paste0("10.3.1.7", c(2, 3, 5, 7, 8, 9, 15, 17)), 4)
+host <- paste0("10.3.1.7", rep(c(2, 3, 5, 7, 8, 9, 15, 17), each=4)
 start(workers=host, user="10.3.1.1")
 cols <- c("vendor_id"="character",
 		"pickup_datetime"="POSIXct",
@@ -20,4 +20,4 @@ cols <- c("vendor_id"="character",
 		"tip_amount"="numeric",
 		"tolls_amount"="numeric",
 		"total_amount"="numeric")
-file <- paste0("~/taxicab-", formatC(seq(8*4),width=2,flag=0))
+file <- paste0("~/taxicab-", formatC(seq(0, (8*4)-1),width=2,flag=0))

@@ -1,26 +1,12 @@
 read.dlcsv <- function(host, file,
 		       header=FALSE, sep=",", quote="\"", dec = ".",
-		       fill=TRUE, comment.char="", col.names, colClasses
-		       ) {
-	dfile <- distribute(file, target=distObjRef(lapply(host, chunkRef)))
-	distObjRef(mapply(function(file, header, sep, quote, dec, fill,
-				   comment.char, col.names, colClasses) {
-				  do.ccall("read.csv", 
-						   args = list(file=I(file),
-							       header=I(header),
-							       sep=I(sep),
-							       quote=I(quote),
-							       dec=I(dec),
-							       fill=I(fill),
-							       comment.char=I(comment.char),
-							       col.names=I(col.names),
-							       colClasses=I(colClasses)), 
-						   target = root())
-				},
-				file=chunkRef(dfile), header=header, sep=sep, quote=quote,
-				dec=dec, fill=fill, comment.char=comment.char,
-				col.names=col.names, colClasses=colClasses, 
-				SIMPLIFY=FALSE, USE.NAMES=FALSE))
+		       fill=TRUE, comment.char="", col.names, colClasses) {
+	dfile <- mapply(distribute, file=file, target=lapply(host, chunkRef))
+	browser()
+	do.dcall("read.csv", 
+		 list(file=file, header=I(header), sep=I(sep), quote=I(quote),
+		      dec=I(dec), fill=I(fill), comment.char=I(comment.char),
+		      col.names=I(col.names), colClasses=I(colClasses)))
 }
 
 read.dcsv <- function(file, header=FALSE, sep=",", quote="\"", dec = ".",
