@@ -1,13 +1,13 @@
 #https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 library(largeScaleR)
-host <- paste0("10.3.1.7", rep(c(2, 3, 5, 7, 8, 9, 15, 17), each=4)
+host <- paste0("10.3.1.", rep(c(2, 3, 5, 7, 8, 9, 15, 17), each=4))
 start(workers=host, user="10.3.1.1")
 cols <- c("vendor_id"="character",
 		"pickup_datetime"="POSIXct",
-		"dropoff_datetime"="POSIXct"
+		"dropoff_datetime"="POSIXct",
 		"passenger_count"="integer",
 		"trip_distance"="numeric",
-		"pickup_longitude"="numeric"
+		"pickup_longitude"="numeric",
 		"pickup_latitude"="numeric",
 		"rate_code"="integer",
 		"store_and_fwd_flag"="character",

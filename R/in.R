@@ -1,7 +1,7 @@
 read.dlcsv <- function(host, file,
 		       header=FALSE, sep=",", quote="\"", dec = ".",
 		       fill=TRUE, comment.char="", col.names, colClasses) {
-	dfile <- mapply(distribute, file=file, target=lapply(host, chunkRef))
+	dfile <- mapply(distribute, arg=file, target=lapply(host, chunkRef))
 	browser()
 	do.dcall("read.csv", 
 		 list(file=file, header=I(header), sep=I(sep), quote=I(quote),
