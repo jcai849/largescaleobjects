@@ -1,11 +1,11 @@
 source("prop-3-setup")
 
+debug(read.dlcsv)
 taxicab <- read.dlcsv(host, file, col.names=names(cols), colClasses=cols)
 print(taxicab)
 preview(taxicab)
 nrow(taxicab)
 object.dsize(taxicab)
 
-isCMT <- taxicab$VendorID == 1L
-preview(isCMT)
-sum(isCMT, na.rm=T)
+totaltips <- taxicab$tip_amount
+sum(totaltips, na.rm=T)
