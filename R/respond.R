@@ -7,9 +7,10 @@ worker <- function(comms, log, host, port) {
 	logProcess(largeScaleR::host(log), largeScaleR::port(log), FALSE)
 	userProcess(host, if (missing(port)) largeScaleR::port() else port)
 	init()
-	assign(host(getUserProcess), host(getUserProcess),
+
+	assign(host(getUserProcess()), host(getUserProcess()),
 	       envir=.largeScaleRKeys)
-	assign(desc(getUserProcess), desc(getUserProcess),
+	assign(desc(getUserProcess()), desc(getUserProcess()),
 	       envir=.largeScaleRKeys)
 
 	repeat {
