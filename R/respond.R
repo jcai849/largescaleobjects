@@ -10,8 +10,6 @@ worker <- function(comms, log, host, port) {
 
 	assign(host(getUserProcess()), host(getUserProcess()),
 	       envir=.largeScaleRKeys)
-	assign(desc(getUserProcess()), desc(getUserProcess()),
-	       envir=.largeScaleRKeys)
 
 	repeat {
 		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))
