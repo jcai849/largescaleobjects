@@ -23,4 +23,4 @@ cols <- c("vendor_id"="character",
 		"tip_amount"="numeric",
 		"tolls_amount"="numeric",
 		"total_amount"="numeric")
-file <- paste0("~/taxicab-", formatC(seq(0, (8*4)-1),width=2,flag=0))
+file <- paste0("~/taxicab-", formatC(seq(0, (8*4)-1),width=2,flag=0), ".csv")
