@@ -1,6 +1,5 @@
 source("prop-3-setup")
 
-debug(read.dlcsv)
 taxicab <- read.dlcsv(host, file, col.names=names(cols), colClasses=cols)
 print(taxicab)
 preview(taxicab)
