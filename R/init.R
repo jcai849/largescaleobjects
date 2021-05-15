@@ -1,8 +1,8 @@
-start <- function(workers, user="127.0.0.1", comms=user, log=user) {
+start <- function(workers, loginName, user="127.0.0.1", comms=user, log=user) {
 	logProcess(log)
 	commsProcess(comms)
 	userProcess(user)
-	lapply(workers, workerProcess)
+	lapply(workers, workerProcess, user=loginName)
 	init()
 }
 
@@ -123,7 +123,6 @@ register.workerProcess <- function(x, ...) {
 	attr(x, "count") <- NULL
 	rm(list=paste0(count, ".workerProcess"), envir=unregisteredProcesses())
 
-	loc <- paste0(if (!is.null(user(x))) paste0(user(x), '@') else  NULL, host(x))
 	command <- c("R", "-e", 
 		     paste0("largeScaleR::worker(comms=",
 			    deparse1(getCommsProcess()), 
@@ -132,7 +131,8 @@ register.workerProcess <- function(x, ...) {
 			    if (is.null(port(x))) NULL else paste0(",port=",
 								   deparse1(port(x))),
 			    ")"))
-	system2("ssh", c(loc, shQuote(shQuote(command))),
+	system2("ssh", c(if (is.null(user(x))) NULL else paste("-l", user(x)), 
+			     host(x), shQuote(shQuote(command))),
 		stdout=FALSE, stderr=FALSE,  wait=FALSE)
 }
 

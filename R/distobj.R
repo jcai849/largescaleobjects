@@ -77,4 +77,4 @@ combine.distObjRef <- function(...) {
 	x <- distObjRef(chunks)
 	x
 }
-object.dsize <- function(x) sum(emerge(do.dcall("object.size", x)))
+object.dsize <- function(x) sum(emerge(do.dcall("object.size", list(x))))
