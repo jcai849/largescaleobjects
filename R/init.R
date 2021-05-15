@@ -123,14 +123,14 @@ register.workerProcess <- function(x, ...) {
 	attr(x, "count") <- NULL
 	rm(list=paste0(count, ".workerProcess"), envir=unregisteredProcesses())
 
-	command <- c("R", "-e", 
+	command <- c("R", "-e",
 		     paste0("largeScaleR::worker(comms=",
-			    deparse(getCommsProcess()), 
-			    ",log=",deparse(getLogProcess()), 
-			    ",host=", deparse(host(x)),
+			    paste0(deparse(getCommsProcess()), collapse=""), 
+			    ",log=", paste0(deparse(getLogProcess()), collapse=""), 
+			    ",host=", paste0(deparse(host(x)), collapse=""),
 			    if (is.null(port(x))) NULL else paste0(",port=",
-								   deparse(port(x))),
-			    ")"))
+						   paste0(deparse(port(x))), collapse=""),
+			    ")", collapse=""))
 	system2("ssh", c(if (is.null(user(x))) NULL else paste("-l", user(x)), 
 			     host(x), shQuote(shQuote(command))),
 		stdout=FALSE, stderr=FALSE,  wait=FALSE)
