@@ -125,11 +125,11 @@ register.workerProcess <- function(x, ...) {
 
 	command <- c("R", "-e", 
 		     paste0("largeScaleR::worker(comms=",
-			    deparse1(getCommsProcess()), 
-			    ",log=",deparse1(getLogProcess()), 
-			    ",host=", deparse1(host(x)),
+			    deparse(getCommsProcess()), 
+			    ",log=",deparse(getLogProcess()), 
+			    ",host=", deparse(host(x)),
 			    if (is.null(port(x))) NULL else paste0(",port=",
-								   deparse1(port(x))),
+								   deparse(port(x))),
 			    ")"))
 	system2("ssh", c(if (is.null(user(x))) NULL else paste("-l", user(x)), 
 			     host(x), shQuote(shQuote(command))),
