@@ -1,12 +1,11 @@
 read.dlcsv <- function(host, file,
 		       header=FALSE, sep=",", quote="\"", dec = ".",
 		       fill=TRUE, comment.char="", col.names, colClasses) {
-	dfile <- distObjRef(mapply(distribute, arg=file, target=lapply(host, chunkRef),
-				   SIMPLIFY=FALSE, USE.NAMES=FALSE))
-	do.dcall("read.csv", 
-		 list(file=dfile, header=I(header), sep=I(sep), quote=I(quote),
-		      dec=I(dec), fill=I(fill), comment.char=I(comment.char),
-		      col.names=I(col.names), colClasses=I(colClasses)))
+	distObjRef(mapply(function(..., target) do.ccall("read.csv", list(...), target=target), 
+			  file=file, target = lapply(host, chunkRef), 
+			  MoreArgs = list(header=I(header), sep=I(sep), quote=I(quote),
+					  dec=I(dec), fill=I(fill), comment.char=I(comment.char),
+					  col.names=I(col.names), colClasses=I(colClasses))))
 }
 
 read.dcsv <- function(file, header=FALSE, sep=",", quote="\"", dec = ".",
