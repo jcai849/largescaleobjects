@@ -4,4 +4,6 @@ largeScaleR::worker(comms=structure(list(host = "127.0.0.1", port = 6379L,
 		    log=structure(list(host = "127.0.0.1", port = 5140L,
 				       execute = FALSE),
 				  class = c("logProcess", "process")),
-		    host="127.0.0.1")
+		    host="127.0.0.1",
+		    port="12345",
+		    prepop=list("1"=iris)

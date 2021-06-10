@@ -1,4 +1,4 @@
-worker <- function(comms, log, host, port) {
+worker <- function(comms, log, host, port, prepop) {
 
 	library("largeScaleR")
 
@@ -10,6 +10,7 @@ worker <- function(comms, log, host, port) {
 
 	assign(host(getUserProcess()), host(getUserProcess()),
 	       envir=.largeScaleRKeys)
+	if (!missing(prepop)) mapply(addChunk, names(prepop), prepop)
 
 	repeat {
 		keys <- c(ls(.largeScaleRChunks), ls(.largeScaleRKeys))

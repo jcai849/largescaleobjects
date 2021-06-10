@@ -4,4 +4,11 @@ commsProcess(host="localhost", port=6379L, execute=FALSE)
 logProcess(host="localhost", port=5140L, execute=FALSE)
 init()
 
-x <- distribute(data.frame(a=rnorm(1E4), b=rnorm(1E4)), 1)
+x <- chunkRef(1)
+host(x) <- ""
+port(x) <- ""
+preview(x) <- ""
+size(x) <- ""
+from(x) <- ""
+to(x) <- ""
+x <- distObjRef(x)
