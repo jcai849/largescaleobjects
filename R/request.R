@@ -23,18 +23,12 @@ do.dcall <- function(what, args, store=TRUE) { #call distObjRef
 	distObjRef(cs)
 }
 
-dreduce <- function(f, x, init) {
-# remaining problem is chunk references -  change do.ccall with send and
-# manually specify chunkref id for final chunk (don't store any but the last)
-	r <- function(f, prev, curr) {
-		res <- f(prev, curr)
-		if (length(chunkRefs(curr)) == 1L)
-			return(res)
-		next <- chunkRefs(x)[-1][1]
-		do.ccall(sys.function(), list(f = f, prev = res, curr = next),
-			 target = next)
-		invisible(NULL)
+dreducable <- function(f) {
+	function(x, y) {
+		do.ccall(f, list(x, y), target = y)
 	}
-	first <-  chunkRefs(x)[-1][1]
-	do.ccall(r, list(f = f, prev = init, curr = first), target = first)
+}
+
+dreduce <- function(f, x, init, right = FALSE, accumulate = FALSE) {
+	Reduce(dreducable(f), chunkRef(x), init, right, accumulate)
 }
