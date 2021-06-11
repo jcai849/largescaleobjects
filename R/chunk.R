@@ -23,7 +23,7 @@ print.chunkRef 	<- function(x, ...) {
 #	cat("...\n")
 }
 
-length.chunkRef <- function(x) 1L
+length.chunkRef <- function(x) 0L
 ncol.chunkRef <- function(x)
 	emerge(do.ccall("ncol", list(x), x))
 colnames.chunkRef <- function(x, ...)
