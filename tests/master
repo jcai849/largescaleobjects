@@ -5,10 +5,11 @@ logProcess(host="localhost", port=5140L, execute=FALSE)
 init()
 
 x <- chunkRef(1)
-host(x) <- ""
-port(x) <- ""
-preview(x) <- ""
-size(x) <- ""
-from(x) <- ""
-to(x) <- ""
-x <- distObjRef(x)
+host(x) <- "127.0.0.1"
+port(x) <- "12345"
+size(x) <- 150
+from(x) <- 1
+to(x) <- 150
+y <- distObjRef(x)
+
+sum(do.dcall("object.size", list(y)))
