@@ -10,6 +10,6 @@ port(x) <- "12345"
 size(x) <- 150
 from(x) <- 1
 to(x) <- 150
-y <- distObjRef(x)
+y <- distObjRef(list(x))
 
 sum(do.dcall("object.size", list(y)))
