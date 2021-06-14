@@ -12,4 +12,7 @@ from(x) <- 1
 to(x) <- 150
 y <- distObjRef(list(x))
 
-sum(do.dcall("object.size", list(y)))
+# sum(do.dcall("object.size", list(y)))
+
+z <- do.dcall("biglm::biglm", list(I(Sepal.Length ~ Sepal.Width), y))
+emerge(z)

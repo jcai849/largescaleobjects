@@ -1,3 +1,4 @@
+debug(largeScaleR::worker)
 largeScaleR::worker(comms=structure(list(host = "127.0.0.1", port = 6379L,
 					 execute = FALSE, desc = "comms"),
 				    class = c("commsProcess", "process")),
