@@ -37,7 +37,7 @@ read.lcsv <- function(file, header, colTypes, quote="", max.line=65536L,
 	cr <- iotools::chunk.reader(file, max.line=max.line)
 	if (header && 
 	    length(chunk <- iotools::read.chunk(cr, max.size=max.size))){
-		chunkRef <- do.ccall(iotools::dstrsplit,
+		chunkRef <- do.ccall("iotools::dstrsplit",
 					       list(x=chunk,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,
@@ -47,7 +47,7 @@ read.lcsv <- function(file, header, colTypes, quote="", max.line=65536L,
 		chunkRefs <- c(chunkRefs, chunkRef)
 	}
 	while(length(chunk <- iotools::read.chunk(cr, max.size=max.size))) {
-		chunkRef <- do.ccall(iotools::dstrsplit,
+		chunkRef <- do.ccall("iotools::dstrsplit",
 					       list(x=chunk,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,
