@@ -18,7 +18,6 @@ preview.distObjRef <- function(x, ...) lapply(chunkRef(x), preview)
 print.distObjRef <- function(x, ...) {
 	cat("Distributed Object Reference with", format(length(chunkRef(x))), 
 	    "chunk references\n")
-#	cat(" Total size", format(sum(size(x))), "\n")
 	cat("First chunk reference:\n")
 	print(chunkRef(x)[[1]])
 }

@@ -15,13 +15,8 @@ is.chunkRef <- function(x) inherits(x, "chunkRef")
 
 # Other methods
 
-print.chunkRef 	<- function(x, ...) {
+print.chunkRef 	<- function(x, ...)
 	cat("Chunk Reference with Descriptor", format(desc(x)), "\n")
-#	cat(" and size", format(size(x)), 
-#	    "\n", "Preview:", "\n")
-#	print(preview(x))
-#	cat("...\n")
-}
 
 length.chunkRef <- function(x) 0L
 ncol.chunkRef <- function(x)
