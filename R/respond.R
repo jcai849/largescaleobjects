@@ -28,11 +28,45 @@ worker <- function(comms, log, host, port, prepop) {
 
 evaluate <- function(fun, args, target) {
 	stopifnot(is.list(args))
-	args <- lapply(args, emerge, target=target)
+	args <- rapply(args, emerge, 
+		       classes = c("AsIs", "chunkRef", "distObjRef"),
+		       deflt = NULL, how="replace", target=target)
 	if (is.character(fun)) {
 		funsplit <- strsplit(fun, "::", fixed=TRUE)[[1]]
 		if (length(funsplit) == 2L)
 			fun <- getFromNamespace(funsplit[2], funsplit[1])
 	}
 	do.call(fun, args, envir=.GlobalEnv)
+}
+
+do.NEAcall <- function(what, args) {
+	stopifnot(is.character(what),
+		  all(names(args) != ""))
+	funsplit <- strsplit(what, "::", fixed=TRUE)[[1]]
+	fun <- if (length(funsplit) == 2L) {
+		call("::", as.symbol(funsplit[1]), as.symbol(funsplit[2]))
+	} else as.symbol(what)
+	eval(as.call(c(fun, structure(lapply(names(args), as.symbol),
+				      names=names(args)))),
+	     envir=args)
+}
+
+dlm <- function(formula, data, weights=NULL, sandwich=FALSE) {
+	stopifnot(is.distObjRef(data))
+	stopifnot(length(chunkRef(distObjRef)) > 0L)
+	init <- dbiglm(formula, data, weights, sandwich)
+	if (length(chunkRef(distObjRef)) == 1L) return(emerge(init))
+	emerge(dreduce("update", data, init))
+}
+
+dbiglm <- function(formula, data, weights=NULL, sandwich=FALSE)
+	distObjRef(list(do.ccall("do.NEAcall", list(what="biglm",
+						    args=list(formula=I(stripEnv(formula)),
+							      data=data,
+							      weights=I(stripEnv(weights)),
+							      sandwich=I(sandwich))))))
+
+stripEnv <- function(x) {
+	attr(x, ".Environment") <- NULL
+	x
 }
