@@ -29,5 +29,10 @@ worker <- function(comms, log, host, port, prepop) {
 evaluate <- function(fun, args, target) {
 	stopifnot(is.list(args))
 	args <- lapply(args, emerge, target=target)
+	if (is.character(fun)) {
+		funsplit <- strsplit(fun, "::", fixed=TRUE)[[1]]
+		if (length(funsplit) == 2L)
+			fun <- getFromNamespace(funsplit[2], funsplit[1])
+	}
 	do.call(fun, args, envir=.GlobalEnv)
 }
