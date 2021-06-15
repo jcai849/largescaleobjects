@@ -10,9 +10,9 @@ port(x) <- "12345"
 size(x) <- 150
 from(x) <- 1
 to(x) <- 150
-y <- distObjRef(list(x))
 
+# y <- distObjRef(list(x))
 # sum(do.dcall("object.size", list(y)))
 
-z <- do.dcall("biglm::biglm", list(I(Sepal.Length ~ Sepal.Width), y))
+z <- dbiglm(Sepal.Length ~ Sepal.Width, x)
 emerge(z)
