@@ -226,3 +226,7 @@ export("do.dcall")
 # respond.R
 export("evaluate")
 export("worker")
+export("do.NEAcall")
+export("dlm")
+export("dbiglm")
+export("stripEnv")
