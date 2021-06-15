@@ -53,18 +53,24 @@ do.NEAcall <- function(what, args) {
 
 dlm <- function(formula, data, weights=NULL, sandwich=FALSE) {
 	stopifnot(is.distObjRef(data))
-	stopifnot(length(chunkRef(distObjRef)) > 0L)
-	init <- dbiglm(formula, data, weights, sandwich)
-	if (length(chunkRef(distObjRef)) == 1L) return(emerge(init))
-	emerge(dreduce("update", data, init))
+	chunks <- chunkRef(distObjRef)
+	stopifnot(length(chunks) > 0L)
+	init <- dbiglm(formula, chunks[[1]], weights, sandwich)
+	if (length(chunks) != 1L) 
+		dreduce("update", chunks[-1], init)
+	else init
 }
 
-dbiglm <- function(formula, data, weights=NULL, sandwich=FALSE)
-	distObjRef(list(do.ccall("do.NEAcall", list(what="biglm",
-						    args=list(formula=I(stripEnv(formula)),
-							      data=data,
-							      weights=I(stripEnv(weights)),
-							      sandwich=I(sandwich))))))
+dbiglm <- function(formula, data, weights=NULL, sandwich=FALSE) {
+	stopifnot(is.chunkRef(data))
+	distObjRef(list(do.ccall("do.NEAcall",
+				 list(what="biglm",
+				      args=list(formula=stripEnv(formula),
+						data=data,
+						weights=stripEnv(weights),
+						sandwich=sandwich)),
+				 target=data)))
+}
 
 stripEnv <- function(x) {
 	attr(x, ".Environment") <- NULL
