@@ -233,3 +233,4 @@ export("dreduce")
 # respond.R
 export("evaluate")
 export("worker")
+export("do.NEAcall")
