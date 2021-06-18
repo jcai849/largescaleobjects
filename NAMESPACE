@@ -106,6 +106,7 @@ export("fillMetaData")
 export("from")
 export("from<-")
 export("fun")
+export("getFun")
 export("host")
 export("host<-")
 export("name<-")
@@ -222,7 +223,6 @@ S3method("init", "logProcess")
 
 # model.R
 export("dlm")
-export("dbiglm")
 
 # request.R
 export("do.ccall")
@@ -233,4 +233,3 @@ export("dreduce")
 # respond.R
 export("evaluate")
 export("worker")
-export("do.NEAcall")
