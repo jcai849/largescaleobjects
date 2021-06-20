@@ -4,15 +4,27 @@ commsProcess(host="localhost", port=6379L, execute=FALSE)
 logProcess(host="localhost", port=5140L, execute=FALSE)
 init()
 
-x <- chunkRef(1)
-host(x) <- "127.0.0.1"
-port(x) <- "12345"
-size(x) <- 150
-from(x) <- 1
-to(x) <- 150
+x1 <- chunkRef("a")
+host(x1) <- "127.0.0.1"
+port(x1) <- "12345"
+size(x1) <- 50
+from(x1) <- 1
+to(x1) <- 50
+x2 <- chunkRef("b")
+host(x2) <- "127.0.0.1"
+port(x2) <- "12346"
+size(x2) <- 50
+from(x2) <- 51
+to(x2) <- 100
+x3 <- chunkRef("c")
+host(x3) <- "127.0.0.1"
+port(x3) <- "12347"
+size(x3) <- 50
+from(x3) <- 101
+to(x3) <- 150
 
-# y <- distObjRef(list(x))
-# sum(do.dcall("object.size", list(y)))
-
-z <- dbiglm(Sepal.Length ~ Sepal.Width, x)
-emerge(z)
+init <- dbiglm(Sepal.Length ~ Sepal.Width, x1)
+print(emerge(init))
+z <- dreduce("biglm::update.biglm",
+		distObjRef(list(x2, x3)), init) 
+print(emerge(z))

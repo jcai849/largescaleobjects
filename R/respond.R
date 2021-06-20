@@ -19,60 +19,42 @@ worker <- function(comms, log, host, port, prepop) {
 			       desc(request))) # WRK X Y - Working at worker X on chunk Y
 		result <- tryCatch(evaluate(fun(request), 
 					    args(request),
-					    target(request)), 
+					    target(request),
+					    get0(mask(request))), 
 				   error =  identity)
 		if (store(request))
 			addChunk(largeScaleR::desc(request), result)
 	}
 }
 
-evaluate <- function(fun, args, target) {
+evaluate <- function(fun, args, target, mask) {
 	stopifnot(is.list(args))
 	args <- rapply(args, emerge, 
 		       classes = c("AsIs", "chunkRef", "distObjRef"),
 		       deflt = NULL, how="replace", target=target)
-	if (is.character(fun)) {
-		funsplit <- strsplit(fun, "::", fixed=TRUE)[[1]]
-		if (length(funsplit) == 2L)
-			fun <- getFromNamespace(funsplit[2], funsplit[1])
-	}
+	fun <- getFun(fun)
+	if (!missing(mask)) fun <- maskFun(fun, mask)
 	do.call(fun, args, envir=.GlobalEnv)
 }
 
-do.NEAcall <- function(what, args) {
-	stopifnot(is.character(what),
-		  all(names(args) != ""))
-	funsplit <- strsplit(what, "::", fixed=TRUE)[[1]]
-	fun <- if (length(funsplit) == 2L) {
-		call("::", as.symbol(funsplit[1]), as.symbol(funsplit[2]))
-	} else as.symbol(what)
-	eval(as.call(c(fun, structure(lapply(names(args), as.symbol),
-				      names=names(args)))),
-	     envir=args)
+getFun.function <- identity
+
+getFun.character <- function(x) {
+		funsplit <- strsplit(x, "::", fixed=TRUE)[[1]]
+		if (length(funsplit) == 2L) {
+			getFromNamespace(funsplit[2], funsplit[1])
+		} else get(x)
 }
 
-dlm <- function(formula, data, weights=NULL, sandwich=FALSE) {
-	stopifnot(is.distObjRef(data))
-	chunks <- chunkRef(distObjRef)
-	stopifnot(length(chunks) > 0L)
-	init <- dbiglm(formula, chunks[[1]], weights, sandwich)
-	if (length(chunks) != 1L) 
-		dreduce("update", chunks[-1], init)
-	else init
+maskFun <- function(fun, mask) {
+	environment(fun) <- new.env(parent = environment(fun))
+	for (m in names(mask))
+		assign(m, mask[[m]], environment(fun))
+	fun
 }
 
-dbiglm <- function(formula, data, weights=NULL, sandwich=FALSE) {
-	stopifnot(is.chunkRef(data))
-	distObjRef(list(do.ccall("do.NEAcall",
-				 list(what="biglm",
-				      args=list(formula=stripEnv(formula),
-						data=data,
-						weights=stripEnv(weights),
-						sandwich=sandwich)),
-				 target=data)))
-}
-
-stripEnv <- function(x) {
-	attr(x, ".Environment") <- NULL
-	x
+makeCallFun <- function(f, which=0) {
+	fun <- function(...) {}
+	body(out) <- call("quote", f(which))
+	out
 }

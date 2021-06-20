@@ -89,6 +89,7 @@ export("getCommsProcess")
 export("getLogProcess")
 export("getUserProcess")
 export("unregisteredProcesses")
+export("stripEnv")
 
 # generic.R
 export("args")
@@ -105,6 +106,7 @@ export("fillMetaData")
 export("from")
 export("from<-")
 export("fun")
+export("getFun")
 export("host")
 export("host<-")
 export("name<-")
@@ -219,14 +221,15 @@ S3method("size", "matrix")
 export("stateLog")
 S3method("init", "logProcess")
 
+# model.R
+export("dlm")
+
 # request.R
 export("do.ccall")
 export("do.dcall")
+export("dreducable")
+export("dreduce")
 
 # respond.R
 export("evaluate")
 export("worker")
-export("do.NEAcall")
-export("dlm")
-export("dbiglm")
-export("stripEnv")
