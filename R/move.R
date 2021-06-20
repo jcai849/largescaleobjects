@@ -23,7 +23,7 @@ emerge.chunkRef <- function(arg, target) {
 }
 
 emerge.distObjRef <- function(arg, target) {
-	if (missing(target)) {
+	if (missing(target) || is.null(target)) {
 		chunks <- sapply(chunkRef(arg), emerge, 
 				 simplify=FALSE, USE.NAMES=FALSE)
 		names(chunks) <- NULL

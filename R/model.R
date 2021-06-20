@@ -8,7 +8,8 @@ dlm <- function(formula, data, weights=NULL, sandwich=FALSE) {
 			      weights=stripEnv(weights),
 			      sandwich=sandwich),
 			 target=chunks[[1]],
-			 mask=list(sys.call=makeCallFun(sys.call, 1)))
+			 mask=list(sys.call=c(alist(...=),
+					      call("quote", sys.call()))))
         if (length(chunks) != 1L)
                 dreduce("biglm::update.biglm", chunks[-1], init)
         else init

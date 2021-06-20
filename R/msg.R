@@ -25,11 +25,11 @@ print.msg <- function(x, ...) {
 	}
 }
 
-getMsg		<- function(field) function(x, ...) x[[field]]
+getMsg		<- function(field) function(x, ...) getElement(x, field)
 args.msg	<- getMsg("args")
 desc.msg	<- getMsg("desc")
 from.msg	<- getMsg("from")
-fun.msg		<- getMsg("fun")
+fun.msg		<- function(x, ...) as.function(getMsg("fun")(x, ...))
 host.msg	<- getMsg("host")
 mask.msg	<- getMsg("mask")
 port.msg	<- getMsg("port")
@@ -38,3 +38,10 @@ size.msg	<- getMsg("size")
 store.msg	<- getMsg("store")
 target.msg	<- getMsg("target")
 to.msg		<- getMsg("to")
+
+as.function.character <- function(x, ...) {
+                funsplit <- strsplit(x, "::", fixed=TRUE)[[1]]
+                if (length(funsplit) == 2L) {
+                        getFromNamespace(funsplit[2], funsplit[1])
+                } else get(x)
+}
