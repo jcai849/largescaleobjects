@@ -26,7 +26,10 @@ print.msg <- function(x, ...) {
 }
 
 getMsg		<- function(field) function(x, ...) getElement(x, field)
-args.msg	<- getMsg("args")
+args.msg	<- function(x, target, ...) 
+	rapply(getMsg("args")(x, ...),  emerge,
+	       classes = c("AsIs", "chunkRef", "distObjRef"),
+	       deflt = NULL, how="replace", target=target)
 desc.msg	<- getMsg("desc")
 from.msg	<- getMsg("from")
 fun.msg		<- function(x, ...) as.function(getMsg("fun")(x, ...))
