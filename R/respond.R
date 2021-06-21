@@ -17,7 +17,7 @@ worker <- function(comms, log, host, port, prepop) {
 		stateLog(paste("WRK", desc(getUserProcess()),
 			       desc(request))) # WRK X Y - Working at worker X on chunk Y
 		result <- tryCatch(do.call(mask(fun(request), mask(request)), 
-					    args(request, target(request)))
+					    args(request, target(request))),
 				   error =  identity)
 		if (store(request))
 			addChunk(largeScaleR::desc(request), result)
