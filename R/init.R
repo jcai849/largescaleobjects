@@ -2,7 +2,9 @@ start <- function(workers, loginName, user="127.0.0.1", comms=user, log=user) {
 	logProcess(log)
 	commsProcess(comms)
 	userProcess(user)
-	lapply(workers, workerProcess, user=loginName)
+	if (is.numeric(workers)) {
+		replicate(workers, workerProcess())
+	} else lapply(workers, workerProcess, user=loginName)
 	init()
 }
 
