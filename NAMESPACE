@@ -90,6 +90,7 @@ export("getLogProcess")
 export("getUserProcess")
 export("unregisteredProcesses")
 export("envBase")
+export("currCallFun")
 
 # generic.R
 export("args")

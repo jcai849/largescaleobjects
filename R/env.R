@@ -45,6 +45,11 @@ addChunk <- function(cd, val) {
 }
 
 envBase <- function(x) {
-        attr(x, ".Environment") <- baseenv()
+        if (!is.null(x)) attr(x, ".Environment") <- baseenv()
         x
+}
+
+currCallFun <- function(n=0) { 
+	cl <- sys.call(n-1)
+	as.function(c(alist(...=), call("quote", cl)))
 }
