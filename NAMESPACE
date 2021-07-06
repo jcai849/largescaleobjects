@@ -89,7 +89,7 @@ export("getCommsProcess")
 export("getLogProcess")
 export("getUserProcess")
 export("unregisteredProcesses")
-export("stripEnv")
+export("envBase")
 
 # generic.R
 export("args")
@@ -106,7 +106,7 @@ export("fillMetaData")
 export("from")
 export("from<-")
 export("fun")
-export("mask")
+export("insert")
 export("host")
 export("host<-")
 export("name<-")
@@ -166,7 +166,7 @@ S3method("args", "msg")
 S3method("desc", "msg")
 S3method("from", "msg")
 S3method("fun", "msg")
-S3method("mask", "msg")
+S3method("insert", "msg")
 S3method("host", "msg")
 S3method("port", "msg")
 S3method("preview", "msg")
@@ -222,9 +222,6 @@ S3method("size", "matrix")
 # log.R
 export("stateLog")
 S3method("init", "logProcess")
-
-# model.R
-export("dlm")
 
 # request.R
 export("do.ccall")

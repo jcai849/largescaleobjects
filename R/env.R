@@ -44,7 +44,7 @@ addChunk <- function(cd, val) {
 	val
 }
 
-stripEnv <- function(x) {
-        attr(x, ".Environment") <- NULL
+envBase <- function(x) {
+        attr(x, ".Environment") <- baseenv()
         x
 }

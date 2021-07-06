@@ -16,7 +16,7 @@ worker <- function(comms, log, host, port, prepop) {
 		request <- receive(keys)
 		stateLog(paste("WRK", desc(getUserProcess()),
 			       desc(request))) # WRK X Y - Working at worker X on chunk Y
-		result <- tryCatch(do.call(mask(fun(request), mask(request)), 
+		result <- tryCatch(do.call(insert(fun(request), insert(request)), 
 					    args(request, target(request))),
 				   error =  identity)
 		if (store(request))
@@ -24,10 +24,10 @@ worker <- function(comms, log, host, port, prepop) {
 	}
 }
 
-mask.function <- function(fun, mask) {
-	if (is.null(mask)) return(fun)
+insert.function <- function(fun, insert) {
+	if (is.null(insert)) return(fun)
 	environment(fun) <- new.env(parent = environment(fun))
-	for (m in names(mask))
-		assign(m, as.function(mask[[m]]), environment(fun))
+	for (m in names(insert))
+		assign(m, insert[[m]], environment(fun))
 	fun
 }

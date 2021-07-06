@@ -1,4 +1,4 @@
-do.ccall <- function(what, args, target, store=TRUE, mask=NULL) {
+do.ccall <- function(what, args, target, store=TRUE, insert=NULL) {
 	stopifnot(is.list(args))
 	cd <- if (store) desc("chunk") else NULL
 	send(fun	= what, 
@@ -7,11 +7,11 @@ do.ccall <- function(what, args, target, store=TRUE, mask=NULL) {
 	     desc	= cd,
 	     loc	= desc(target),
 	     store	= store,
-	     mask	= mask)
+	     insert	= insert)
 	if (store) chunkRef(cd)
 }
 
-do.dcall <- function(what, args, store=TRUE, mask=NULL) {
+do.dcall <- function(what, args, store=TRUE, insert=NULL) {
 	for (arg in args) fillMetaData(arg)
 	## distribute the non-distributed
 	target <- findTarget(args)
@@ -20,7 +20,7 @@ do.dcall <- function(what, args, store=TRUE, mask=NULL) {
 	##
 	target <- findTarget(args)
 	cs <- lapply(chunkRef(target), 
-		     function(t) do.ccall(what, args, t, store, mask))
+		     function(t) do.ccall(what, args, t, store, insert))
 	distObjRef(cs)
 }
 
