@@ -30,11 +30,14 @@ emerge.distObjRef <- function(arg, target) {
 		return(do.call(combine, chunks))
 	}
 
+	stopifnot(is.chunkRef(target))
+	if (any(sapply(chunkRef(arg), identical, target)))
+		return(emerge(target))
+
 	toAlign <- alignment(arg, target) 
 	Stub <- sapply(toAlign$Stub, emerge,
 		       simplify=FALSE, USE.NAMES=FALSE)
 	names(Stub) <- NULL
-
 	if (length(Stub) == 1) {
 		index(Stub[[1]], seq(toAlign$HEAD$FROM, toAlign$HEAD$TO))
 	} else do.call(combine, 
