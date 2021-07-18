@@ -1,6 +1,6 @@
 combine.default		<- function(...) c(...)
 combine.data.frame 	<- function(...) rbind(...)
-combine.matrix	 	<- function(...) rbind(...)
+combine.matrix	 	<- function(...) Reduce('+', list(...))
 combine.table <- function(...) {
 	tabs <- list(...)
 	chunknames <- lapply(tabs, dimnames)
