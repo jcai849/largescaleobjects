@@ -14,7 +14,7 @@ Description: Allows for transparent interaction with distributed objects,
 	the rapid development of parallel algorithms over the distributed data
 	for fast run time.
 Depends: R (>= 3.6.0)
-Imports: rediscc, osrv, iotools, ulog
+Imports: rediscc, osrv (>= 0.2), iotools, ulog
 License: GPL-3
 URL: https://github.com/jcai849/largeScaleR
 BugReports: https://github.com/jcai849/largeScaleR/issues

@@ -26,12 +26,12 @@ colnames.chunkRef <- function(x, ...)
 	emerge(do.ccall("colnames", list(x), x))
 delete.chunkRef <- function(x, ...) {
 	goodcleanfun <- function(xd) {
-		rm(list=xd, pos=largeScaleR::getChunkStore())
-		gc()
-		osrv::ask(paste0("DEL ", xd, "\n"))
+		rm(list=xd, pos=largeScaleR::getChunkStore()); gc()
 	}
 	do.ccall(envBase(goodcleanfun),
 		 args=list(as.character(desc(x))), target=x, store=FALSE)
+	osrv::ask(paste0("DEL ", as.character(desc(x)), "\n"),
+		  host=host(x), port=port(x), sfs=TRUE)
 	rm(list=ls(x), pos=x)
 	invisible(NULL)
 }
