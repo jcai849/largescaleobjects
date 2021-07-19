@@ -1,3 +1,4 @@
+debug(largeScaleR::worker)
 largeScaleR::worker(comms=structure(list(host = "127.0.0.1", port = 6379L,
 					 execute = FALSE, desc = "comms"),
 				    class = c("commsProcess", "process")),
@@ -6,4 +7,4 @@ largeScaleR::worker(comms=structure(list(host = "127.0.0.1", port = 6379L,
 				  class = c("logProcess", "process")),
 		    host="127.0.0.1",
 		    port="12345",
-		    prepop=list("a"=iris[1:50,]))
+		    prepop=list("a"=iris[1:50,],"b"=iris[51:100,]))

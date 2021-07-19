@@ -27,8 +27,8 @@ print.distObjRef <- function(x, ...) {
 denvRef <- function(target)
 	structure(do.dcall(envBase(function(null)
 				   structure(new.env(parent=baseenv()),
-					     class="denv"),
-		 list(target)), class=c("denvRef", class(target)))
+					     class="denv")), list(target)),
+		  class=c("denvRef", class(target)))
 
 is.denvRef <- function(x) inherits(x, "denvRef")
 is.denv <- function(x) inherits(x, "denv")

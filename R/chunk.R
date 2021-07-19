@@ -4,6 +4,7 @@ chunkRef.default <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkRef"
 	desc(cs) <- x 
+	reg.finalizer(cs, delete)
 	cs
 }
 
@@ -23,3 +24,14 @@ ncol.chunkRef <- function(x)
 	emerge(do.ccall("ncol", list(x), x))
 colnames.chunkRef <- function(x, ...)
 	emerge(do.ccall("colnames", list(x), x))
+delete.chunkRef <- function(x, ...) {
+	goodcleanfun <- function(xd) {
+		rm(list=xd, pos=largeScaleR::getChunkStore())
+		gc()
+		osrv::ask(paste0("DEL ", xd, "\n"))
+	}
+	do.ccall(envBase(goodcleanfun),
+		 args=list(as.character(desc(x))), target=x, store=FALSE)
+	rm(list=ls(x), pos=x)
+	invisible(NULL)
+}

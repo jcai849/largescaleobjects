@@ -35,6 +35,7 @@ getLogProcess		<- function() get("logProcess",
 getCommsConn		<- function() get("commsConn", 
 						envir = .largeScaleRConn,
 						inherits=FALSE)
+getChunkStore		<- function() .largeScaleRChunks
 
 addChunk <- function(cd, val) {
 	assign(as.character(cd), val, envir = .largeScaleRChunks)

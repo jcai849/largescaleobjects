@@ -2,7 +2,7 @@ findTarget <- function(args) {
 	dist <- vapply(args, is.distObjRef, logical(1))
 	if (!any(dist)) return(root())
 	de <- vapply(args, is.denv, logical(1)) # denvs as preferred target
-	if (any(de)) return args[[which.max(de)]]
+	if (any(de)) return(args[[which.max(de)]])
 	sizes <- lapply(args[dist], function(x) sum(size(x)))
 	args[dist][[which.max(sizes)]] # largest 
 }
