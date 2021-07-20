@@ -1,0 +1,24 @@
+#workerab
+library(largeScaleR)
+userProcess(host="localhost")
+commsProcess(host="localhost", port=6379L, execute=FALSE)
+logProcess(host="localhost", port=5140L, execute=FALSE)
+init()
+a <- chunkRef("a")
+host(a) <- "127.0.0.1"
+port(a) <- "12345"
+size(a) <- 50
+from(a) <- 1
+to(a) <- 50
+b <- chunkRef("b")
+host(b) <- "127.0.0.1"
+port(b) <- "12345"
+size(b) <- 50
+from(b) <- 51
+to(b) <- 100
+
+osrv::ask(paste0("GET ", "a", "\n"),
+        host = "127.0.0.1", port = "12345", sfs = TRUE)
+osrv::ask(paste0("GET ", as.character(desc(a)), "\n"),
+	host = host(a), port = port(a), sfs = TRUE)
+emerge(a)
