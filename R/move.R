@@ -20,8 +20,9 @@ emerge.default <- function(arg, target) arg
 emerge.AsIs <- function(arg, target) unAsIs(arg)
 
 emerge.chunkRef <- function(arg, target) {
-	tryCatch(get(as.character(desc(arg)), envir = .largeScaleRChunks),
-		 error = function(e) osrvGet(arg))
+	if (is.null(r <- get0(as.character(desc(arg)), envir=getChunkStore(), inherits=FALSE)))
+		r <- osrvGet(arg)
+	r
 }
 
 emerge.distObjRef <- function(arg, target) {
