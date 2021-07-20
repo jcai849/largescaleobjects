@@ -1,5 +1,8 @@
 library(largeScaleR)
 
+trace(largeScaleR:::host.chunkRef, quote(print("requesting host")), exit=quote(print("host returned")))
+trace(largeScaleR:::requestField.chunkRef, quote(print(paste("requesting", field))), exit=quote(print("request returned")))
+
 init("config")
 
 x <- 1:30
