@@ -3,21 +3,37 @@ userProcess(host="localhost")
 commsProcess(host="localhost", port=6379L, execute=FALSE)
 logProcess(host="localhost", port=5140L, execute=FALSE)
 init()
-a <- chunkRef("a")
+a <- chunkRef("9000")
 host(a) <- "127.0.0.1"
 port(a) <- "12345"
 size(a) <- 50
 from(a) <- 1
 to(a) <- 50
-b <- chunkRef("b")
+b <- chunkRef("9001")
 host(b) <- "127.0.0.1"
 port(b) <- "12345"
 size(b) <- 50
 from(b) <- 51
 to(b) <- 100
 
-emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), a))
-delete(a)
-emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), b))
-gc()
-emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), b))
+trace(largeScaleR:::delete.chunkRef, tracer=quote(cat("deleting ", format(desc(x)), "\n")))
+trace(largeScaleR:::osrvGet, tracer=quote(cat("getting ", format(desc(x)), "\n")))
+
+osrv::ask("GET 9000\n",  "127.0.0.1", "12345", sfs=T)
+osrv::ask("GET 9001\n",  "127.0.0.1", "12345", sfs=T)
+osrv::ask("DEL 9000\n",  "127.0.0.1", "12345")
+osrv::ask("GET 9001\n",  "127.0.0.1", "12345", sfs=T)
+
+#emerge(distObjRef(list(a,b)))
+#emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), a))
+##delete(a)
+#osrv::ask("DEL 9000\n",  "127.0.0.1", "12345")
+#emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), b))
+#gc()
+#emerge(do.ccall(envBase(function() ls(largeScaleR::getChunkStore())), list(), b))
+#
+#gc()
+#emerge(b)
+#gc()
+#emerge(b)
+#emerge(b)

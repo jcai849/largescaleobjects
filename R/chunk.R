@@ -4,11 +4,15 @@ chunkRef.default <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkRef"
 	desc(cs) <- x 
-	reg.finalizer(cs, delete)
+#	reg.finalizer(cs, delete)
 	cs
 }
 
-root <- function() chunkRef("/")
+root <- function() {
+	if (is.null(r <- get0("/", envir=.largeScaleRConn)))
+		assign("/", (r <- chunkRef("/")), pos=.largeScaleRConn)
+	return(r)
+}
 
 # Inherit
 
@@ -25,10 +29,12 @@ ncol.chunkRef <- function(x)
 colnames.chunkRef <- function(x, ...)
 	emerge(do.ccall("colnames", list(x), x))
 delete.chunkRef <- function(x, ...) {
-	goodcleanfun <- function(xd) {
-		rm(list=xd, pos=largeScaleR::getChunkStore()); gc()
+	clean <- function(xd) {
+		rm(list=xd, pos=largeScaleR::getChunkStore())
+		#stateLog(paste("DEL", desc(getUserProcess()), xd))
+		gc()
 	}
-	do.ccall(envBase(goodcleanfun),
+	do.ccall(envBase(clean),
 		 args=list(as.character(desc(x))), target=x, store=FALSE)
 	osrv::ask(paste0("DEL ", as.character(desc(x)), "\n"),
 		  host=host(x), port=port(x), sfs=TRUE)
