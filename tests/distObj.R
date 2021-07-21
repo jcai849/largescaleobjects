@@ -2,7 +2,7 @@ library(largeScaleR)
 
 #trace(largeScaleR:::requestField.chunkRef, quote(print(paste("requesting", field, "from", desc(x)))), exit=quote(print("request returned")))
 trace(largeScaleR:::delete.chunkRef, quote(print(paste("deleting", desc(x)))))
-trace(largeScaleR:::osrvGet, quote(print(paste("getting", desc(x)))))
+#trace(largeScaleR:::osrvGet, quote(print(paste("getting", desc(x)))))
 
 init("config")
 

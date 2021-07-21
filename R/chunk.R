@@ -4,7 +4,7 @@ chunkRef.default <- function(x, ...)  {
 	cs <- new.env(TRUE, emptyenv())
 	class(cs) <- "chunkRef"
 	desc(cs) <- x 
-#	reg.finalizer(cs, delete)
+	reg.finalizer(cs, delete)
 	cs
 }
 
