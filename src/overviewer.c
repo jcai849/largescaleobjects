@@ -29,7 +29,7 @@ loop:
 	instructs = deparse(buf);
 	update(sysstate, instructs);
 	display(sysstate);
-GOTO loop;
+goto loop;
 	close(s);
 
 	exit 0;
