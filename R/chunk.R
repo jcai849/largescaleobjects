@@ -29,6 +29,7 @@ ncol.chunkRef <- function(x)
 colnames.chunkRef <- function(x, ...)
 	emerge(do.ccall("colnames", list(x), x))
 delete.chunkRef <- function(x, ...) {
+	if (is.null(desc(x))) return()
 	clean <- function(xd) {
 		rm(list=xd, pos=largeScaleR::getChunkStore())
 		#stateLog(paste("DEL", desc(getUserProcess()), xd))
@@ -39,5 +40,5 @@ delete.chunkRef <- function(x, ...) {
 	osrv::ask(paste0("DEL ", as.character(desc(x)), "\n"),
 		  host=host(x), port=port(x), sfs=TRUE)
 	rm(list=ls(x), pos=x)
-	invisible(NULL)
+	return()
 }
