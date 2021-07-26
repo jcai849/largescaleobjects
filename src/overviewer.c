@@ -12,14 +12,15 @@
 
 typedef struct connection {
 	int s;
-	struct sockaddr ca_ptr;
+	struct sockaddr *ca_ptr;
 	socklen_t *len;
 } connection;
+
 
 int main(int argc, char **argv)
 {
 	char buf[BUFSIZ];
-	connection conn;
+/*	connection conn;
 	instructions instructs;
 	systemstate sysstate;
 
@@ -31,18 +32,19 @@ loop:
 	display(sysstate);
 goto loop;
 	close(s);
+	*/
 
-	exit 0;
+	exit(0);
 }
 
-ssize_t receive(connection conn, char *buf) {
+ssize_t receive(connection *conn, char *buf) {
 	ssize_t n;
-	n = recvfrom(conn->s, buf, BUFSIZ, 0, conn->ca_ptr, &conn.len);
+	n = recvfrom(conn->s, buf, BUFSIZ, 0, conn->ca_ptr, conn->len);
 	if (n > 0) buf[n] = 0;
 	return n;
 }
 
-connection setup(connection conn)
+connection setup(connection *conn)
 {
 	int s, i;
 	struct sockaddr_in sai, cai;
@@ -50,7 +52,7 @@ connection setup(connection conn)
 	int ca_len = 0;
 
 	s = socket(AF_INET, SOCK_DGRAM, 0);
-	if (s == -1) { perror("ERROR: failed to open socket"); return 1; };
+	if (s == -1) { perror("ERROR: failed to open socket"); exit(1); };
 
         int optval = 1;
         setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
@@ -63,7 +65,7 @@ connection setup(connection conn)
         i = bind(s, (SA*)&sai, sizeof(sai));
 	socklen_t len = ca_len;
 
-	if (i == -1) { perror("ERROR: failed to bind socket"); return 2; };
+	if (i == -1) { perror("ERROR: failed to bind socket"); exit(2); };
 }
 
 /* CON X - New worker connected */
