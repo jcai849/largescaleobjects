@@ -1,7 +1,7 @@
 library(largeScaleR)
 
 #trace(largeScaleR:::requestField.chunkRef, quote(print(paste("requesting", field, "from", desc(x)))), exit=quote(print("request returned")))
-trace(largeScaleR:::delete.chunkRef, quote(print(paste("deleting", desc(x)))))
+#trace(largeScaleR:::delete.chunkRef, quote(print(paste("deleting", desc(x)))))
 #trace(largeScaleR:::osrvGet, quote(print(paste("getting", desc(x)))))
 
 init("config")
@@ -67,9 +67,7 @@ stopifnot(
 	  ## ncol
 	  identical(ncol(distIris), ncol(iris)),
 	  ## colnames
-	  identical(colnames(distIris), colnames(iris)),
-	  ## cbind
-	  identical(emerge(cbind(distIris, distIris)), cbind(iris, iris))
+	  identical(colnames(distIris), colnames(iris))
 )
 
 ## Print
