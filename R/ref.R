@@ -63,9 +63,8 @@ dref.list <- function(x, ...) {
 
 delete <- function(x, ...) UseMethod("delete", x)
 delete.cdesc <- function(x, ...) {
-	# delete chunk with descriptor x from local chunkStore
-	rm(list=as.character(x), pos=getChunkStore())
-	stateLog(paste("DEL", desc(getUserProcess()), x))
+	chunks()[[x]] <- NULL
+	log("DEL", x)
 	gc()
 }
 delete.ccache <- function(x, ...) {
@@ -73,7 +72,7 @@ delete.ccache <- function(x, ...) {
 	do.ccall(delete, args=list(x=cdesc(x)), target=cdesc(x), store=FALSE)
 	osrv::ask(paste0("DEL", cdesc(x), "\n"),
 		  host=host(x), port=port(x), sfs=TRUE)
-	rm(list=ls(x), pos=x)
+	rm(list=ls(x), x)
 	return()
 }
 

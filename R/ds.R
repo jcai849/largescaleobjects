@@ -3,7 +3,7 @@
 desc <- function(x, ...) UseMethod("desc", x)
 `desc<-` <- function(x, value) UseMethod("desc<-", x)
 desc.character <- function(x, ...)
-        structure(rediscc::redis.inc(getCommsConn(), x), class="desc")
+        structure(rediscc::redis.inc(msg(), x), class="desc")
 
 # Caches
 
@@ -14,6 +14,12 @@ cache <- function(x, mutable) {
         } else UseMethod("cache", x)
 }
 `cache<-` <- function(x, value) UseMethod("cache<-", x)
+`cache[[<-` <- function(x, i, value) {
+	if (is.null(value)) {
+		if (is.environment(x)) return(rm(list=i, x))
+	}
+	x[[i]] <- value
+}
 
 # Refs
 
