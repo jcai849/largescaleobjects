@@ -1,22 +1,25 @@
-msgconn <- function() conn(msg())
-
-send <- function(..., loc) {
-	m <- msg(...)
-	serializedMsg <- rawToChar(serialize(m, NULL, T))
-	rediscc::redis.push(getCommsConn(), loc, serializedMsg)
+msg <- function(..., to) { # flowchart available at XXX
+	if (missing(...)) {
+		ncm <- ncache$msg
+		if (is.null(ncm)) return(ncache()$msg <- cache(mutable=TRUE))
+		if (!is.null(ncm$conn)) return(ncm)
+		if (is.null(ncm$host) || is.null(ncm$port)) return(ncm)
+		return(redis.connect(host(ncm$msg), port(ncm$msg), reconnect=TRUE))
+	} else if (missing(to)) {
+		return(structure(list(...), class="msg"))
+	} else {
+		redis.push(msgconn(), to,
+			   rawToChar(serialize(msg(...), NULL, T)))
+	}
 }
+
+msgconn <- function() msg()$conn
 
 receive <- function(loc) {
 	stateLog(paste("WTQ", desc(getUserProcess()))) # WTQ X - Waiting on queues at worker X
         while (is.null(serializedMsg <-
                 rediscc::redis.pop(getCommsConn(), loc, timeout=10))) {}
         unserialize(charToRaw(serializedMsg))
-}
-
-msg <- function(...) {
-	m <- list(...)
-	class(m) <- "msg"
-	m
 }
 
 print.msg <- function(x, ...) {
@@ -27,22 +30,21 @@ print.msg <- function(x, ...) {
 	}
 }
 
-getMsg		<- function(field) function(x, ...) getElement(x, field)
 args.msg	<- function(x, target, ...) 
 	rapply(getMsg("args")(x, ...),  emerge,
 	       classes = c("AsIs", "chunkRef", "distObjRef"),
 	       deflt = NULL, how="replace", target=target)
-desc.msg	<- getMsg("desc")
-from.msg	<- getMsg("from")
-fun.msg		<- function(x, ...) as.function(getMsg("fun")(x, ...))
-host.msg	<- getMsg("host")
-insert.msg	<- getMsg("insert")
-port.msg	<- getMsg("port")
-preview.msg	<- getMsg("preview")
-size.msg	<- getMsg("size")
-store.msg	<- getMsg("store")
-target.msg	<- getMsg("target")
-to.msg		<- getMsg("to")
+desc.msg	<- function(x) x$desc
+from.msg	<- function(x) x$from
+fun.msg		<- function(x, ...) as.function(x$fun)
+host.msg	<- function(x) x$host
+insert.msg	<- function(x) x$insert
+port.msg	<- function(x) x$port
+preview.msg	<- function(x) x$preview
+size.msg	<- function(x) x$size
+store.msg	<- function(x) x$store
+target.msg	<- function(x) x$target
+to.msg		<- function(x) x$to
 
 as.function.character <- function(x, ...) {
                 funsplit <- strsplit(x, "::", fixed=TRUE)[[1]]

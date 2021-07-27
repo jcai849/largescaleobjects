@@ -1,9 +1,9 @@
 chunk <- function(x) {
 	if (missing(x)) {
-		nc <- ncache()$chunk
-		if (is.null(nc))
-			ncache()$chunk <- cache(mutable=TRUE)
-		return(nc)}
+		ncc <- ncache()$chunk
+		if (is.null(ncc))
+			ncc <- ncache()$chunk <- cache(mutable=TRUE)
+		return(ncc)}
 	else UseMethod("chunk", x)
 }
 `chunk<-`<- function(x, value) UseMethod("chunk<-", x)
