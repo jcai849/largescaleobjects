@@ -3,7 +3,7 @@
 desc <- function(x, ...) UseMethod("desc", x)
 `desc<-` <- function(x, value) UseMethod("desc<-", x)
 desc.character <- function(x, ...)
-        structure(rediscc::redis.inc(msg(), x), class="desc")
+        structure(rediscc::redis.inc(msgconn(), x), class="desc")
 
 # Caches
 
@@ -24,8 +24,7 @@ cache <- function(x, mutable) {
 # Refs
 
 ref <- function(x, ...) {
-        if (missing(x)) {
-                structure(list(), class="ref")
-        } else UseMethod("ref")
+	if (missing(x)) return(structure(list(), class="ref"))
+        else UseMethod("ref")
 }
 `ref<-` <- function(x, value) UseMethod("ref", x)

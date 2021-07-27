@@ -63,7 +63,7 @@ dref.list <- function(x, ...) {
 
 delete <- function(x, ...) UseMethod("delete", x)
 delete.cdesc <- function(x, ...) {
-	chunks()[[x]] <- NULL
+	chunk(x) <- NULL
 	log("DEL", x)
 	gc()
 }
