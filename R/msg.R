@@ -1,3 +1,5 @@
+msgconn <- function() conn(msg())
+
 send <- function(..., loc) {
 	m <- msg(...)
 	serializedMsg <- rawToChar(serialize(m, NULL, T))

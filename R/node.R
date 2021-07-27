@@ -4,7 +4,7 @@ node <- function(x, ...) {
 }
 
 node.numeric <- function(x, ...) {
-	replicate(x, node("127.0.0.1", port()))
+	replicate(x, node(HOST, port()))
 }
 
 node.character <- function(x, p=port()) {
