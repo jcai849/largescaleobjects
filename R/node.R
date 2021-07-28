@@ -1,6 +1,7 @@
 node <- function(x, ...) {
-	if (missing(x)) return(ncache()$self)
-	else UseMethod("node", x)
+	if (missing(x)) {
+		return(nget("self", start))
+	} else UseMethod("node", x)
 }
 
 node.numeric <- function(x, ...) {

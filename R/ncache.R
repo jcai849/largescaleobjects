@@ -11,3 +11,15 @@ ncache <- local(function() {
 			}
 			nc
 })
+
+nget <- function(what, connfun, ...) {
+	ncx <- ncache()[[what]]
+	if (is.null(ncx)) {
+		ncx <- ncache()[[what]] <- cache(mutable=TRUE)
+	} else if (is.null(ncx$conn) &&
+		   !is.null(ncx$host) &&
+		   !is.null(ncx$port)) {
+		ncx$conn <- connfun(ncx$host, ncx$port, ...)
+	}
+	ncx
+}

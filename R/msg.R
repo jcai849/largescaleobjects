@@ -1,10 +1,6 @@
-msg <- function(..., to) { # flowchart available at XXX
+msg <- function(..., to) {
 	if (missing(...)) {
-		ncm <- ncache$msg
-		if (is.null(ncm)) return(ncache()$msg <- cache(mutable=TRUE))
-		if (!is.null(ncm$conn)) return(ncm)
-		if (is.null(ncm$host) || is.null(ncm$port)) return(ncm)
-		return(redis.connect(host(ncm$msg), port(ncm$msg), reconnect=TRUE))
+		return(nget("msg", redis.connect, reconnect=TRUE))
 	} else if (missing(to)) {
 		return(structure(list(...), class="msg"))
 	} else {
