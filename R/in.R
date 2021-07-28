@@ -1,7 +1,7 @@
 read.dlcsv <- function(host, file,
 		       header=FALSE, sep=",", quote="\"", dec = ".",
 		       fill=TRUE, comment.char="", col.names, colClasses) {
-	dfile <- distObjRef(mapply(distribute, arg=file, target=lapply(host, chunkRef),
+	dfile <- dref(mapply(distribute, arg=file, target=lapply(host, cref),
 				   SIMPLIFY=FALSE, USE.NAMES=FALSE))
 	do.dcall("read.csv", 
 		 list(file=dfile, header=I(header), sep=I(sep), quote=I(quote),
@@ -11,7 +11,7 @@ read.dlcsv <- function(host, file,
 
 read.dcsv <- function(file, header=FALSE, sep=",", quote="\"", dec = ".",
 		      fill=TRUE, comment.char="", col.names, colClasses) {
-	distObjRef(mapply(function(file, header, sep, quote, dec, fill,
+	dref(mapply(function(file, header, sep, quote, dec, fill,
 				   comment.char, col.names, colClasses) {
 				  do.ccall("read.csv", 
 						   args = list(file=I(file),
@@ -33,28 +33,28 @@ read.dcsv <- function(file, header=FALSE, sep=",", quote="\"", dec = ".",
 
 read.lcsv <- function(file, header, colTypes, quote="", max.line=65536L, 
 			  max.size=33554432L, strict=TRUE) {
-	chunkRefs <- list()
+	crefs <- list()
 	cr <- iotools::chunk.reader(file, max.line=max.line)
 	if (header && 
-	    length(chunk <- iotools::read.chunk(cr, max.size=max.size))){
-		chunkRef <- do.ccall("iotools::dstrsplit",
-					       list(x=chunk,
+	    length(ck <- iotools::read.chunk(cr, max.size=max.size))){
+		cr <- do.ccall("iotools::dstrsplit",
+					       list(x=ck,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,
 						    strict=strict, skip=1,
 						    quote=quote),
 					     root()) 
-		chunkRefs <- c(chunkRefs, chunkRef)
+		crefs <- c(crefs, cr)
 	}
-	while(length(chunk <- iotools::read.chunk(cr, max.size=max.size))) {
-		chunkRef <- do.ccall("iotools::dstrsplit",
-					       list(x=chunk,
+	while(length(ck <- iotools::read.chunk(cr, max.size=max.size))) {
+		ck <- do.ccall("iotools::dstrsplit",
+					       list(x=ck,
 						    col_types=colTypes,
 						    sep=",", nsep=NA,
 						    strict=strict, skip=0,
 						    quote=quote),
 					     root()) 
-		chunkRefs <- c(chunkRefs, chunkRef)
+		crefs <- c(crefs, cr)
 	}
-	distObjRef(chunkRefs)
+	dref(crefs)
 }

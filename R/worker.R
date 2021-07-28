@@ -21,11 +21,14 @@ serve <- function() {
 		while (is.null(smsg <- redis.pop(msgconn(), keys, timeout=10))) {}
 		request <- unserialize(charToRaw(smsg))
 		rd <- desc(request)
-		log("WRK", desc(request))
+		log("WRK", rd)
 		result <- tryCatch(do.call(insert(fun(request), insert(request)),
                                             args(request, target(request))),
                                    error =  identity)
-                if (store(request)) chunk(rd) <- result
+                if (store(request)) {
+			chunk(rd) <- result
+			log("SVD", rd)
+		}
 	}
 }
 

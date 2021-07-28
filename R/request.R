@@ -1,6 +1,6 @@
 do.ccall <- function(what, args, target, store=TRUE, insert=NULL) {
-	stopifnot(is.list(args), is.chunkRef(target))
-	cd <- if (store) desc("chunk") else NULL
+	stopifnot(is.list(args), is.cref(target))
+	cd <- if (store) cdesc() else NULL
 	send(fun	= what, 
 	     args	= args,
 	     target	= target,
@@ -8,25 +8,23 @@ do.ccall <- function(what, args, target, store=TRUE, insert=NULL) {
 	     loc	= desc(target),
 	     store	= store,
 	     insert	= insert)
-	if (store) chunkRef(cd)
+	if (store) cref(cd)
 }
 
 do.dcall <- function(what, args, store=TRUE, insert=NULL) {
 	stopifnot(is.list(args))
 	for (arg in args) fillMetaData(arg)
-	## distribute the non-distributed
 	target <- findTarget(args)
 	args <- lapply(args, distribute, target=target)
 	for (arg in args) fillMetaData(arg)
-	##
 	target <- findTarget(args)
-	cs <- lapply(chunkRef(target), 
+	cs <- lapply(cref(target), 
 		     function(t) do.ccall(what, args, t, store, insert))
-	distObjRef(cs)
+	dref(cs)
 }
 
 dreduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
-	Reduce(dreducable(f, ...), chunkRef(x), init, right, accumulate)
+	Reduce(dreducable(f, ...), cref(x), init, right, accumulate)
 }
 
 dreducable <- function(f, ...) {

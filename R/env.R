@@ -1,12 +1,5 @@
-addChunk <- function(cd, val) {
-	if (is.environment(val)) val <- as.list(val)
-	chunks(cd) <- val
-	osrv::put(as.character(cd), val, sfs=TRUE)
-	log("SVD", cd) # SVD X Y - Saving at worker X, chunk Y
-	val
-}
-
-envbase <- function(x) {
+benv <- function(x) {
+	if (missing(x)) return(baseenv())
         if (!is.null(x)) attr(x, ".Environment") <- baseenv()
         x
 }
