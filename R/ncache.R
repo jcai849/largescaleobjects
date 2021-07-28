@@ -12,7 +12,7 @@ ncache <- local(function() {
 			nc
 })
 
-nget <- function(what, connfun, ...) {
+ncget <- function(what, connfun, ...) {
 	ncx <- ncache()[[what]]
 	if (is.null(ncx)) {
 		ncx <- ncache()[[what]] <- cache(mutable=TRUE)

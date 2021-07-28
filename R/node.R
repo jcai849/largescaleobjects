@@ -1,6 +1,6 @@
 node <- function(x, ...) {
 	if (missing(x)) {
-		return(nget("self", start))
+		return(ncget("self", start))
 	} else UseMethod("node", x)
 }
 
@@ -13,8 +13,8 @@ node.character <- function(x, p=port()) {
                      paste0("largeScaleR::worker(",
                             "host=", deparse(x),
                             ",port=", deparse(p),
-			    ",commhost=", deparse(host(msg())),
-			    ",commport=", deparse(port(msg())),
+			    ",msghost=", deparse(host(msg())),
+			    ",msgport=", deparse(port(msg())),
                             ",loghost=", deparse(host(log())),
                             ",logport=", deparse(port(log())),
 			    ")", collapse=""))
