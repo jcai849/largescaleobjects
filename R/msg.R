@@ -1,6 +1,6 @@
 msg <- function(..., to) {
 	if (missing(...)) {
-		return(nget("msg", redis.connect, reconnect=TRUE))
+		return(ncget("msg", redis.connect, reconnect=TRUE))
 	} else if (missing(to)) {
 		return(structure(list(...), class="msg"))
 	} else {
@@ -9,7 +9,7 @@ msg <- function(..., to) {
 	}
 }
 
-msgconn <- function() msg()$conn
+msgconn <- function() conn(msg())
 
 print.msg <- function(x, ...) {
 	cat("Message with components:\n")

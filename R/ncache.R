@@ -3,23 +3,23 @@ ncache <- local(function() {
 			if (is.null(nc)) {
 				nc <- cache(mutable=TRUE)
 				class(nc) <- c("ncache", class(nc))
-				nc$self <- node()
-				nc$msg <- msg()
-				nc$chunk <- chunk()
-				nc$log <- log()
+				msg(nc) <- msg()
+				chunk(nc) <- chunk()
+				log(nc) <- log()
 				nc <<- nc
 			}
 			nc
 })
 
-ncget <- function(what, connfun, ...) {
+ncget <- function(what, conninit, ...) {
 	ncx <- ncache()[[what]]
 	if (is.null(ncx)) {
 		ncx <- ncache()[[what]] <- cache(mutable=TRUE)
-	} else if (is.null(ncx$conn) &&
-		   !is.null(ncx$host) &&
-		   !is.null(ncx$port)) {
-		ncx$conn <- connfun(ncx$host, ncx$port, ...)
+		class(ncx) <- c("loc", class(ncx))
+	} else if (is.null(conn(ncx)) &&
+		   !is.null(host(ncx))
+		   !is.null(host(ncx))) {
+		conn(ncx) <- conninit(host(ncx), port(ncx), ...)
 	}
 	ncx
 }

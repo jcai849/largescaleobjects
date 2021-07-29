@@ -1,3 +1,8 @@
+cdata <- function(x, ...) UseMethod("cdata", x)
+cdata.chunk <- function(x, ...) {
+	ccache
+
+}
 ################################# Populate  ################################
 
 access.chunkRef <- function(x, field) {

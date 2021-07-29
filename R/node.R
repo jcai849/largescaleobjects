@@ -1,11 +1,9 @@
 node <- function(x, ...) {
-	if (missing(x)) {
-		return(ncget("self", start))
-	} else UseMethod("node", x)
+	UseMethod("node", x)
 }
 
 node.numeric <- function(x, ...) {
-	replicate(x, node(HOST, port()))
+	replicate(x, node(HOST))
 }
 
 node.character <- function(x, p=port()) {

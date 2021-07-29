@@ -50,8 +50,7 @@ c.dref <- function(...) combine(...)
 combine.dref <- function(...) {
         chunks <- do.call(c, (lapply(list(...), cref)))
         x <- dref(chunks)
-        to(dref) <- NULL
-        from(dref) <- NULL
+	cdata(dref) <- NULL
         x
 }
 object.dsize <- function(x) sum(do.dcall("object.size", list(x)))
