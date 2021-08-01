@@ -1,9 +1,9 @@
 worker <- function(host, port, msghost, msgport, loghost, logport, prepop) {
 	options(autolsr=FALSE)
 	library(PKGNAME)
-	host(node()) <- host
-	port(node()) <- port
-	node()
+	host(chunk()) <- host
+	port(chunk()) <- port
+	chunk()
 	host(msg()) <- msghost
 	port(msg()) <- msgport
 	msg()
@@ -17,7 +17,7 @@ worker <- function(host, port, msghost, msgport, loghost, logport, prepop) {
 serve <- function() {
 	repeat {
 		log("WTQ")
-		keys <- ls(chunk())
+		keys <- ls(cstore())
 		while (is.null(smsg <- redis.pop(msgconn(), keys, timeout=10))) {}
 		request <- unserialize(charToRaw(smsg))
 		rd <- desc(request)

@@ -5,13 +5,12 @@ MSGPORT	<- 6160
 LOGPORT	<- 1234
 
 .onAttach <- function(libname, pkgname) {
-	ncache()
 	options <- sapply(c("autolsr", "autolsrself",
 			    "autolsrmsg", "autolsrlog"),
 			  getOption, default=TRUE)
 	if (options["autolsrself"] && options["autolsr"]) {
-		host(node()) <- HOST; port(node()) <- PORT
-		tryCatch(node(), error=function(e)
+		host(chunk()) <- HOST; port(chunk()) <- PORT
+		tryCatch(chunk(), error=function(e)
 		 packageStartupMessage("Please specify node host and port."))
 	} if (options["autolsrmsg"] && options["autolsr"]) {
 		host(msg()) <- HOST; port(msg()) <- MSGPORT

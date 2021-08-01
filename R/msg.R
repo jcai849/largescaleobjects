@@ -1,6 +1,6 @@
 msg <- function(..., to) {
 	if (missing(...)) {
-		return(ncget("msg", redis.connect, reconnect=TRUE))
+		return(lstore("msg", redis.connect, reconnect=TRUE))
 	} else if (missing(to)) {
 		return(structure(list(...), class="msg"))
 	} else {

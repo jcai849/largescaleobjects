@@ -4,60 +4,80 @@ cdesc <- function(x, ...) {
 	if (missing(x)) {
 		cd <- desc("cd")
 		class(cd) <- c("cdesc", class(cd))
-		return(cd)
+		cd
 	} else UseMethod("cdesc", x)
 }
-desc.ccache <- cdesc.ccache <- function(x, ...) x$cd
+cdesc.character <- function(x, ...) {
+	class(x) <- c("cdesc", class(x))
+	x
+}
+desc.crcache <- cdesc.crcache <- function(x, ...) x[["cd"]]
 desc.dref <- cdesc.dref <- function(x, ...) sapply(cref(x), cdesc)
 
 # Caches
 
-ccache <- function(x, ...) UseMethod("ccache", x)
-ccache.cdesc <- function(x, ...) {
+crcache <- function(x, ...) {
+	if (!missing(x)) {
+		UseMethod("crcache", x)
+	} else {
+		crcache(cdesc())
+	}
+}
+crcache.cdesc <- crcache.character <- function(x, ...) {
 	cc <- cache(mutable=TRUE)
-	class(cc) <- c("ccache", class(cc))
-	cc$cd <- x
+	class(cc) <- c("crcache", class(cc))
+	cc[["cd"]] <- x
 	reg.finalizer(cc, delete)
 	cc
 }
-cache.cref <- ccache.cref <- function(x, ...) x$cc
-ccache.dref <- function(x, ...) lapply(cref(x), ccache)
-`ccache<-` <- function(x, value) UseMethod("ccache<-", x)
-`cache<-.cref` <- `ccache<-.cref` <- function(x, value) {x$cc <- value; x}
+cache.cref <- crcache.cref <- function(x, ...) x[["cc"]]
+crcache.dref <- function(x, ...) lapply(cref(x), crcache)
+`crcache<-` <- function(x, value) UseMethod("crcache<-", x)
+`cache<-.cref` <- `crcache<-.cref` <- function(x, value) {x[["cc"]] <- value; x}
 
-dcache <- function(x, ...) {
+drcache <- function(x, ...) {
 	if (missing(x)) {
 		dc <- cache(mutable=FALSE)
-		class(dc) <- c("dcache", class(dc))
+		class(dc) <- c("drcache", class(dc))
 		return(dc)
 	}
-	UseMethod("dcache", x)
+	UseMethod("drcache", x)
 }
-cache.dref <- dcache.dref <- function(x, ...) x$dc
+cache.dref <- drcache.dref <- function(x, ...) x[["dc"]]
 
 # Refs
 
-cref <- function(x, ...) UseMethod("cref", x)
-ref.ccache <- cref.ccache <- function(x, ...) {
+cref <- function(x, ...) {
+	if (!missing(x)) {
+		UseMethod("cref", x)
+	} else {
+		cref(crcache())
+	}
+}
+ref.crcache <- cref.crcache <- function(x, ...) {
 	cr <- ref()
 	class(cr) <- c("cref", class(cr))
-	ccache(cr) <- x
+	crcache(cr) <- x
 	cr
 }
-ref.cdesc <- cref.cdesc <- function(x, ...) cref(ccache(x))
-ref.dref <- cref.dref <- function(x, ...) x$cr
+cref.character <- function(x, ...) {
+	cref(crcache(x))
+}
+ref.cdesc <- cref.cdesc <- function(x, ...) cref(crcache(x))
+ref.dref <- cref.dref <- function(x, ...) x[["cr"]]
 `cref<-` <- function(x, value) UseMethod("cref<-", x)
-`ref<-.dref` <- `cref<-.dref` <- function(x, value) {x$cr <- value; x}
+`ref<-.dref` <- `cref<-.dref` <- function(x, value) {x[["cr"]] <- value; x}
 
 dref <- function(x, ...) UseMethod("dref", x)
 dref.list <- function(x, ...) {
 	stopifnot(all(sapply(x, is.cref)))
 	dr <- ref()
 	class(dr) <- c("dref", class(dr))
-	dcache(dr) <- dcache()
+	drcache(dr) <- drcache()
 	cref(dr) <- x
 	dr
 }
+dref.character <- function(x, ...) dref(list(cref(x)))
 
 # Deletion
 
@@ -67,7 +87,7 @@ delete.cdesc <- function(x, ...) {
 	log("DEL", x)
 	gc()
 }
-delete.ccache <- function(x, ...) {
+delete.crcache <- function(x, ...) {
 	if (is.null(cdesc(x))) return()
 	do.ccall(delete, args=list(x=cdesc(x)), target=cdesc(x), store=FALSE)
 	osrv::ask(paste0("DEL", cdesc(x), "\n"),
@@ -81,15 +101,15 @@ delete.ccache <- function(x, ...) {
 is.desc		<- function(x) inherits(x, "desc")
 is.cdesc	<- function(x) inherits(x, "cdesc")
 is.cache	<- function(x) inherits(x, "cache")
-is.ccache	<- function(x) inherits(x, "ccache")
-is.dcache	<- function(x) inherits(x, "dcache")
+is.crcache	<- function(x) inherits(x, "crcache")
+is.drcache	<- function(x) inherits(x, "drcache")
 is.ref		<- function(x) inherits(x, "ref")
 is.cref		<- function(x) inherits(x, "cref")
 is.dref		<- function(x) inherits(x, "dref")
 
 format.desc	<- function(x, ...) format(unclass(x))
 format.cache	<- function(x, ...) format(as.list(unclass(x)))
-format.cref	<- function(x, ...) format(ccache(x))
+format.cref	<- function(x, ...) format(crcache(x))
 format.dref	<- function(x, ...) sapply(cref(x), format)
 
 catformat	<- function(x, ...) cat(format(x), "\n")
