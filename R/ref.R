@@ -1,18 +1,42 @@
-# Descriptors
+# Refs
 
-cdesc <- function(x, ...) {
-	if (missing(x)) {
-		cd <- desc("cd")
-		class(cd) <- c("cdesc", class(cd))
-		cd
-	} else UseMethod("cdesc", x)
+cref <- function(x, ...) {
+	if (!missing(x)) {
+		UseMethod("cref", x)
+	} else {
+		cref(crcache())
+	}
 }
-cdesc.character <- function(x, ...) {
-	class(x) <- c("cdesc", class(x))
-	x
+ref.crcache <- cref.crcache <- function(x, ...) {
+	cr <- ref()
+	class(cr) <- c("cref", class(cr))
+	crcache(cr) <- x
+	cr
 }
-desc.crcache <- cdesc.crcache <- function(x, ...) x[["cd"]]
-desc.dref <- cdesc.dref <- function(x, ...) sapply(cref(x), cdesc)
+ref.cdesc <- cref.cdesc <- function(x, ...) cref(crcache(x))
+ref.dref <- cref.dref <- function(x, ...) x[["cr"]]
+`cref<-` <- function(x, value) UseMethod("cref<-", x)
+`ref<-.dref` <- `cref<-.dref` <- function(x, value) { x[["cr"]] <- value; x }
+cref.default <- function(x, ...) distribute(x) # base on size
+
+clist <- function(...) {
+	cl <- list(...)
+	stopifnot(all(sapply(x, is.cref)))
+	class(cl) <- c("clist", class(cl))
+	cl
+}
+
+dref <- function(x, ...) UseMethod("dref", x)
+dref.clist <- function(x, ...) {
+	dr <- ref()
+	class(dr) <- c("dref", class(dr))
+	drcache(dr) <- drcache()
+	cref(dr) <- x
+	dr
+}
+dref.cref <- function(x, ...) dref(clist(x))
+dref.cdesc <- function(x, ...) dref(cref(x))
+dref.default <- function(x, ...) distribute(x) # base on size
 
 # Caches
 
@@ -33,7 +57,7 @@ crcache.cdesc <- crcache.character <- function(x, ...) {
 cache.cref <- crcache.cref <- function(x, ...) x[["cc"]]
 crcache.dref <- function(x, ...) lapply(cref(x), crcache)
 `crcache<-` <- function(x, value) UseMethod("crcache<-", x)
-`cache<-.cref` <- `crcache<-.cref` <- function(x, value) {x[["cc"]] <- value; x}
+`cache<-.cref` <- `crcache<-.cref` <- function(x, value) { x[["cc"]] <- value; x }
 
 drcache <- function(x, ...) {
 	if (missing(x)) {
@@ -45,39 +69,21 @@ drcache <- function(x, ...) {
 }
 cache.dref <- drcache.dref <- function(x, ...) x[["dc"]]
 
-# Refs
+# Descriptors
 
-cref <- function(x, ...) {
-	if (!missing(x)) {
-		UseMethod("cref", x)
-	} else {
-		cref(crcache())
-	}
+cdesc <- function(x, ...) {
+	if (missing(x)) {
+		cd <- desc("cd")
+		class(cd) <- c("cdesc", class(cd))
+		cd
+	} else UseMethod("cdesc", x)
 }
-ref.crcache <- cref.crcache <- function(x, ...) {
-	cr <- ref()
-	class(cr) <- c("cref", class(cr))
-	crcache(cr) <- x
-	cr
+cdesc.character <- function(x, ...) {
+	class(x) <- c("cdesc", class(x))
+	x
 }
-cref.character <- function(x, ...) {
-	cref(crcache(x))
-}
-ref.cdesc <- cref.cdesc <- function(x, ...) cref(crcache(x))
-ref.dref <- cref.dref <- function(x, ...) x[["cr"]]
-`cref<-` <- function(x, value) UseMethod("cref<-", x)
-`ref<-.dref` <- `cref<-.dref` <- function(x, value) {x[["cr"]] <- value; x}
-
-dref <- function(x, ...) UseMethod("dref", x)
-dref.list <- function(x, ...) {
-	stopifnot(all(sapply(x, is.cref)))
-	dr <- ref()
-	class(dr) <- c("dref", class(dr))
-	drcache(dr) <- drcache()
-	cref(dr) <- x
-	dr
-}
-dref.character <- function(x, ...) dref(list(cref(x)))
+desc.crcache <- cdesc.crcache <- function(x, ...) x[["cd"]]
+desc.dref <- cdesc.dref <- function(x, ...) sapply(cref(x), cdesc)
 
 # Deletion
 

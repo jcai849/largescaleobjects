@@ -16,4 +16,4 @@ chunk.cdesc <- chunk.numeric <- function(x) chunk(as.character(x))
 
 root <- function() 
 	tryCatch(chunk("/"),
-		 error=function(e) chunk("/") <- dref("/"))
+		 error=function(e) chunk("/") <- dref(cdesc("/")))
