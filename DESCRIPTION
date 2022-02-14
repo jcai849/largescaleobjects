@@ -1,8 +1,8 @@
 Package: largeScaleR
 Type: Package
 Title: Provides a Distributed Framework for Statistical Modelling
-Version: 0.4
-Date: 2021-06-21
+Version: 0.5
+Date: 2022-02-15
 Author: Jason Cairns [aut, cre]
 Maintainer: Jason Cairns <jcai849@aucklanduni.ac.nz>
 Authors@R: c(person("Jason", "Cairns", role = c("aut", "cre"),
@@ -13,10 +13,8 @@ Description: Allows for transparent interaction with distributed objects,
 	including the import of very large distributed data files, as well as
 	the rapid development of parallel algorithms over the distributed data
 	for fast run time.
-Depends: R (>= 3.6.0)
-Imports: rediscc, osrv (>= 0.2-1), iotools, ulog
-License: GPL-3
+Imports: largerscale
+License: MIT
 URL: https://github.com/jcai849/largeScaleR
 BugReports: https://github.com/jcai849/largeScaleR/issues
 OS_type: unix
-NeedsCompilation: no
