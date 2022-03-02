@@ -13,12 +13,12 @@ Complex.DistributedObject <- function(z)
 	do.dcall(.Generic, list(z=z))
 
 Summary.DistributedObject <- function(..., na.rm = FALSE) {
-	mapped <- emerge(do.dcall(.Generic, c(list(...), list(na.rm=I(na.rm)))))
+	mapped <- emerge(do.dcall(.Generic, c(list(...), list(na.rm=na.rm))))
 	do.call(.Generic, c(list(mapped), list(na.rm=na.rm)))
 }
 
 `$.DistributedObject` <- function(x, name)
-	do.dcall("$", list(x=x, name=I(name)))
+	do.dcall("$", list(x=x, name=name))
 
 table.DistributedObject <- function(...)
 	emerge(do.dcall("table", list(...), combination=combine.table))
