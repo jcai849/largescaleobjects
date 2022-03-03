@@ -1,0 +1,6 @@
+split-window -h R ; send-keys 'source("locator.R", echo=TRUE)' Enter
+split-window -h R ; send-keys 'source("worker1.R", echo=TRUE)' Enter
+split-window R ; send-keys 'source("worker3.R", echo=TRUE)' Enter
+select-pane -L ; split-window R ; send-keys 'source("worker2.R", echo=TRUE)' Enter
+select-pane -L ; split-window R ; send-keys 'source("read.R", echo=TRUE)' Enter
+select-pane -U
