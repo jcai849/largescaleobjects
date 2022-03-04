@@ -1,4 +1,4 @@
-Package: largeScaleR
+Package: largescaler
 Type: Package
 Title: Provides a Distributed Framework for Statistical Modelling
 Version: 0.5
