@@ -20,7 +20,22 @@ Summary.DistributedObject <- function(..., na.rm = FALSE) {
 `$.DistributedObject` <- function(x, name)
 	do.dcall("$", list(x=x, name=name))
 
-table.DistributedObject <- function(...)
+table <- function(...,
+		  exclude = if (useNA == "no") c(NA, NaN),
+		  useNA = c("no", "ifany", "always"),
+		  dnn = list.names(...), deparse.level = 1) UseMethod("table", ..1)
+table.default <- function(...,
+		  exclude = if (useNA == "no") c(NA, NaN),
+		  useNA = c("no", "ifany", "always"),
+		  dnn = list.names(...), deparse.level = 1)
+	base::table(...,
+		  exclude = if (useNA == "no") c(NA, NaN),
+		  useNA = c("no", "ifany", "always"),
+		  dnn = list.names(...), deparse.level = 1)
+table.DistributedObject <- function(...,
+		  exclude = if (useNA == "no") c(NA, NaN),
+		  useNA = c("no", "ifany", "always"),
+		  dnn = list.names(...), deparse.level = 1)
 	emerge(do.dcall("table", list(...), combination=combine.table))
 
 subset.DistributedObject <- function(x, subset, ...)
