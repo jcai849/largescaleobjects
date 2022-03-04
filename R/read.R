@@ -10,7 +10,7 @@ read.dcsv <- function(hosts, paths, header=FALSE, sep=",", quote="\"",
 		      dec=dec,
 		      fill=fill,
 		      comment.char=comment.char,
-		      col.names=col.names,
-		      colClasses=colClasses),
+		      col.names=list(col.names),
+		      colClasses=list(colClasses)),
 		 combination=rbind)
 }
