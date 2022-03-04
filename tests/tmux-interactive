@@ -7,4 +7,4 @@ run-shell 'sleep 1'
 select-pane -L ; split-window R ; send-keys 'source("worker2.R", echo=TRUE)' Enter
 run-shell 'sleep 1'
 select-pane -L ; split-window R ; send-keys 'source("read.R", echo=TRUE)' Enter
-select-pane -U
+select-pane -U ; send-keys 'vi read.R' Enter
