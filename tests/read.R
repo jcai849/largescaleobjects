@@ -1,6 +1,6 @@
 library(largescaler)
 
-LOCATOR("localhost", 8989L)
+largerscale::LOCATOR("localhost", 8989L)
 
 n_nodes <- 3
 df <- iris
