@@ -11,6 +11,6 @@ read.dcsv <- function(hosts, paths, header=FALSE, sep=",", quote="\"",
 		      fill=fill,
 		      comment.char=comment.char,
 		      col.names=list(col.names),
-		      colClasses=list(colClasses)),
-		 combination=rbind)
+		      colClasses=list(colClasses)))
+
 }

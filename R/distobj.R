@@ -1,5 +1,5 @@
 emerge <- function(x) {
-	do.call(unclass(x)$combination, lapply(unclass(x)$chunks, largerscale::pull))
+	do.call(combine, lapply(unclass(x)$chunks, largerscale::pull))
 }
 
 Math.DistributedObject <- function(x, ...) 
@@ -36,7 +36,7 @@ table.DistributedObject <- function(...,
 		  exclude = if (useNA == "no") c(NA, NaN),
 		  useNA = c("no", "ifany", "always"),
 		  dnn = list.names(...), deparse.level = 1)
-	emerge(do.dcall("table", list(...), combination=combine.table))
+	emerge(do.dcall("table", list(...)))
 
 subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
@@ -50,6 +50,9 @@ size <- function(measure) function(x) sum(do.dcall(measure, x))
 length.DistributedObject <- size(length)
 nrow.DistributedObject <- size(nrow)
 
+combine <- function(...) UseMethod("combine", ..1)
+combine.default <- function(...) c(...)
+combine.data.frame <- function(...) rbind(...)
 combine.table <- function(...) {
 	tabs <- list(...)
 	chunknames <- lapply(tabs, dimnames)
