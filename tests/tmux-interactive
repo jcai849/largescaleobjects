@@ -1,10 +1,20 @@
-split-window -h R ; send-keys 'source("locator.R", echo=TRUE)' Enter
+split-window -h R
+split-window -h R 
+split-window R
+select-pane -L
+split-window R
+select-pane -L
+split-window R
+select-pane -U
 run-shell 'sleep 1'
-split-window -h R ; send-keys 'source("worker1.R", echo=TRUE)' Enter
+
+select-pane -R ; send-keys 'source("locator.R", echo=TRUE)' Enter
 run-shell 'sleep 1'
-split-window R ; send-keys 'source("worker3.R", echo=TRUE)' Enter
+select-pane -R ; send-keys 'source("worker1.R", echo=TRUE)' Enter
 run-shell 'sleep 1'
-select-pane -L ; split-window R ; send-keys 'source("worker2.R", echo=TRUE)' Enter
+select-pane -D ; send-keys 'source("worker2.R", echo=TRUE)' Enter
 run-shell 'sleep 1'
-select-pane -L ; split-window R ; send-keys 'source("read.R", echo=TRUE)' Enter
-select-pane -U ; send-keys 'vi read.R' Enter
+select-pane -L ; send-keys 'source("worker3.R", echo=TRUE)' Enter
+run-shell 'sleep 1'
+select-pane -L ; send-keys 'source("read.R", echo=TRUE)' Enter
+select-pane -U; send-keys 'vi read.R' Enter 
