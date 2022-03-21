@@ -12,10 +12,15 @@ Ops.DistributedObject <- function(e1, e2)
 Complex.DistributedObject <- function(z) 
 	do.dcall(.Generic, list(z=z))
 
-Summary.DistributedObject <- function(..., na.rm = FALSE) {
-	mapped <- emerge(do.dcall(.Generic, c(list(...), list(na.rm=na.rm))))
-	do.call(.Generic, c(list(mapped), list(na.rm=na.rm)))
+map_reduce <- function(map, reduce) {
+	function(..., addl_map_args, addl_reduce_args) {
+		mapped <- emerge(do.dcall(map, c(list(...), addl_map_args)))
+		do.call(reduce, c(list(mapped), addl_reduce_args)) # reduced
+	}
 }
+
+Summary.DistributedObject <- function(..., na.rm = FALSE)
+	map_reduce(.Generic, .Generic)(..., addl_map_args=list(na.rm=na.rm), addl_reduce_args=list(na.rm=na.rm))
 
 `$.DistributedObject` <- function(x, name)
 	do.dcall("$", list(x=x, name=name))
