@@ -2,32 +2,35 @@ library(largescaler)
 
 init_locator("hadoop1", 9000L)
 Sys.sleep(2)
-init_worker("hadoop2", 9001L)
-init_worker("hadoop3", 9001L)
-init_worker("hadoop4", 9001L)
-init_worker("hadoop5", 9001L)
-init_worker("hadoop6", 9001L)
-init_worker("hadoop7", 9001L)
-init_worker("hadoop8", 9001L)
+locations <- expand.grid(hostnum=2L:8L, port=9001L:9004L)
+hosts <- paste0("hadoop", locations$hostnum)
+mapply(init_worker, hosts, locations$port)
 Sys.sleep(2)
 
-hosts <- rep(paste0("hadoop", 2:8), each=4)
 paths <- paste0("taxicab-", sprintf("%02d", 4:31), ".csv")
-cols <- c("VendorID"="integer", "tpep_pickup_datetime"="POSIXct",
-	  "tpep_dropoff_datetime"="POSIXct", "passenger_count"="integer",
-	  "trip_distance"="numeric", "RateCodeID"="integer",
-	  "store_and_fwd_flag"="character", "PULocationID"="integer",
-	  "DOLocationID"="integer", "payment_type"="integer",
-	  "fare_amount"="numeric", "extra"="numeric", "mta_tax"="numeric",
-	  "tip_amount"="numeric", "tolls_amount"="numeric",
-	  "improvement_surcharge"="numeric", "total_amount"="numeric",
-	  "congestion_surcharge"="numeric")
-taxicab <- read.dcsv(hosts, paths, col.names=names(cols), colClasses=as.vector(cols))
+cols <- c("vendor_id"="character",
+	  "pickup_datetime"="POSIXct",
+	  "dropoff_datetime"="POSIXct",
+	  "passenger_count"="integer",
+	  "trip_distance"="numeric",
+	  "pickup_longitude"="numeric",
+	  "pickup_latitude"="numeric",
+	  "rate_code"="integer",
+	  "store_and_fwd_flag"="character",
+	  "dropoff_longitude"="numeric",
+	  "dropoff_latitude"="numeric",
+	  "payment_type"="character",
+	  "fare_amount"="numeric",
+	  "surcharge"="numeric",
+	  "mta_tax"="numeric",
+	  "tip_amount"="numeric",
+	  "tolls_amount"="numeric",
+	  "total_amount"="numeric")
+taxicab <- read.dcsv(sort(hosts), paths, col.names=names(cols), colClasses=as.vector(cols))
 
-isCMT <- taxicab$VendorID == 1L
-sum(isCMT)
+sum(taxicab$mta_tax)
 
-sum(taxicab$tip_amount)
+Sys.sleep(2)
 
-passengerRateCode <- table(CMT$passenger_count, CMT$RateCodeID)
+passengerRateCode <- table(taxicab$passenger_count, taxicab$rate_code)
 print(passengerRateCode)
