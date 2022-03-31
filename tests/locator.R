@@ -1,3 +1,3 @@
 library(largerscale)
 
-locator("localhost", 8989L)
+locator("localhost", 8989L, verbose=TRUE)

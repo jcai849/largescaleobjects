@@ -7,6 +7,8 @@ mapply(init_worker, hosts, locations$port)
 
 Sys.sleep(2)
 
+# options("largerscaleVerbose" = TRUE)
+
 paths <- paste0("taxicab-", sprintf("%02d", 4:31), ".csv")
 cols <- c("vendor_id"="character",
 	  "pickup_datetime"="POSIXct",
