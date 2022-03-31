@@ -1,10 +1,10 @@
 library(largescaler)
 
 init_locator("hadoop1", 9000L)
-Sys.sleep(2)
 locations <- expand.grid(hostnum=2L:8L, port=9001L:9004L)
 hosts <- paste0("hadoop", locations$hostnum)
 mapply(init_worker, hosts, locations$port)
+
 Sys.sleep(2)
 
 paths <- paste0("taxicab-", sprintf("%02d", 4:31), ".csv")

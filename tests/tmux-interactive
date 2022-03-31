@@ -9,12 +9,9 @@ select-pane -U
 run-shell 'sleep 1'
 
 select-pane -R ; send-keys 'source("locator.R", echo=TRUE)' Enter
-run-shell 'sleep 1'
 select-pane -R ; send-keys 'source("worker1.R", echo=TRUE)' Enter
-run-shell 'sleep 1'
 select-pane -D ; send-keys 'source("worker2.R", echo=TRUE)' Enter
-run-shell 'sleep 1'
 select-pane -L ; send-keys 'source("worker3.R", echo=TRUE)' Enter
-run-shell 'sleep 1'
+run-shell 'sleep 2'
 select-pane -L ; send-keys 'source("read.R", echo=TRUE)' Enter
 select-pane -U; send-keys 'vi read.R' Enter 
