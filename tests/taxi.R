@@ -30,9 +30,6 @@ cols <- c("vendor_id"="character",
 	  "total_amount"="numeric")
 taxicab <- read.dcsv(sort(hosts), paths, col.names=names(cols), colClasses=as.vector(cols))
 
-sum(taxicab$mta_tax)
-
-Sys.sleep(2)
-
-passengerRateCode <- table(taxicab$passenger_count, taxicab$rate_code)
-print(passengerRateCode)
+# sum(taxicab$mta_tax)
+# passengerRateCode <- table(taxicab$passenger_count, taxicab$rate_code)
+# print(passengerRateCode)
