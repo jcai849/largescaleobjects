@@ -1,4 +1,6 @@
 export(read.dcsv, do.dcall, emerge, init_locator, init_worker, dReduce, d, DistributedObject)
+S3method(emerge, DistributedObject)
+S3method(emerge, default)
 S3method(as.list, DistributedObject)
 S3method(Math, DistributedObject)
 S3method(Ops, DistributedObject)

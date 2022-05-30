@@ -7,10 +7,13 @@ DistributedObject <- function(chunks) {
 
 as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
 
-emerge <- function(x, ...) {
-	stopifnot(inherits(x, "DistributedObject"))
+emerge <- function(x, ...) UseMethod("emerge", x)
+
+emerge.DistributedObject <- function(x, ...) {
 	do.call(combine, lapply(as.list(x), largerscale::pull))
 }
+
+emerge.default <- function(x, ...) x
 
 Math.DistributedObject <- function(x, ...) 
 	do.dcall(.Generic, c(list(x=x), list(...)))
