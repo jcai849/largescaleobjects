@@ -92,3 +92,8 @@ combine.table <- function(...) {
 	NULL})
 	as.table(wholearray)
 }
+
+solve.DistributedObject <- function(a, b, ...) {
+	a <- emerge(a)
+	if (!missing(b)) solve(a=a, b=emerge(b), ...) else solve(a=a, ...)
+}
