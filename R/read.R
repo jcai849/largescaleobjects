@@ -3,7 +3,7 @@ read.dcsv <- function(hosts, paths, header=FALSE, sep=",", quote="\"",
 	chunks <- mapply(largerscale::push, paths, hosts,
 			 SIMPLIFY=FALSE, USE.NAMES=FALSE)
 	do.dcall(read.csv,
-		 list(file=DistributedObject(chunks),,
+		 list(file=DistributedObject(chunks),
 		      header=header,
 		      sep=sep,
 		      quote=quote,
