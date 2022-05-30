@@ -1,5 +1,14 @@
-emerge <- function(x) {
-	do.call(combine, lapply(unclass(x)$chunks, largerscale::pull))
+DistributedObject <- function(chunks) {
+        stopifnot(is.list(chunks)) 
+        stopifnot(sapply(chunks, inherits, "ChunkReference"))
+        structure(list(chunks=chunks), class="DistributedObject")
+}
+
+as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
+
+emerge <- function(x, ...) {
+	stopifnot(inherits(x, "DistributedObject"))
+	do.call(combine, lapply(as.list(x), largerscale::pull))
 }
 
 Math.DistributedObject <- function(x, ...) 
