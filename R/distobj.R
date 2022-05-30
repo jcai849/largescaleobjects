@@ -60,7 +60,7 @@ dim.DistributedObject <- function(x) {
 	c(sum(dims[1,]), dims[,1][-1])
 }
 
-size <- function(measure) function(x) sum(do.dcall(measure, x))
+size <- function(measure) function(x) sum(do.dcall(measure, list(x)))
 length.DistributedObject <- size(length)
 nrow.DistributedObject <- size(nrow)
 
