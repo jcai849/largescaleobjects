@@ -1,5 +1,5 @@
-dreduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
-        Reduce(dreducable(f, ...), x, init, right, accumulate)
+dReduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
+        Reduce(dreducable(f, ...), as.list(x), init, right, accumulate)
 }
 
 dreducable <- function(f, ...) {
