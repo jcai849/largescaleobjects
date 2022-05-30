@@ -1,6 +1,7 @@
 DistributedObject <- function(chunks) {
+	if (inherits(chunks, "ChunkReference")) chunks <- list(chunks) # if single chunk
         stopifnot(is.list(chunks)) 
-        stopifnot(sapply(chunks, inherits, "ChunkReference"))
+	chunks <- lapply(chunks, function(x) if (inherits(x, "ChunkReference")) x else largerscale::push(x))
         structure(list(chunks=chunks), class="DistributedObject")
 }
 
