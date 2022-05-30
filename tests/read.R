@@ -16,3 +16,10 @@ sum(ddf$Sepal.Length > 5.8)
 small_ddf <- subset(ddf, ddf$Sepal.Length <= 5.8)
 emerge(small_ddf)
 table(small_ddf$Species, small_ddf$Petal.Width)
+emerge(dReduce("sum", ddf$Sepal.Length))
+emerge(dReduce("sum", ddf$Sepal.Length, init=3, accumulate=T))
+
+unique(emerge(do.dcall(names, list(ddf))))
+
+dnames <- d(names)
+unique(emerge(dnames(ddf)))
