@@ -4,7 +4,7 @@ do.dcall <- function(what, args) {
 	chunks <- do.call(mapply, c(list(function(...) largerscale::remote_call(what, list(...))),
 				    aligned,
 				    list(SIMPLIFY=FALSE, USE.NAMES=FALSE)))
-	structure(list(chunks=chunks), class="DistributedObject")
+	DistributedObject(chunks)
 }
 
 d <- function(what) function(...) do.dcall(what, args=list(...))
