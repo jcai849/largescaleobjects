@@ -7,13 +7,18 @@ DistributedObject <- function(chunks) {
 
 as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
 
-emerge <- function(x, ...) UseMethod("emerge", x)
+emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 
-emerge.DistributedObject <- function(x, ...) {
-	do.call(combine, lapply(as.list(x), largerscale::pull))
+emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
+	data_chunks <- lapply(as.list(x), largerscale::pull)
+	if (is.function(combiner)) {
+		do.call(combiner, data_chunks)
+	} else if (combiner) {
+		do.call(combine, data_chunks)
+	} else data_chunks
 }
 
-emerge.default <- function(x, ...) x
+emerge.default <- function(x, combiner, ...) x
 
 Math.DistributedObject <- function(x, ...) 
 	do.dcall(.Generic, c(list(x=x), list(...)))
