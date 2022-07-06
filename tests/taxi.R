@@ -1,13 +1,13 @@
 library(largescaler)
 
-init_locator("hadoop1", 9000L)
-locations <- expand.grid(hostnum=1L:8L, port=9001L:9004L)
-hosts <- paste0("hadoop", locations$hostnum)
-mapply(init_worker, hosts, locations$port)
+#init_locator("hadoop1", 9000L)
+#locations <- expand.grid(hostnum=1L:8L, port=9001L:9004L)
+#hosts <- paste0("hadoop", locations$hostnum)
+#mapply(init_worker, hosts, locations$port)
 
 Sys.sleep(2)
 
-# options("largerscaleVerbose" = TRUE)
+options("largerscaleVerbose" = TRUE)
 
 paths <- paste0("taxicab-", sprintf("%02d", 0:31), ".csv")
 cols <- c("vendor_id"="character",
