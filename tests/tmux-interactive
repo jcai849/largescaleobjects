@@ -1,17 +1,10 @@
-split-window -h R
-split-window -h R 
-split-window R
-select-pane -L
-split-window R
-select-pane -L
-split-window R
-select-pane -U
-run-shell 'sleep 1'
-
-select-pane -R ; send-keys 'source("locator.R", echo=TRUE)' Enter
-select-pane -R ; send-keys 'source("worker1.R", echo=TRUE)' Enter
-select-pane -D ; send-keys 'source("worker2.R", echo=TRUE)' Enter
-select-pane -L ; send-keys 'source("worker3.R", echo=TRUE)' Enter
-run-shell 'sleep 2'
-select-pane -L ; send-keys 'source("read.R", echo=TRUE)' Enter
-select-pane -U; send-keys 'vi read.R' Enter 
+split-window R --interactive
+send-keys 'largerscale::locator_node("localhost", 8999L, verbose=T)' Enter
+split-window R --interactive
+send-keys 'largerscale::worker_node("localhost", 3434L, "localhost", 8999L, verbose=T)' Enter
+split-window R --interactive
+send-keys 'largerscale::worker_node("localhost", 4343L, "localhost", 8999L, verbose=T)' Enter
+split-window R --interactive
+send-keys 'largerscale::worker_node("localhost", 4433L, "localhost", 8999L, verbose=T)' Enter
+select-layout tiled
+select-pane -t0; send-keys 'R && tmux kill-session' Enter 'source("read.R", echo=TRUE)' Enter

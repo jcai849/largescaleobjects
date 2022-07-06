@@ -4,11 +4,11 @@ init_locator <- function(host, port) {
 }
 
 init_worker <- function(host, port) {
-	locator_address <- largerscale::LOCATOR()$address
-	locator_port <- largerscale::LOCATOR()$port
-	if (is.null(locator_address) || is.null(locator_port))
+	if (is.null(largerscale::LOCATOR()))
 		stop("Location service not yet initialised")
-	remote_sys(host, "largerscale::worker", list(host, port, locator_address, locator_port))
+	remote_sys(host, "largerscale::worker",
+		   list(host, port,
+			orcv::address(largerscale::LOCATOR()), orcv::port(largerscale::LOCATOR())))
 }
 
 remote_sys <- function(host, fun, args) {
