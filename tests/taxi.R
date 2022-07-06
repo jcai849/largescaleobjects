@@ -33,3 +33,5 @@ taxicab <- read.dcsv(sort(hosts), paths, col.names=names(cols), colClasses=as.ve
 # sum(taxicab$mta_tax)
 # passengerRateCode <- table(taxicab$passenger_count, taxicab$rate_code)
 # print(passengerRateCode)
+# largerscale::kill_all_nodes()
+# q("no")

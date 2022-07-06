@@ -27,4 +27,5 @@ unique(emerge(do.dcall(names, list(ddf))))
 dnames <- d(names)
 unique(emerge(dnames(ddf)))
 
+largerscale::kill_all_nodes()
 q("no")
