@@ -2,10 +2,12 @@ library(largescaler)
 
 #init_locator("hadoop1", 9000L)
 #locations <- expand.grid(hostnum=1L:8L, port=9001L:9004L)
-#hosts <- paste0("hadoop", locations$hostnum)
 #mapply(init_worker, hosts, locations$port)
 
 Sys.sleep(2)
+
+hosts <- paste0("hadoop", locations$hostnum)
+largerscale::LOCATOR("hadoop1", 9000L)
 
 options("largerscaleVerbose" = TRUE)
 
