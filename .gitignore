@@ -6,3 +6,4 @@ dump.rdb
 a.out
 *.out
 symbols.rds
+R.core
