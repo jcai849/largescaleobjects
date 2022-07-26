@@ -10,5 +10,5 @@ init_worker("hadoop6", 9001L)
 init_worker("hadoop7", 9001L)
 Sys.sleep(2)
 
-x <- largerscale::push(1:100)
-largerscale::pull(x)
+x <- chunknet::push(1:100)
+chunknet::pull(x)

@@ -4,6 +4,6 @@ dReduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
 
 dreducable <- function(f, ...) {
         function(x, y) {
-		largerscale::remote_call(f, list(x, y), target=y, ...)
+		chunknet::remote_call(f, list(x, y), target=y, ...)
         }
 }

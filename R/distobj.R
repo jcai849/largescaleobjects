@@ -1,7 +1,7 @@
 DistributedObject <- function(chunks) {
 	if (inherits(chunks, "ChunkReference")) chunks <- list(chunks) # if single chunk
         stopifnot(is.list(chunks)) 
-	chunks <- lapply(chunks, function(x) if (inherits(x, "ChunkReference")) x else largerscale::push(x))
+	chunks <- lapply(chunks, function(x) if (inherits(x, "ChunkReference")) x else chunknet::push(x))
         structure(list(chunks=chunks), class="DistributedObject")
 }
 
@@ -10,7 +10,7 @@ as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
-	data_chunks <- lapply(as.list(x), largerscale::pull)
+	data_chunks <- lapply(as.list(x), chunknet::pull)
 	if (is.function(combiner)) {
 		do.call(combiner, data_chunks)
 	} else if (combiner) {

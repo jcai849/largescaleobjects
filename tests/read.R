@@ -2,7 +2,7 @@ library(largescaler)
 
 Sys.sleep(2)
 
-largerscale::LOCATOR("localhost", 8999L)
+chunknet::LOCATOR("localhost", 8999L)
 
 n_nodes <- 3
 df <- iris
@@ -27,5 +27,5 @@ unique(emerge(do.dcall(names, list(ddf))))
 dnames <- d(names)
 unique(emerge(dnames(ddf)))
 
-largerscale::kill_all_nodes()
+chunknet::kill_all_nodes()
 q("no")

@@ -1,6 +1,6 @@
 read.dcsv <- function(hosts, paths, header=FALSE, sep=",", quote="\"",
 		      dec=".", fill=TRUE, comment.char="", col.names, colClasses) {
-	chunks <- mapply(largerscale::push, paths, hosts,
+	chunks <- mapply(chunknet::push, paths, hosts,
 			 SIMPLIFY=FALSE, USE.NAMES=FALSE)
 	do.dcall(read.csv,
 		 list(file=DistributedObject(chunks),
