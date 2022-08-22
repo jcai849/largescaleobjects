@@ -4,7 +4,8 @@ do.dcall <- function(what, args) {
 	chunks <- do.call(mapply, c(list(function(...) chunknet::remote_call(what, list(...), post_locs=FALSE)),
 				  aligned,
 				  list(SIMPLIFY=FALSE, USE.NAMES=FALSE)))
-	post_locations(sapply(chunk, '$', "href"), sapply(chunk, '$', "init_loc"))
+	chunknet::post_locations(sapply(chunks, function(x) get("href",x)),
+				 do.call(c, lapply(chunks, function(x) get("init_loc", x))))
 	DistributedObject(chunks)
 }
 
