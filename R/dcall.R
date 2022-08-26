@@ -1,12 +1,8 @@
 do.dcall <- function(what, args) {
 	if (inherits(args, "DistributedObject")) stop("Requires list for argument, not distributed object")
 	aligned <- lapply(args, function(arg) if (inherits(arg, "DistributedObject")) as.list(arg) else arg)
-	chunks <- do.call(mapply, c(list(function(...) chunknet::remote_call(what, list(...), post_locs=FALSE)),
-				  aligned,
-				  list(SIMPLIFY=FALSE, USE.NAMES=FALSE)))
-	chunknet::post_locations(sapply(chunks, function(x) get("href",x)),
-				 do.call(c, lapply(chunks, function(x) get("init_loc", x))))
-	DistributedObject(chunks)
+	chunks <- chunknet::do.ccall(what, list(aligned))
+	DistributedObject(unlist(chunks, recursive=FALSE))
 }
 
 d <- function(what) function(...) do.dcall(what, args=list(...))

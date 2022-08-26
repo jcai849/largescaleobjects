@@ -10,7 +10,7 @@ as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
-	data_chunks <- chunknet::pull(sapply(as.list(x), function(x) get("href", x)))
+	data_chunks <- chunknet::pull(as.list(x))
 	if (is.function(combiner)) {
 		do.call(combiner, data_chunks)
 	} else if (combiner) {
