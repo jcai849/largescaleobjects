@@ -3,7 +3,7 @@ do.dcall <- function(what, args) {
 	aligned <- do.call(mapply, c(list,
 					lapply(args, function(arg) if (inherits(arg, "DistributedObject")) as.list(arg) else arg),
 					SIMPLIFY=FALSE))
-	chunks <- chunknet::do.ccall(rep(list(what), length(aligned)), aligned)
+	chunks <- chunknet::do.ccall(list(what), aligned)
 	DistributedObject(unlist(chunks, recursive=FALSE))
 }
 
