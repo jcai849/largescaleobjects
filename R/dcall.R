@@ -1,7 +1,9 @@
 do.dcall <- function(what, args) {
 	if (inherits(args, "DistributedObject")) stop("Requires list for argument, not distributed object")
-	aligned <- lapply(args, function(arg) if (inherits(arg, "DistributedObject")) as.list(arg) else arg)
-	chunks <- chunknet::do.ccall(what, list(aligned))
+	aligned <- do.call(mapply, c(list,
+					lapply(args, function(arg) if (inherits(arg, "DistributedObject")) as.list(arg) else arg),
+					SIMPLIFY=FALSE))
+	chunks <- chunknet::do.ccall(rep(list(what), length(aligned)), aligned)
 	DistributedObject(unlist(chunks, recursive=FALSE))
 }
 
