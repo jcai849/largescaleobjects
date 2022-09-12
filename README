@@ -4,6 +4,11 @@
              || Distributed Object Platform for R ||
                ===================================
 
-Requires a running redis-server, passwordless ssh, and a unix system
+     offers tools for working with distributed objects in R.
+     includes
+                  distributed environment setup,
+             automatic distributed function converter
+                   distributed reduce operator,
+                       and distributed i/o
 
 =======================  Work In Progress ==========================
