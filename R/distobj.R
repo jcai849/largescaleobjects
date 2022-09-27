@@ -32,8 +32,8 @@ Complex.DistributedObject <- function(z)
 
 map_reduce <- function(map, reduce) {
 	function(..., addl_map_args, addl_reduce_args) {
-		mapped <- emerge(do.dcall(map, c(list(...), addl_map_args)))
-		do.call(reduce, c(list(mapped), addl_reduce_args)) # reduced
+		mapped <- emerge(do.dcall(map, c(list(...), if (missing(addl_map_args)) NULL else addl_map_args)))
+		do.call(reduce, c(list(mapped), if (missing(addl_map_args)) NULL else addl_reduce_args)) # reduced
 	}
 }
 
@@ -69,10 +69,6 @@ dim.DistributedObject <- function(x) {
 	c(sum(dims[1,]), dims[,1][-1])
 }
 
-size <- function(measure) function(x) sum(do.dcall(measure, list(x)))
-length.DistributedObject <- size(length)
-nrow.DistributedObject <- size(nrow)
-
 combine <- function(...) UseMethod("combine", ..1)
 combine.default <- function(...) c(...)
 combine.data.frame <- function(...) rbind(...)
@@ -97,6 +93,18 @@ combine.table <- function(...) {
 	NULL})
 	as.table(wholearray)
 }
+combine.matrix <- function(...) rbind(...)
+
+combine.Addible <- function(...) Reduce(function(a, b) rmAddible(a) + rmAddible(b), list(...))
+Addible <- function(x) {
+	class(x) <- unique.default(c("Addible", oldClass(x)))
+	x
+}
+rmAddible <- function(x) {
+        class(x) <- setdiff(oldClass(x), "Addible")
+        x
+}
+
 
 solve.DistributedObject <- function(a, b, ...) {
 	a <- emerge(a)
