@@ -14,6 +14,6 @@ read.dcsv <- function(dests, header=FALSE, sep=",", quote="\"",
 		      dec=dec,
 		      fill=fill,
 		      comment.char=comment.char,
-		      col.names=I(col.names),
-		      colClasses=I(colClasses)))
+		      col.names=col.names,
+		      colClasses=colClasses))
 }

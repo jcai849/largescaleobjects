@@ -10,10 +10,14 @@ d <- function(what) function(...) do.dcall(what, args=list(...))
 # e.g. d.model.matrix <- d(model.matrix); d.model.matrix(object=~ a + b, dd)
 
 prealign <- function(x, ...) UseMethod("prealign", x)
-prealign.default <- function(x, ...) x
+prealign.default <- function(x, ...) list(x) 
 prealign.DistributedObject <- function(x, ...) as.list(x)
-prealign.AsIs <- function(x, ...) list(unAsIs(x))
-unAsIs <- function(x) {
-	class(x) <- setdiff(oldClass(x), "AsIs")
+prealign.RecyclesWithChunks <- function(x, ...) unclass_RWC(x)
+RecyclesWithChunks <- function(x, ...) {
+	class(x) <- unique.default(c("RecyclesWithChunks", oldclass(x)))
+	x
+}
+unclass_RWC <- function(x) {
+	class(x) <- setdiff(oldClass(x), "RecyclesWithChunks")
 	x
 }
