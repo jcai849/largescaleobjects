@@ -1,21 +1,39 @@
-export(read.dcsv, do.dcall, emerge, init_locator, init_worker, dReduce, d, DistributedObject, map_reduce)
-export(Addible)
-S3method(emerge, DistributedObject)
-S3method(emerge, default)
-S3method(as.list, DistributedObject)
+export(
+	as.darray,
+	DistributedObject,
+	d,
+	dReduce,
+	do.dcall,
+	emerge,
+	init_locator,
+	init_worker,
+	map_reduce,
+	read.dcsv,
+	table
+)
+
+S3method("[", DistributedObject)
+S3method('$', DistributedObject)
+S3method(Complex, DistributedObject)
 S3method(Math, DistributedObject)
 S3method(Ops, DistributedObject)
-S3method(Complex, DistributedObject)
 S3method(Summary, DistributedObject)
-S3method('$', DistributedObject)
-S3method(table, DistributedObject)
-export(table)
-S3method(table, default)
-S3method(table, DistributedObject)
-S3method(subset, DistributedObject)
+S3method(as.list, DistributedObject)
 S3method(dim, DistributedObject)
+S3method(emerge, DistributedObject)
+S3method(emerge, default)
 S3method(solve, DistributedObject)
+S3method(subset, DistributedObject)
+S3method(table, DistributedObject)
+S3method(table, DistributedObject)
+S3method(table, default)
 
-S3method(prealign, default)
 S3method(prealign, DistributedObject)
 S3method(prealign, RecyclesWithChunks)
+S3method(prealign, default)
+
+S3method(combine, dArray)
+S3method(combine, data.frame)
+S3method(combine, default)
+S3method(combine, matrix)
+S3method(combine, table)

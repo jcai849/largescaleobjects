@@ -8,17 +8,19 @@ DistributedObject <- function(chunks) {
 as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
 
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
-
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
 	data_chunks <- chunknet::pull(as.list(x))
 	if (is.function(combiner)) {
-		do.call(combiner, data_chunks)
+		combiner(data_chunks)
 	} else if (combiner) {
-		do.call(combine, data_chunks)
+		combine(data_chunks)
 	} else data_chunks
 }
-
 emerge.default <- function(x, combiner, ...) x
+
+`[.DistributedObject` <- function(x, i, ...) {
+	emerge(x, i)
+}
 
 Math.DistributedObject <- function(x, ...) 
 	do.dcall(.Generic, c(list(x=x), list(...)))
@@ -69,12 +71,11 @@ dim.DistributedObject <- function(x) {
 	c(sum(dims[1,]), dims[,1][-1])
 }
 
-combine <- function(...) UseMethod("combine", ..1)
-combine.default <- function(...) c(...)
-combine.data.frame <- function(...) rbind(...)
-combine.table <- function(...) {
-	tabs <- list(...)
-	chunknames <- lapply(tabs, dimnames)
+combine <- function(x, ...) UseMethod("combine", x[[1]])
+combine.default <- function(x, ...) do.call(c, x)
+combine.data.frame <- function(x, ...) do.call(rbind, x)
+combine.table <- function(x, ...) {
+	chunknames <- lapply(x, dimnames)
 	stopifnot(all(lengths(chunknames) == length(chunknames[[1]])))
 	groupedvarnames <- lapply(seq(length(chunknames[[1]])),
 			      function(i) lapply(chunknames,
@@ -84,25 +85,23 @@ combine.table <- function(...) {
 			  names = names(chunknames[[1]]))
 	wholearray <- array(0L, dim = lengths(wholenames, use.names = FALSE),
 			    dimnames = wholenames)
-	lapply(seq(length(tabs)), function(i)
+	lapply(seq(length(x)), function(i)
 	       {eval(substitute(wholearray_sub <<- wholearray_sub + tab_chunk, 
 		   list(wholearray_sub =  do.call(call, c(list("["),
 			x = quote(quote(wholearray)),
 			unname(chunknames[[i]]))),
-			tab_chunk = substitute(tabs[[i]], list(i = i)))))
+			tab_chunk = substitute(x[[i]], list(i = i)))))
 	NULL})
-	as.table(wholearray)
+as.table(wholearray)
 }
-combine.matrix <- function(...) rbind(...)
+combine.matrix <- function(x, ...) do.call(rbind, x)
+combine.dArray <- function(x, ...) {
+	rowSums(simplify2array(x), dims=2)
+}
 
-combine.Addible <- function(...) Reduce(function(a, b) rmAddible(a) + rmAddible(b), list(...))
-Addible <- function(x) {
-	class(x) <- unique.default(c("Addible", oldClass(x)))
+as.darray <- function(x) {
+	class(x) <- unique.default(c("dArray", oldClass(x)))
 	x
-}
-rmAddible <- function(x) {
-        class(x) <- setdiff(oldClass(x), "Addible")
-        x
 }
 
 
