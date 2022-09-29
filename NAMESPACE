@@ -18,4 +18,4 @@ S3method(solve, DistributedObject)
 
 S3method(prealign, default)
 S3method(prealign, DistributedObject)
-S3method(prealign, AsIs)
+S3method(prealign, RecyclesWithChunks)
