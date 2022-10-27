@@ -21,8 +21,7 @@ emerge(small_ddf)
 table(small_ddf$Species, small_ddf$Petal.Width)
 
 emerge(dReduce("sum", ddf$Sepal.Length))
-x <- dReduce("sum", ddf$Sepal.Length, init=3, accumulate=T)
-emerge(x)
+emerge(dReduce("sum", ddf$Sepal.Length, init=3, accumulate=T))
 
 unique(emerge(do.dcall(names, list(ddf))))
 
@@ -32,6 +31,9 @@ unique(emerge(dnames(ddf)))
 gc()
 
 # DPLYR
+
+emerge(dplyr::select(ddf, Sepal.Length))
+
 
 #chunknet::kill_all_nodes()
 #q("no")
