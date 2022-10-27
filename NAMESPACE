@@ -28,6 +28,13 @@ S3method(table, DistributedObject)
 S3method(table, DistributedObject)
 S3method(table, default)
 
+S3method(dplyr::arrange, DistributedObject)
+S3method(dplyr::filter, DistributedObject)
+S3method(dplyr::group_by, DistributedObject)
+S3method(dplyr::mutate, DistributedObject)
+S3method(dplyr::select, DistributedObject)
+S3method(dplyr::summarise, DistributedObject)
+
 S3method(prealign, DistributedObject)
 S3method(prealign, RecyclesWithChunks)
 S3method(prealign, default)
