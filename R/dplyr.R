@@ -1,4 +1,4 @@
-ddplyr <- function(FUN) function(.data, ...) do.dcall(FUN, c(.data=list(.data), lapply(as.list(substitute(list(...))[-1]), function(x) bquote(quote(.(x))))))
+ddplyr <- function(FUN) function(.data, ...) do.dcall(FUN, c(.data=list(.data), as.list(substitute(list(...)))[-1]))
 
 arrange.DistributedObject <- ddplyr(dplyr::arrange)
 filter.DistributedObject <- ddplyr(dplyr::filter)
