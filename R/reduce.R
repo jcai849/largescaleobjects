@@ -5,6 +5,6 @@ dReduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
 
 dreducable <- function(f, ...) {
         function(x, y) {
-		chunknet::do.ccall(list(f), list(list(x[[1]], y)), target=y, ...)
+		chunknet::do.ccall(list(f), list(list(x, y)), target=y, ...)[[1]]
         }
 }
