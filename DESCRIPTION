@@ -14,6 +14,7 @@ Description: Allows for transparent interaction with distributed objects,
 	the rapid development of parallel algorithms over the distributed data
 	for fast run time.
 Imports: chunknet
+Depends: iotools
 Enhances: dplyr
 License: MIT
 URL: https://github.com/jcai849/largeScaleR
