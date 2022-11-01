@@ -63,6 +63,9 @@ table.DistributedObject <- function(...,
 		  dnn = list.names(...), deparse.level = 1)
 	emerge(do.dcall("table", list(...)))
 
+rbind.DistributedObject <- function(..., deparse.level=1) {
+	DistributedObject(do.call(c, lapply(list(...), as.list)))
+}
 subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
