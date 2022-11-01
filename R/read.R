@@ -19,3 +19,19 @@ read.dcsv <- function(dests, header=FALSE, sep=",", skip=0L, fileEncoding="",
                       nrowsClasses=nrowsClasses,
                       quote=quote))
 }
+
+read.lcsv <- function(file, hosts, col_types, sep=",", header=FALSE, skip=0L, quote="\'",
+			max.size=50*1024^2, max.line=65536L) {
+	chunks <- vector("list", ceiling(file.size(file)/max.size))
+	cr <- iotools::chunk.reader(file, max.line=max.line)
+	i <- 1
+	if (skip > 0L || !header) stop()
+	while (length(chunkraw <- iotools::read.chunk(cr, max.size=max.size))) {
+		chunks[[i]] <- do.dcall(iotools::dstrsplit,
+					list(x=chunkraw,
+				             col_types=col_types,
+                                             quote=quote))
+		i <- i+1
+	}
+	do.call(rbind, chunks)
+}
