@@ -35,5 +35,7 @@ gc()
 emerge(dplyr::select(ddf, Sepal.Length, Sepal.Width))
 emerge(dplyr::mutate(ddf, x=sum(Sepal.Length), y=Sepal.Length^2, z=Sepal.Width^2))
 
+rbind(ddf, ddf)
+
 #chunknet::kill_all_nodes()
 #q("no")

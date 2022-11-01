@@ -112,3 +112,8 @@ solve.DistributedObject <- function(a, b, ...) {
 	a <- emerge(a)
 	if (!missing(b)) solve(a=a, b=emerge(b), ...) else solve(a=a, ...)
 }
+
+print.DistributedObject <- function(x, ...) {
+	cat("Distributed Object\n")
+	cat("Consisting of", length(unclass(x)$chunks), "chunks\n")
+}
