@@ -30,3 +30,25 @@ read.lcsv <- function(file, col_types, sep=",", quote="",
                                                            quote=quote)),
                               CH.MAX.SIZE=max.size)
 }
+
+write.dcsv <- function(x, file="", sep=',', nsep='\t', col.names=colnames(x), fileEncoding='') {
+	x <- as.list(x)
+	iotools::write.csv.raw(pull(x[[1]]), file, sep=sep, nsep=nsep, col.names=col.names, fileEncoding=fileEncoding)
+	if (length(x) > 1L)
+	for (chunk in x[-1])
+            iotools::write.csv.raw(pull(chunk), file, append=TRUE, sep=sep,
+                                   nsep=nsep, col.names=col.names, fileEncoding=fileEncoding)
+	file
+}
+
+checkpoint <- function(x, pattern="largescaler", loc=tempdir(), ...) {
+	chunks <- do.dcall(function(x, pattern, loc) saveRDS(x, tempfile(pattern, loc)), list(x, pattern, loc))
+        data.frame(loc=location(chunks), path=emerge(chunks))
+}
+
+restore <- function(x, ...) UseMethod("restore", x)
+restore.data.frame <- function(x, ...) restore(x=x$loc, path=x$path)
+restore.Location <- function(x, path, ...) {
+	chunks <- chunknet::push(path, x)
+	d(readRDS)(chunks)
+}
