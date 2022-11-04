@@ -8,7 +8,7 @@ partition.default <- function(x, k) {
 	}))
 }
 partition.table <- function(x, k, ...) {
-	k <- if (missing(k)) prod(dim(x)) else k
+	if (missing(k)) k <- prod(dim(x))
 	partition(as.multiset(x, k), k)
 }
 partition.Multiset <- function(x, k) {
@@ -49,3 +49,19 @@ merge.Multiset <- function(x, y, ...) {
 
 '[.Multiset' <- function(x, i, ...) as.multiset(unclass(x)[i])
 c.Multiset <- function(...) as.multiset(do.call(c, lapply(list(...), unclass)))
+
+shuffle.DistributedObject <- function(X, index, ...) {
+	tab <- table(index)
+	vals <- lapply(partition(tab, length(X)), function(i) expand.grid(dimnames(tab))[i,])
+	subsets <- lapply(vals, function(val) do.dcall(multimatch, list(X, index, val)))
+	t_subsets <- do.call(mapply, c(list, subsets, SIMPLIFY=FALSE))
+	shuffled <- lapply(t_subsets, do.dcall, combine)
+	combine(shuffled)
+}
+
+multimatch <- function(X, index, val) {
+	if (!is.list(index)) index <- list(index)
+	if (!is.list(val)) val <- list(val)
+	i <- Reduce('&', mapply(match, index, val, SIMPLIFY=FALSE))
+	X[i,] # TODO: generalise to arrays of arbitrary dimension
+}
