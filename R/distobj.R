@@ -63,9 +63,7 @@ table.DistributedObject <- function(...,
 		  dnn = list.names(...), deparse.level = 1)
 	emerge(do.dcall("table", list(...)))
 
-rbind.DistributedObject <- function(..., deparse.level=1) {
-	DistributedObject(do.call(c, lapply(list(...), as.list)))
-}
+
 subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
@@ -104,6 +102,10 @@ combine.matrix <- function(x, ...) do.call(rbind, x)
 combine.dArray <- function(x, ...) {
 	rowSums(simplify2array(x), dims=2)
 }
+combine.DistributedObject <- function(x, ...) DistributedObject(do.call(c, lapply(x, as.list)))
+
+rbind.DistributedObject <- function(..., deparse.level=1) combine(list(...))
+c.DistributedObject <- function(...) combine(list(...))
 
 as.darray <- function(x) {
 	class(x) <- unique.default(c("dArray", oldClass(x)))
