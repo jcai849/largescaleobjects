@@ -19,7 +19,7 @@ emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
 emerge.default <- function(x, combiner, ...) x
 
 `[.DistributedObject` <- function(x, i, ...) {
-	emerge(x, i)
+	if (missing(i)) emerge(x)
 }
 
 Math.DistributedObject <- function(x, ...) 

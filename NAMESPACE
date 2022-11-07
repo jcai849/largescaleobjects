@@ -12,6 +12,7 @@ export(
 	read.dcsv,
 	read.lcsv,
 	restore,
+	shuffle,
 	table,
 	write.dcsv
 )
@@ -28,6 +29,7 @@ S3method(Math, DistributedObject)
 S3method(Ops, DistributedObject)
 S3method(print, DistributedObject)
 S3method(rbind, DistributedObject)
+S3method(shuffle, DistributedObject)
 S3method(solve, DistributedObject)
 S3method(subset, DistributedObject)
 S3method(Summary, DistributedObject)

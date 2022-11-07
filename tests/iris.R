@@ -39,3 +39,6 @@ rbind(ddf, ddf)
 
 #chunknet::kill_all_nodes()
 #q("no")
+
+shuffle(ddf, ddf$Sepal.Width, 4)
+shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)

@@ -50,18 +50,19 @@ merge.Multiset <- function(x, y, ...) {
 '[.Multiset' <- function(x, i, ...) as.multiset(unclass(x)[i])
 c.Multiset <- function(...) as.multiset(do.call(c, lapply(list(...), unclass)))
 
-shuffle.DistributedObject <- function(X, index, ...) {
+shuffle <- function(X, index, n.chunks) UseMethod("shuffle", X)
+shuffle.DistributedObject <- function(X, index, n.chunks, ...) {
 	tab <- table(index)
-	vals <- lapply(partition(tab, length(X)), function(i) expand.grid(dimnames(tab))[i,])
+	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
+	vals <- lapply(partition(tab, if (missing(n.chunks)) length(X) else n.chunks), function(i) tnames[i,])
 	subsets <- lapply(vals, function(val) do.dcall(multimatch, list(X, index, val)))
-	t_subsets <- do.call(mapply, c(list, subsets, SIMPLIFY=FALSE))
-	shuffled <- lapply(t_subsets, do.dcall, combine)
-	combine(shuffled)
+	t_subsets <- do.call(mapply, c(list, lapply(subsets, as.list), SIMPLIFY=FALSE, USE.NAMES=FALSE))
+	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject))
 }
 
 multimatch <- function(X, index, val) {
 	if (!is.list(index)) index <- list(index)
 	if (!is.list(val)) val <- list(val)
-	i <- Reduce('&', mapply(match, index, val, SIMPLIFY=FALSE))
+	i <- apply(mapply('%in%', index, val), 1, all)
 	X[i,] # TODO: generalise to arrays of arbitrary dimension
 }
