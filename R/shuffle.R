@@ -64,5 +64,5 @@ multimatch <- function(X, index, val) {
 	if (!is.list(index)) index <- list(index)
 	if (!is.list(val)) val <- list(val)
 	i <- apply(mapply('%in%', index, val), 1, all)
-	X[i,] # TODO: generalise to arrays of arbitrary dimension
+	subset(X, i)
 }
