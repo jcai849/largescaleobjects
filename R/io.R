@@ -41,14 +41,21 @@ write.dcsv <- function(x, file="", sep=',', nsep='\t', col.names=colnames(x), fi
 	file
 }
 
-checkpoint <- function(x, pattern="largescaler", loc=tempdir(), ...) {
-	chunks <- do.dcall(function(x, pattern, loc) saveRDS(x, tempfile(pattern, loc)), list(x, pattern, loc))
-        data.frame(loc=location(chunks), path=emerge(chunks))
+checkpoint <- function(x, pattern="largescaler", dir=tempdir(), ...) {
+	cp <- function(x, pattern, dir) {
+		fp <- tempfile(pattern, dir)
+		saveRDS(x, fp)
+		fp
+	}
+	chunks <- do.dcall(cp, list(x, pattern, dir))
+        structure(list(loc=location(chunks), fp=emerge(chunks)), class="Checkpoint")
 }
 
 restore <- function(x, ...) UseMethod("restore", x)
-restore.data.frame <- function(x, ...) restore(x=x$loc, path=x$path)
-restore.Location <- function(x, path, ...) {
-	chunks <- chunknet::push(path, x)
+restore.Checkpoint <- function(x, ...) restore(x=x$loc, path=x$fp)
+restore.Location <- function(x, fp, ...) {
+	chunks <- chunknet::push(fp, x)
 	d(readRDS)(chunks)
 }
+
+print.Checkpoint <- function(x, ...) cat("Checkpoint of", length(x), "chunks\n")

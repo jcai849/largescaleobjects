@@ -52,5 +52,6 @@ S3method(prealign, DistributedObject)
 S3method(prealign, RecyclesWithChunks)
 S3method(prealign, default)
 
-S3method(restore, data.frame)
+S3method(restore, Checkpoint)
 S3method(restore, Location)
+S3method(print, Checkpoint)
