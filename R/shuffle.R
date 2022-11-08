@@ -2,9 +2,9 @@
 partition <- function(x, k, ...) UseMethod("partition")
 partition.default <- function(x, k) {
 	as.multiset(lapply(partition(table(x), k), function(i) {
-		vals <- names(table(x))[i]
-		mode(vals) <- mode(x)
-		which(x %in% vals)
+		keys <- names(table(x))[i]
+		mode(keys) <- mode(x)
+		which(x %in% keys)
 	}))
 }
 partition.table <- function(x, k, ...) {
@@ -54,15 +54,15 @@ shuffle <- function(X, index, n.chunks) UseMethod("shuffle", X)
 shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...) {
 	tab <- table(index)
 	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
-	vals <- lapply(partition(tab, if (missing(n.chunks)) length(X) else n.chunks), function(i) tnames[i,])
-	subsets <- lapply(vals, function(val) do.dcall(multimatch, list(X, index, val)))
+	keys <- lapply(partition(tab, if (missing(n.chunks)) length(X) else n.chunks), function(i) tnames[i,])
+	subsets <- lapply(keys, function(key) do.dcall(multimatch, list(X, index, key)))
 	t_subsets <- do.call(mapply, c(list, lapply(subsets, as.list), SIMPLIFY=FALSE, USE.NAMES=FALSE))
 	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject))
 }
 
-multimatch <- function(X, index, val) {
+multimatch <- function(X, index, key) {
 	if (is.null(dim(index))) dim(index) <- length(index)
-	if (is.null(dim(val))) dim(val) <- length(val)
-	matches <- apply(index, 1, function(i) any(apply(val, 1, function(j) all(i == j))))
+	if (is.null(dim(key))) dim(key) <- length(key)
+	matches <- apply(index, 1, function(i) any(apply(key, 1, function(j) all(i == j))))
 	subset(X, matches)
 }
