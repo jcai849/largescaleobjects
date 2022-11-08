@@ -18,8 +18,16 @@ emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
 }
 emerge.default <- function(x, combiner, ...) x
 
-`[.DistributedObject` <- function(x, i, ...) {
-	if (missing(i)) emerge(x)
+# TODO: generalise to arbitrary dimension
+`[.DistributedObject` <- function(x, i, j, ..., drop=TRUE) {
+	if (missing(i) && missing(j)) {
+		emerge(x)
+	} else if (missing(i)) {
+		do.dcall(function(x, j) x[,j], list(x, j))
+	} else if (missing(j)) {
+		do.dcall(function(x, i) x[i,], list(x, i))
+	} else
+		do.dcall(function(x, i, j) x[i, j], list(x, i, j))
 }
 
 Math.DistributedObject <- function(x, ...) 
@@ -48,19 +56,17 @@ Summary.DistributedObject <- function(..., na.rm = FALSE)
 table <- function(...,
 		  exclude = if (useNA == "no") c(NA, NaN),
 		  useNA = c("no", "ifany", "always"),
-		  dnn = list.names(...), deparse.level = 1) UseMethod("table", ..1)
+		  deparse.level = 1) UseMethod("table", ..1)
 table.default <- function(...,
 		  exclude = if (useNA == "no") c(NA, NaN),
-		  useNA = c("no", "ifany", "always"),
-		  dnn = list.names(...), deparse.level = 1)
+		  useNA = c("no", "ifany", "always"), dnn, deparse.level = 1)
 	base::table(...,
 		  exclude = if (useNA == "no") c(NA, NaN),
-		  useNA = c("no", "ifany", "always"),
-		  dnn = list.names(...), deparse.level = 1)
+		  useNA = c("no", "ifany", "always"), deparse.level = 1)
 table.DistributedObject <- function(...,
 		  exclude = if (useNA == "no") c(NA, NaN),
 		  useNA = c("no", "ifany", "always"),
-		  dnn = list.names(...), deparse.level = 1)
+		  deparse.level = 1)
 	emerge(do.dcall("table", list(...)))
 
 
@@ -71,8 +77,8 @@ dim.DistributedObject <- function(x) {
 	dims <- emerge(do.dcall("dim", list(x=x)))
 	c(sum(dims[1,]), dims[,1][-1])
 }
-dimnames.DistributedObject <- function(x) {
-	chunknet::pull(chunknet::do.ccall(colnames, as.list(x)[[1]]))
+colnames.DistributedObject <- function(x) {
+	chunknet::pull(chunknet::do.ccall(colnames, as.list(x)[1]))
 }
 
 combine <- function(x, ...) UseMethod("combine", x[[1]])

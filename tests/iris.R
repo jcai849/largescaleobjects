@@ -37,8 +37,7 @@ emerge(dplyr::mutate(ddf, x=sum(Sepal.Length), y=Sepal.Length^2, z=Sepal.Width^2
 
 rbind(ddf, ddf)
 
+y <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)
+x <- shuffle(ddf, ddf$Sepal.Width, 4)
 #chunknet::kill_all_nodes()
 #q("no")
-
-shuffle(ddf, ddf$Sepal.Width, 4)
-shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)

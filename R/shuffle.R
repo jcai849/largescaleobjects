@@ -51,7 +51,7 @@ merge.Multiset <- function(x, y, ...) {
 c.Multiset <- function(...) as.multiset(do.call(c, lapply(list(...), unclass)))
 
 shuffle <- function(X, index, n.chunks) UseMethod("shuffle", X)
-shuffle.DistributedObject <- function(X, index, n.chunks, ...) {
+shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...) {
 	tab <- table(index)
 	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
 	vals <- lapply(partition(tab, if (missing(n.chunks)) length(X) else n.chunks), function(i) tnames[i,])
@@ -61,8 +61,8 @@ shuffle.DistributedObject <- function(X, index, n.chunks, ...) {
 }
 
 multimatch <- function(X, index, val) {
-	if (!is.list(index)) index <- list(index)
-	if (!is.list(val)) val <- list(val)
-	i <- apply(mapply('%in%', index, val), 1, all)
-	subset(X, i)
+	if (is.null(dim(index))) dim(index) <- length(index)
+	if (is.null(dim(val))) dim(val) <- length(val)
+	matches <- apply(index, 1, function(i) any(apply(val, 1, function(j) all(i == j))))
+	subset(X, matches)
 }
