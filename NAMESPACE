@@ -19,9 +19,7 @@ export(
 
 S3method('$', DistributedObject)
 S3method(as.list, DistributedObject)
-S3method(dimnames, DistributedObject)
 S3method(Complex, DistributedObject)
-S3method(dim, DistributedObject)
 S3method("[", DistributedObject)
 S3method(emerge, default)
 S3method(emerge, DistributedObject)

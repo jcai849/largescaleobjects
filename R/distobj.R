@@ -73,14 +73,6 @@ table.DistributedObject <- function(...,
 subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
-dim.DistributedObject <- function(x) {
-	dims <- emerge(do.dcall("dim", list(x=x)))
-	c(sum(dims[1,]), dims[,1][-1])
-}
-colnames.DistributedObject <- function(x) {
-	chunknet::pull(chunknet::do.ccall(colnames, as.list(x)[1]))
-}
-
 combine <- function(x, ...) UseMethod("combine", x[[1]])
 combine.default <- function(x, ...) do.call(c, x)
 combine.data.frame <- function(x, ...) do.call(rbind, x)
