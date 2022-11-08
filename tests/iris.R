@@ -37,7 +37,11 @@ emerge(dplyr::mutate(ddf, x=sum(Sepal.Length), y=Sepal.Length^2, z=Sepal.Width^2
 
 rbind(ddf, ddf)
 
-y <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)
-x <- shuffle(ddf, ddf$Sepal.Width, 4)
+unishuff <- shuffle(ddf, ddf$Sepal.Width, 4)
+multishuff <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)
+
+tidy_table <- dplyr::summarise(dplyr::group_by(ddf, Sepal.Width), dplyr::n())
+multi_tidy_table <- dplyr::summarise(dplyr::group_by(ddf, Sepal.Width, Species), dplyr::n())
+
 #chunknet::kill_all_nodes()
 #q("no")
