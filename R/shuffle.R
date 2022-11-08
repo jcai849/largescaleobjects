@@ -63,7 +63,7 @@ shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...
 multimatch <- function(X, index, key) {
 	if (!is.list(index)) index <- list(index)
 	if (!is.list(key)) key <- list(key)
-	RS <- '\036'
-	matches <- do.call(paste, c(index, sep=RS)) %in% do.call(paste, c(key, sep=RS))
+	US <- '\037'
+	matches <- do.call(paste, c(index, sep=US)) %in% do.call(paste, c(key, sep=US))
 	subset(X, matches)
 }
