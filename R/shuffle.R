@@ -61,8 +61,9 @@ shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...
 }
 
 multimatch <- function(X, index, key) {
-	if (is.null(dim(index))) dim(index) <- length(index)
-	if (is.null(dim(key))) dim(key) <- length(key)
-	matches <- apply(index, 1, function(i) any(apply(key, 1, function(j) all(i == j))))
+	if (!is.list(index)) index <- list(index)
+	if (!is.list(key)) key <- list(key)
+	RS <- '\036'
+	matches <- do.call(paste, c(index, sep=RS)) %in% do.call(paste, c(key, sep=RS))
 	subset(X, matches)
 }
