@@ -54,7 +54,7 @@ shuffle <- function(X, index, n.chunks) UseMethod("shuffle", X)
 shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...) {
 	tab <- table(index)
 	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
-	keys <- lapply(partition(tab, if (missing(n.chunks)) length(X) else n.chunks), function(i) tnames[i[tab[i] > 0],])
+	keys <- lapply(partition(tab, n.chunks), function(i) tnames[i[tab[i] > 0],])
 	subsets <- lapply(keys, function(key) do.dcall(multimatch, list(X, index, key)))
 	t_subsets <- do.call(mapply, c(list, lapply(subsets, as.list), SIMPLIFY=FALSE, USE.NAMES=FALSE))
 	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject))
