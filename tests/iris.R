@@ -37,6 +37,7 @@ emerge(dplyr::mutate(ddf, x=sum(Sepal.Length), y=Sepal.Length^2, z=Sepal.Width^2
 
 rbind(ddf, ddf)
 
+debug(shuffle)
 unishuff <- shuffle(ddf, ddf$Sepal.Width, 4)
 multishuff <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)
 
