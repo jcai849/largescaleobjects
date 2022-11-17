@@ -57,7 +57,7 @@ shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...
 	keys <- lapply(partition(tab, n.chunks), function(i) tnames[i[tab[i] > 0],])
 	subsets <- lapply(keys, function(key) do.dcall(multimatch, list(X, index, key)))
 	t_subsets <- do.call(mapply, c(list, lapply(subsets, as.list), SIMPLIFY=FALSE, USE.NAMES=FALSE))
-	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject))
+	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject), balanced=TRUE)
 }
 
 multimatch <- function(X, index, key) {
