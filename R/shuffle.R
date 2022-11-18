@@ -56,8 +56,8 @@ shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...
 	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
 	keys <- lapply(partition(tab, n.chunks), function(i) tnames[i[tab[i] > 0],])
 	subsets <- lapply(keys, function(key) do.dcall(multimatch, list(X, index, key)))
-	t_subsets <- do.call(mapply, c(list, lapply(subsets, as.list), SIMPLIFY=FALSE, USE.NAMES=FALSE))
-	do.dcall(function(...) combine(list(...)), lapply(t_subsets, DistributedObject), balanced=TRUE)
+	partitioned <- chunknet::ChunkReferenceArray(do.call(c, subsets), dim=c(lengths(subsets)[1], length(subsets))
+	chunknet::dapply(partitioned, 2, function(...) combine(list(...)), balanced=TRUE)
 }
 
 multimatch <- function(X, index, key) {

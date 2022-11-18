@@ -55,3 +55,6 @@ S3method(prealign, default)
 S3method(restore, Checkpoint)
 S3method(restore, Location)
 S3method(print, Checkpoint)
+
+S3method(DistributedObject, default)
+S3method(DistributedObject, ChunkReferenceArray)

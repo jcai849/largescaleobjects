@@ -1,11 +1,16 @@
-DistributedObject <- function(chunks) {
+DistributedObject <- function(chunks) UseMethod("DistributedObject", chunks)
+DistributedObject.ChunkReferenceArray <- function(chunks) {
+	class(chunks) <- c("DistributedObject", oldClass(chunks))
+	chunks
+}
+DistributedObject.default <- function(chunks) {
 	if (inherits(chunks, "ChunkReference")) chunks <- list(chunks) # if single chunk
         stopifnot(is.list(chunks)) 
 	chunks <- lapply(chunks, function(x) if (inherits(x, "ChunkReference")) x else chunknet::push(x)[[1]])
-        structure(list(chunks=chunks), class="DistributedObject")
+	DistributedObject(chunknet::ChunkReferenceArray(chunks))
 }
 
-as.list.DistributedObject <- function(x, ...) unclass(x)$chunks
+as.list.DistributedObject <- function(x, ...) unclass(x)
 
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
