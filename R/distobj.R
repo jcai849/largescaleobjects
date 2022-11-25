@@ -123,5 +123,5 @@ solve.DistributedObject <- function(a, b, ...) {
 
 print.DistributedObject <- function(x, ...) {
 	cat("Distributed Object\n")
-	cat("Consisting of", length(unclass(x)$chunks), "chunks\n")
+	cat("Consisting of", length(unclass(x)), "chunks\n")
 }
