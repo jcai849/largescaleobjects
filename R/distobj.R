@@ -125,3 +125,6 @@ print.DistributedObject <- function(x, ...) {
 	cat("Distributed Object\n")
 	cat("Consisting of", length(unclass(x)), "chunks\n")
 }
+
+t.ChunkReferenceArray <- function(x)
+	as.ChunkReferenceArray(t(unclass(chunknet::dapply(X, c(1,2), t))))

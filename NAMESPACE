@@ -34,6 +34,7 @@ S3method(Summary, DistributedObject)
 S3method(table, default)
 S3method(table, DistributedObject)
 S3method(table, DistributedObject)
+S3method(t, ChunkReferenceArray)
 
 S3method(combine, dArray)
 S3method(combine, data.frame)
