@@ -115,7 +115,6 @@ as.darray <- function(x) {
 	x
 }
 
-
 solve.DistributedObject <- function(a, b, ...) {
 	a <- emerge(a)
 	if (!missing(b)) solve(a=a, b=emerge(b), ...) else solve(a=a, ...)
@@ -126,5 +125,4 @@ print.DistributedObject <- function(x, ...) {
 	cat("Consisting of", length(unclass(x)), "chunks\n")
 }
 
-t.ChunkReferenceArray <- function(x)
-	as.ChunkReferenceArray(t(unclass(chunknet::dapply(X, c(1,2), t))))
+t.ChunkReferenceArray <- function(x) t.default(chunknet::dapply(X, c(1,2), t))
