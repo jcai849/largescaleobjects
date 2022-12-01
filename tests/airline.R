@@ -1,6 +1,6 @@
 library(largescaler)
 
-PATHS <- list.files("/course/data/airline/full", full.names=TRUE)[1:3]
+PATHS <- list.files("/course/data/airline/full", full.names=TRUE)
 
 orcv::start()
 chunknet::LOCATOR("localhost", 8999L)
@@ -12,4 +12,5 @@ colClasses <- vapply(lairline, class, character(1))
 
 dairline <- read.dcsv(PATHS, header=T, colClasses=colClasses)
 
+debug(chunknet:::select_from_locs.Balancer)
 dest_table <- dplyr::summarise(dplyr::group_by(dairline, Dest), dplyr::n())
