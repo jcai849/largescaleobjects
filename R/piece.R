@@ -1,24 +1,35 @@
-index <- function(x, i, j, ...) UseMethod("index", i)
-index.numeric <- function(x, i, j, ...) {
+index <- function(x, i, ...) UseMethod("index", i)
+index.numeric <- function(x, i, ...) {
 	stopifnot(is.DistributedObject(x))
-	sizes <- emerge(do.dcall(dim, list(x)))
-	cumsum(sizes)
-	# What if arrays aren't combined end-to-end, as in distributed matrix?
-	# It seems that this cumsum should be a method that depends on the dimension and class
-	# e.g.
-	#> x <- array(1:9, c(3,3))
-	#> apply(sapply(list(x,x,x,x), dim), 1, cumsum)
+	x <- chunkReferenceArray(x)
+	chunk_dims <- emerge(d(dim)(x))
+	stopifnot(identical(dim(chunk_dims), dim(x)))
+	margins <- seq(length(dim(dims))))
+	
+	accum_dims <- lapply(margins, function(margin) {
+		cumsum(apply(chunk_dims, margin, function(s) apply(s, margin, sum)))
+	})
+	gi <- gen_indices(i, accum_dims)
+	stopifnot(identical(dim(gi), dim(x)))
+	
+	DistributedObject(send_indices(x, gi))
 }
-prune <- function(x)
-align <- function(x, y)
+gen_indices <- function(i, accum_dims) NULL
+send_indices <- function(x, i) NULL
+
+prune <- function(x) {
+	DistributedObject(chunkReferenceArray(x)[emerge(do.dcall(function(x) NROW(x) == 0L, list(x)))])
+}
+
+align <- function(x, y) NULL
 
 #utils
-dim.DistributedObject
-head.DistributedObject
-length.DistributedObject
-nrow.DistributedObject
-NROW.DistributedObject
-object.size.DistributedObject
-ncol.DistributedObject
-colnames.DistributedObject
-names.DistributedObject
+#dim.DistributedObject
+#head.DistributedObject
+#length.DistributedObject
+#nrow.DistributedObject
+#NROW.DistributedObject
+#object.size.DistributedObject
+#ncol.DistributedObject
+#colnames.DistributedObject
+#names.DistributedObject
