@@ -12,7 +12,7 @@ index.numeric <- function(x, i, ...) {
 }
 accumulated_dims <- function(chunk_dims) UseMethod("accumulated_dims", chunk_dims)
 accumulated_dims.array <- function(chunk_dims) {
-	margins <- seq(length(dim(chunk_dims))))
+	margins <- seq(length(dim(chunk_dims)))
 	lapply(margins, function(margin)
 		cumsum(apply(chunk_dims, margin,
 			     function(s) apply(s, margin, sum)))
