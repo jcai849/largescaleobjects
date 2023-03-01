@@ -19,7 +19,7 @@ accumulated_dims.array <- function(chunk_dims) {
 	)
 }
 gen_indices <- function(i, accum_dims) {
-	which.max(accum_dims[-1] < i < accum_dims) # something like this... maybe using that geographical routine?
+	which.max(accum_dims[-1] < i & i < accum_dims) # something like this... maybe using that geographical routine?
 }
 send_indices <- function(x, gi) {
 	ChunkReferenceArray(mapply(function(x, gi) do.ccall(list('['),
