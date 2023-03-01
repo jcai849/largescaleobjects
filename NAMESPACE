@@ -1,5 +1,4 @@
 export(
-	as.darray,
 	checkpoint,
 	d,
 	DistributedObject,
