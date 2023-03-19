@@ -12,5 +12,4 @@ colClasses <- vapply(lairline, class, character(1))
 
 dairline <- read.dcsv(PATHS, header=T, colClasses=colClasses)
 
-debug(chunknet:::select_from_locs.Balancer)
 dest_table <- dplyr::summarise(dplyr::group_by(dairline, Dest), dplyr::n())
