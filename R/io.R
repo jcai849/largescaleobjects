@@ -1,4 +1,3 @@
-
 # Returns a distributed object with each chunk being a char vector naming its destination path
 dpath <- function(dests) {
 	tokens <- lapply(dests, chunknet::extract, pattern="(.*):(.*)", split=";")
@@ -15,6 +14,15 @@ read.dcsv <- function(dests, header=FALSE, sep=",", skip=0L, fileEncoding="",
 		 list(file=dpath(dests), header=header, sep=sep, skip=skip, fileEncoding=fileEncoding,
 			  colClasses=colClasses, nrows=nrows, nsep=nsep, strict=strict,
 			  nrowsClasses=nrowsClasses, quote=quote))
+}
+
+read.dmatrix <- function(dests, type=c("numeric", "character", "logical", "integer",  "complex", "raw"),
+						 ddim=dim(dests), sep="|", nsep=NA, strict=TRUE, ncol = NA, skip=0L, nrows=-1L, quote="") {
+	x <- do.dcall(iotools::input.file,
+				  list(file_name=dpath(dests), sep=sep, nsep=nsep, strict=strict,
+				       ncol=ncol, type=type, skip=skip, nrows=nrows, quote=quote))
+	dim(x) <- if (is.null(ddim)) dim(x) else ddim
+	x
 }
 
 read.lcsv <- function(file, col_types, sep=",", quote="",
