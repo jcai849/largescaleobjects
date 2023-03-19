@@ -15,6 +15,7 @@ as.list.DistributedObject <- function(x, ...) unclass(x)
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
 	data_chunks <- chunknet::pull(as.list(x))
+	dim(data_chunks) <- dim(x)
 	if (is.function(combiner)) {
 		combiner(data_chunks)
 	} else if (combiner) {
@@ -79,7 +80,7 @@ subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
 combine <- function(x, ...) UseMethod("combine", x[[1]])
-combine.default <- function(x, ...) do.call(c, x)
+combine.default <- function(x, ...) do.call(cbind, apply(x, 1, function(chunks) do.call(rbind, chunks), simplify=F))
 combine.data.frame <- function(x, ...) do.call(rbind, x)
 combine.table <- function(x, ...) {
 	chunknames <- lapply(x, dimnames)
@@ -101,7 +102,7 @@ combine.table <- function(x, ...) {
 	NULL})
 as.table(wholearray)
 }
-combine.matrix <- function(x, ...) do.call(rbind, x)
+
 combine.DistributedObject <- function(x, ...) DistributedObject(do.call(c, lapply(x, as.list)))
 
 rbind.DistributedObject <- function(..., deparse.level=1) combine(list(...))

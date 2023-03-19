@@ -20,6 +20,7 @@ export(
 S3method('$', DistributedObject)
 S3method(as.list, DistributedObject)
 S3method(Complex, DistributedObject)
+S3method("[", DistributedObject)
 S3method(emerge, default)
 S3method(emerge, DistributedObject)
 S3method(Math, DistributedObject)
@@ -37,7 +38,6 @@ S3method(t, ChunkReferenceArray)
 
 S3method(combine, data.frame)
 S3method(combine, default)
-S3method(combine, matrix)
 S3method(combine, table)
 
 S3method(dplyr::arrange, DistributedObject)
