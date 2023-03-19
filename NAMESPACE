@@ -1,5 +1,6 @@
 export(
 	checkpoint,
+	combine,
 	d,
 	DistributedObject,
 	do.dcall,
@@ -19,7 +20,6 @@ export(
 S3method('$', DistributedObject)
 S3method(as.list, DistributedObject)
 S3method(Complex, DistributedObject)
-S3method("[", DistributedObject)
 S3method(emerge, default)
 S3method(emerge, DistributedObject)
 S3method(Math, DistributedObject)
