@@ -20,7 +20,7 @@ read.dmatrix <- function(dests, type=c("numeric", "character", "logical", "integ
 						 ddim=dim(dests), sep="|", nsep=NA, strict=TRUE, ncol = NA, skip=0L, nrows=-1L, quote="") {
 	x <- do.dcall(iotools::input.file,
 				  list(file_name=dpath(dests), sep=sep, nsep=nsep, strict=strict,
-				       ncol=ncol, type=type, skip=skip, nrows=nrows, quote=quote))
+				       ncol=ncol, type=match.arg(type), skip=skip, nrows=nrows, quote=quote))
 	dim(x) <- if (is.null(ddim)) dim(x) else ddim
 	x
 }

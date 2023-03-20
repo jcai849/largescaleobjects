@@ -10,6 +10,7 @@ export(
 	init_worker,
 	map_reduce,
 	read.dcsv,
+	read.dmatrix,
 	read.lcsv,
 	restore,
 	shuffle,
@@ -38,6 +39,7 @@ S3method(t, ChunkReferenceArray)
 
 S3method(combine, data.frame)
 S3method(combine, default)
+S3method(combine, list)
 S3method(combine, table)
 
 S3method(dplyr::arrange, DistributedObject)
