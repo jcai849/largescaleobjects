@@ -80,7 +80,17 @@ subset.DistributedObject <- function(x, subset, ...)
 	do.dcall("subset", c(list(x=x, subset=subset), list(...)))
 
 combine <- function(x, ...) UseMethod("combine", x[[1]])
-combine.default <- function(x, ...) do.call(cbind, apply(x, 1, function(chunks) do.call(rbind, chunks), simplify=F))
+combine.default <- function(x, ...) {
+	combined <- do.call(rbind, apply(x, 1, function(chunks) do.call(cbind, chunks), simplify=F))
+	dim(combined) <- dim(combined)[seq_along(dim(x))]
+	combined
+}
+combine.list <- function(x, ...) {
+	combined <- do.call(c, x)
+	class(combined) <- class(x[[1]])
+	combined
+}
+
 combine.data.frame <- function(x, ...) do.call(rbind, x)
 combine.table <- function(x, ...) {
 	chunknames <- lapply(x, dimnames)
