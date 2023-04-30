@@ -165,3 +165,6 @@ dim.DistributedObject <- function(x) {
 head.DistributedObject <- function(x) {
 	emerge(d(head)(DistributedObject(as.list(x)[1])))
 }
+length.DistributedObject <- function(x) {
+	sum(d(length)(x))
+}

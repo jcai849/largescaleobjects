@@ -45,6 +45,7 @@ S3method(table, DistributedObject)
 S3method(t, ChunkReferenceArray)
 S3method(dim, DistributedObject)
 S3method(head, DistributedObject)
+S3method(length, DistributedObject)
 
 S3method(combine, data.frame)
 S3method(combine, default)
