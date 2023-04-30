@@ -155,8 +155,10 @@ print.DistributedObject <- function(x, ...) {
 t.ChunkReferenceArray <- function(x) t.default(chunknet::dapply(X, c(1,2), t))
 
 dim.DistributedObject <- function(x) {
-	stop("Getting dimension of an arbitrarily shaped distributed object?
-	This is way harder than you think, but possible. No time right now.")
+	dims <- emerge(d(dim)(x), combiner=F)
+	alldims <- Reduce('+', dims)
+	if (length(alldims) == 2) alldims[2] <- dims[[1]][2] # Hack; change upon greater multidimensionality
+	alldims
 }
 `dim<-.DistributedObject` <- function(x, value) {
 	stop("Setting dimension of an arbitrarily shaped distributed object?
