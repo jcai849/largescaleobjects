@@ -10,6 +10,9 @@ DistributedObject.default <- function(chunks) {
 	DistributedObject(chunknet::ChunkReferenceArray(chunks))
 }
 
+materialise <- function(distributedObject) unclass(distributedObject)
+dematerialise <- function(materialised_distributedObject) DistributedObject(materialised_distributedObject)
+
 as.list.DistributedObject <- function(x, ...) unclass(x)
 
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
@@ -125,7 +128,7 @@ solve.DistributedObject <- function(a, b, ...) {
 
 print.DistributedObject <- function(x, ...) {
 	cat("Distributed Object\n")
-	cat("Consisting of", length(unclass(x)), "chunks\n")
+	cat("Consisting of", length(as.list(x)), "chunks\n")
 }
 
 t.ChunkReferenceArray <- function(x) t.default(chunknet::dapply(X, c(1,2), t))
