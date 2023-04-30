@@ -1,9 +1,13 @@
+importFrom(chunknet, ChunkReferenceArray)
+
 export(
 	checkpoint,
 	combine,
 	d,
 	dematerialise,
+	distribute
 	DistributedObject,
+	DistributedObjectReference,
 	do.dcall,
 	dReduce,
 	emerge,
@@ -29,6 +33,7 @@ S3method(emerge, DistributedObject)
 S3method(Math, DistributedObject)
 S3method(Ops, DistributedObject)
 S3method(print, DistributedObject)
+S3method(print, DistributedObjectReference)
 S3method(rbind, DistributedObject)
 S3method(shuffle, DistributedObject)
 S3method(solve, DistributedObject)
@@ -59,5 +64,13 @@ S3method(restore, Checkpoint)
 S3method(restore, Location)
 S3method(print, Checkpoint)
 
-S3method(DistributedObject, default)
+S3method(DistributedObject, list)
 S3method(DistributedObject, ChunkReferenceArray)
+
+S3method(DistributedObjectReference, ChunkReferenceArray)
+S3method(DistributedObjectReference, DistributedObject)
+
+S3method(ChunkReferenceArray, DistributedObject)
+
+S3method(materialise, DistributedObject)
+S3method(dematerialise, DistributedObjectReference)

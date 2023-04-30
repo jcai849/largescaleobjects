@@ -3,15 +3,36 @@ DistributedObject.ChunkReferenceArray <- function(chunks) {
 	class(chunks) <- c("DistributedObject", oldClass(chunks))
 	chunks
 }
-DistributedObject.default <- function(chunks) {
-	if (inherits(chunks, "ChunkReference")) chunks <- list(chunks) # if single chunk
-        stopifnot(is.list(chunks)) 
-	chunks <- lapply(chunks, function(x) if (inherits(x, "ChunkReference")) x else chunknet::push(x)[[1]])
+DistributedObject.ChunkReference <- function(chunks) {
+	DistributedObject(chunknet::ChunkReferenceArray(chunks))
+}
+DistributedObject.list <- function(chunks) {
+	chunks <- lapply(chunks, function(x) if (chunknet::is.ChunkReference(x)) x else chunknet::push(x)[[1]])
 	DistributedObject(chunknet::ChunkReferenceArray(chunks))
 }
 
-materialise <- function(distributedObject) unclass(distributedObject)
-dematerialise <- function(materialised_distributedObject) DistributedObject(materialised_distributedObject)
+ChunkReferenceArray.DistributedObject <- function(chunkrefs, dim) {
+	chunkref_base <- unclass(chunkrefs)
+	dimension <- if (missing(dim)) base::dim(chunkref_base) else dim
+	ChunkReferenceArray(chunkref_base, dim=dimension)
+}
+
+DistributedObjectReference <- function(x) UseMethod("DistributedObjectReference", x)
+DistributedObjectReference.ChunkReferenceArray <- function(x) {
+	class(x) <- c("DistributedObjectReference", oldClass(x))
+	x
+}
+DistributedObjectReference.DistributedObject <- function(x) {
+	DistributedObjectReference(ChunkReferenceArray(x))
+}
+materialise <- function(do) UseMethod("materialise", do)
+materialise.DistributedObject <- function(do) DistributedObjectReference(do)
+dematerialise <- function(dor) UseMethod("dematerialise", dor)
+dematerialise.DistributedObjectReference <- function(dor) DistributedObject(dor)
+print.DistributedObjectReference <- function(x, ...) {
+	cat("Distributed Object Reference\n")
+	cat("Pointing to", length(as.list(x)), "chunks\n")
+}
 
 as.list.DistributedObject <- function(x, ...) unclass(x)
 
