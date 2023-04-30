@@ -162,3 +162,6 @@ dim.DistributedObject <- function(x) {
 	stop("Setting dimension of an arbitrarily shaped distributed object?
 	This is way harder than you think, but possible. No time right now.")
 }
+head.DistributedObject <- function(x) {
+	emerge(d(head)(DistributedObject(as.list(x)[1])))
+}
