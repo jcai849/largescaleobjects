@@ -15,6 +15,7 @@ export(
 	init_worker,
 	map_reduce,
 	materialise,
+	object.size,
 	read.dcsv,
 	read.dmatrix,
 	read.lcsv,
@@ -46,6 +47,8 @@ S3method(t, ChunkReferenceArray)
 S3method(dim, DistributedObject)
 S3method(head, DistributedObject)
 S3method(length, DistributedObject)
+S3method(object.size, default)
+S3method(object.size, DistributedObject)
 
 S3method(combine, data.frame)
 S3method(combine, default)

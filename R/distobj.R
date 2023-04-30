@@ -171,5 +171,8 @@ length.DistributedObject <- function(x) {
 	sum(d(length)(x))
 }
 
+object.size <- function(x) UseMethod("object.size", x)
+object.size.default <- function(x) utils::object.size(x)
+object.size.DistributedObject <- function(x) structure(sum(d(object.size)(x)), class="object_size")
 
 distribute <- function(what, where) d(function(where, what) what)(where, what)

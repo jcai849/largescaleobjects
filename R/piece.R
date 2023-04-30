@@ -31,14 +31,3 @@ prune <- function(x) {
 }
 
 align <- function(x, y) NULL
-
-#utils
-#dim.DistributedObject
-#head.DistributedObject
-#length.DistributedObject
-#nrow.DistributedObject
-#NROW.DistributedObject
-#object.size.DistributedObject
-#ncol.DistributedObject
-#colnames.DistributedObject
-#names.DistributedObject
