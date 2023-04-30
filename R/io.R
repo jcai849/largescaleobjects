@@ -21,7 +21,9 @@ read.dmatrix <- function(dests, type=c("numeric", "character", "logical", "integ
 	x <- do.dcall(iotools::input.file,
 				  list(file_name=dpath(dests), sep=sep, nsep=nsep, strict=strict,
 				       ncol=ncol, type=match.arg(type), skip=skip, nrows=nrows, quote=quote))
+	x <- materialise(x)
 	dim(x) <- if (is.null(ddim)) dim(x) else ddim
+	x <- dematerialise(x)
 	x
 }
 
