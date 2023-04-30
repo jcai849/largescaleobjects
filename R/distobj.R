@@ -170,3 +170,6 @@ head.DistributedObject <- function(x) {
 length.DistributedObject <- function(x) {
 	sum(d(length)(x))
 }
+
+
+distribute <- function(what, where) d(function(where, what) what)(where, what)
