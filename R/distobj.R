@@ -39,7 +39,7 @@ as.list.DistributedObject <- function(x, ...) unclass(x)
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
 	data_chunks <- chunknet::pull(as.list(x))
-	dim(data_chunks) <- dim(x)
+	dim(data_chunks) <- dim(materialise(x))
 	if (is.function(combiner)) {
 		combiner(data_chunks)
 	} else if (combiner) {
@@ -153,3 +153,12 @@ print.DistributedObject <- function(x, ...) {
 }
 
 t.ChunkReferenceArray <- function(x) t.default(chunknet::dapply(X, c(1,2), t))
+
+dim.DistributedObject <- function(x) {
+	stop("Getting dimension of an arbitrarily shaped distributed object?
+	This is way harder than you think, but possible. No time right now.")
+}
+`dim<-.DistributedObject` <- function(x, value) {
+	stop("Setting dimension of an arbitrarily shaped distributed object?
+	This is way harder than you think, but possible. No time right now.")
+}

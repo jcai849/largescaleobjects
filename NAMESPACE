@@ -5,7 +5,7 @@ export(
 	combine,
 	d,
 	dematerialise,
-	distribute
+	distribute,
 	DistributedObject,
 	DistributedObjectReference,
 	do.dcall,
@@ -43,6 +43,7 @@ S3method(table, default)
 S3method(table, DistributedObject)
 S3method(table, DistributedObject)
 S3method(t, ChunkReferenceArray)
+S3method(dim, DistributedObject)
 
 S3method(combine, data.frame)
 S3method(combine, default)
