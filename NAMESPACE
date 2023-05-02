@@ -9,6 +9,7 @@ export(
 	DistributedObject,
 	DistributedObjectReference,
 	do.dcall,
+	dpath,
 	dReduce,
 	emerge,
 	init_locator,
