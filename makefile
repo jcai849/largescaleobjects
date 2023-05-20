@@ -6,8 +6,8 @@ install: /usr/local/lib/R/library/largescaler/
 tags:
 	uctags -R 
 test:
-	cd tests && tmux new-session \; source-file test.tmux
+	cd inst/dev-tests && tmux new-session \; source-file test.tmux
 cluster-test:
-	cd tests && tmux new-session \; source-file cluster-test.tmux
+	cd inst/dev-tests && tmux new-session \; source-file cluster-test.tmux
 airline-test:
-	cd tests && tmux new-session \; source-file airline-test.tmux
+	cd inst/dev-tests && tmux new-session \; source-file airline-test.tmux
