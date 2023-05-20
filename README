@@ -1,14 +1,53 @@
-=======================  Work In Progress ==========================
-
+      ___       ___           ___           ___           ___     
+     /\__\     /\  \         /\  \         /\  \         /\  \    
+    /:/  /    /::\  \       /::\  \       /::\  \       /::\  \   
+   /:/  /    /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \  
+  /:/  /    /::\~\:\  \   /::\~\:\  \   /:/  \:\  \   /::\~\:\  \ 
+ /:/__/    /:/\:\ \:\__\ /:/\:\ \:\__\ /:/__/_\:\__\ /:/\:\ \:\__\
+ \:\  \    \/__\:\/:/  / \/_|::\/:/  / \:\  /\ \/__/ \:\~\:\ \/__/
+  \:\  \        \::/  /     |:|::/  /   \:\ \:\__\    \:\ \:\__\  
+   \:\  \       /:/  /      |:|\/__/     \:\/:/  /     \:\ \/__/  
+    \:\__\     /:/  /       |:|  |        \::/  /       \:\__\    
+     \/__/     \/__/         \|__|         \/__/         \/__/ 
+      ___           ___           ___           ___       ___     
+     /\  \         /\  \         /\  \         /\__\     /\  \    
+    /::\  \       /::\  \       /::\  \       /:/  /    /::\  \   
+   /:/\ \  \     /:/\:\  \     /:/\:\  \     /:/  /    /:/\:\  \  
+  _\:\~\ \  \   /:/  \:\  \   /::\~\:\  \   /:/  /    /::\~\:\  \ 
+ /\ \:\ \ \__\ /:/__/ \:\__\ /:/\:\ \:\__\ /:/__/    /:/\:\ \:\__\
+ \:\ \:\ \/__/ \:\  \  \/__/ \/__\:\/:/  / \:\  \    \:\~\:\ \/__/
+  \:\ \:\__\    \:\  \            \::/  /   \:\  \    \:\ \:\__\  
+   \:\/:/  /     \:\  \           /:/  /     \:\  \    \:\ \/__/  
+    \::/  /       \:\__\         /:/  /       \:\__\    \:\__\    
+     \/__/         \/__/         \/__/         \/__/     \/__/    
+      ___     
+     /\  \    
+    /::\  \   
+   /:/\:\  \  
+  /::\~\:\  \ 
+ /:/\:\ \:\__\
+ \/_|::\/:/  /
+    |:|::/  / 
+    |:|\/__/  
+    |:|  |    
+     \|__|    
                ===================================
              || Distributed Object Platform for R ||
                ===================================
 
-     offers tools for working with distributed objects in R.
-     includes
+     Offers tools for working with distributed objects in R.
+     Includes:
                   distributed environment setup,
              automatic distributed function converter
                    distributed reduce operator,
                        and distributed i/o
 
-=======================  Work In Progress ==========================
+Demo (requires tmux, and ports 9000:9003 open):
+
+$ . `Rscript -e 'cat(system.file("exec", "demo-session.sh", package="largescaler"))'`
+R> demo("init", package="largescaler", echo=F)
+R> demo("populate", package="largescaler", echo=F)
+R> small_ddf <- subset(ddf, ddf$Sepal.Length <= 5.8)  # subsetting
+R> table(small_ddf$Species, small_ddf$Petal.Width)    # table
+R> multishuff <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4) # shuffle
+R> dplyr::summarise(dplyr::group_by(ddf, Sepal.Width, Species), dplyr::n()) |> emerge() # dplyr
