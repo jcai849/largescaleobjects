@@ -1,4 +1,4 @@
-library(largescaler)
+library(largescaleobjects)
 
 init_locator("hadoop1", 9000L)
 Sys.sleep(2)
@@ -10,5 +10,5 @@ init_worker("hadoop6", 9001L)
 init_worker("hadoop7", 9001L)
 Sys.sleep(2)
 
-x <- chunknet::push(1:100)
-chunknet::pull(x)
+x <- largescalechunks::push(1:100)
+largescalechunks::pull(x)

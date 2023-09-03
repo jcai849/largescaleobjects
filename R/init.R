@@ -1,14 +1,14 @@
 init_locator <- function(host, port) {
-	chunknet::LOCATOR(host, port)
-	remote_sys(host, "chunknet::locator_node", list(host, port))
+	largescalechunks::LOCATOR(host, port)
+	remote_sys(host, "largescalechunks::locator_node", list(host, port))
 }
 
 init_worker <- function(host, port) {
-	if (is.null(chunknet::LOCATOR()))
+	if (is.null(largescalechunks::LOCATOR()))
 		stop("Location service not yet initialised")
-	remote_sys(host, "chunknet::worker_node",
+	remote_sys(host, "largescalechunks::worker_node",
 		   list(host, port,
-			orcv::address(chunknet::LOCATOR()), orcv::port(chunknet::LOCATOR())))
+			largescalemessages::address(largescalechunks::LOCATOR()), largescalemessages::port(largescalechunks::LOCATOR())))
 }
 
 remote_sys <- function(host, fun, args) {

@@ -1,9 +1,9 @@
-library(largescaler)
+library(largescaleobjects)
 
 Sys.sleep(2)
 
-chunknet::LOCATOR("localhost", 8999L)
-orcv::start()
+largescalechunks::LOCATOR("localhost", 8999L)
+largescalemessages::start()
 
 n_nodes <- 3
 df <- iris
@@ -43,5 +43,5 @@ multishuff <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4)
 tidy_table <- dplyr::summarise(dplyr::group_by(ddf, Sepal.Width), dplyr::n())
 multi_tidy_table <- dplyr::summarise(dplyr::group_by(ddf, Sepal.Width, Species), dplyr::n())
 
-#chunknet::kill_all_nodes()
+#largescalechunks::kill_all_nodes()
 #q("no")

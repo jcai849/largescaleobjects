@@ -1,11 +1,11 @@
-suppressPackageStartupMessages(library(largescaler))
+suppressPackageStartupMessages(library(largescaleobjects))
 
 LOC_HOST <- "localhost"
 LOC_PORT <- 9000L
 
-orcv::start()
-options("chunknetVerbose" = TRUE)
-chunknet::LOCATOR(LOC_HOST, LOC_PORT)
+largescalemessages::start()
+options("largescalechunksVerbose" = TRUE)
+largescalechunks::LOCATOR(LOC_HOST, LOC_PORT)
 chunks_on_each_worker <- 2
 nworkers <- 3
 N_cw <- nworkers*chunks_on_each_worker

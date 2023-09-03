@@ -1,11 +1,11 @@
 # Returns a distributed object with each chunk being a char vector naming its destination path
 dpath <- function(dests) {
-	tokens <- lapply(dests, chunknet::extract, pattern="(.*):(.*)", split=";")
+	tokens <- lapply(dests, largescalechunks::extract, pattern="(.*):(.*)", split=";")
 	split_dests <- mapply(function(t, d) if (is.null(t)) c("localhost", d) else t, tokens, dests)
 	hosts <- split_dests[1,]
 	paths <- split_dests[2,]
-	locations <- chunknet::get_host_locations(hosts)
-	DistributedObject(chunknet::push(paths, locations))
+	locations <- largescalechunks::get_host_locations(hosts)
+	DistributedObject(largescalechunks::push(paths, locations))
 }
 
 read.dcsv <- function(dests, header=FALSE, sep=",", skip=0L, fileEncoding="",
@@ -46,7 +46,7 @@ write.dcsv <- function(x, file="", sep=',', nsep='\t', col.names=colnames(x), fi
 	file
 }
 
-checkpoint <- function(x, pattern="largescaler", dir=tempdir(), ...) {
+checkpoint <- function(x, pattern="largescaleobjects", dir=tempdir(), ...) {
 	cp <- function(x, pattern, dir) {
 		fp <- tempfile(pattern, dir)
 		saveRDS(x, fp)
@@ -59,7 +59,7 @@ checkpoint <- function(x, pattern="largescaler", dir=tempdir(), ...) {
 restore <- function(x, ...) UseMethod("restore", x)
 restore.Checkpoint <- function(x, ...) restore(x=x$loc, path=x$fp)
 restore.Location <- function(x, fp, ...) {
-	chunks <- chunknet::push(fp, x)
+	chunks <- largescalechunks::push(fp, x)
 	d(readRDS)(chunks)
 }
 

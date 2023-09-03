@@ -1,15 +1,15 @@
-library(largescaler)
+library(largescaleobjects)
 
 #init_locator("hadoop1", 9000L)
 #mapply(init_worker, hosts, locations$port)
 
 Sys.sleep(2)
 
-chunknet::LOCATOR("hadoop1", 9000L)
+largescalechunks::LOCATOR("hadoop1", 9000L)
 locations <- expand.grid(hostnum=1L:8L, port=9001L:9004L)
 hosts <- paste0("hadoop", locations$hostnum)
 
-options("chunknetVerbose" = TRUE)
+options("largescalechunksVerbose" = TRUE)
 
 paths <- paste0("taxicab-", sprintf("%02d", 0:31), ".csv")
 cols <- c("vendor_id"="character",
@@ -35,5 +35,5 @@ taxicab <- read.dcsv(sort(hosts), paths, col.names=names(cols), colClasses=as.ve
 # sum(taxicab$mta_tax)
 # passengerRateCode <- table(taxicab$passenger_count, taxicab$rate_code)
 # print(passengerRateCode)
-# chunknet::kill_all_nodes()
+# largescalechunks::kill_all_nodes()
 # q("no")
