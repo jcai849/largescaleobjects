@@ -1,4 +1,4 @@
-Package: largescaleobjects
+Package: largescaler
 Type: Package
 Title: Provides a Distributed Framework for Statistical Modelling
 Version: 0.6
@@ -13,7 +13,7 @@ Description: Allows for transparent interaction with distributed objects,
 	including the import of very large distributed data files, as well as
 	the rapid development of parallel algorithms over the distributed data
 	for fast run time.
-Imports: largescalechunks
+Imports: chunknet
 Depends: iotools
 Enhances: dplyr
 License: MIT

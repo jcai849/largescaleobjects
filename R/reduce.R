@@ -5,6 +5,6 @@ dReduce <- function(f, x, init, right = FALSE, accumulate = FALSE, ...) {
 
 dreducable <- function(f, ...) {
         function(x, y) {
-		largescalechunks::do.ccall(list(f), list(list(x, y)), target=y, ...)[[1]]
+		chunknet::do.ccall(list(f), list(list(x, y)), target=y, ...)[[1]]
         }
 }

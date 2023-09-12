@@ -1,9 +1,9 @@
-library(largescaleobjects)
+library(largescaler)
 
 PATHS <- list.files("/course/data/airline/full", full.names=TRUE)
 
-largescalemessages::start()
-largescalechunks::LOCATOR("localhost", 8999L)
+orcv::start()
+chunknet::LOCATOR("localhost", 8999L)
 
 Sys.sleep(2)
 

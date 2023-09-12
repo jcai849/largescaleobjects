@@ -2,7 +2,7 @@ do.dcall <- function(what, args, balance=FALSE) {
 	if (inherits(args, "DistributedObject")) stop("Requires list for argument, not distributed object")
 	prealigned_args <- lapply(args, prealign)
 	aligned_args <- do.call(mapply, c(list, prealigned_args, SIMPLIFY=FALSE, USE.NAMES=FALSE))
-	chunks <- largescalechunks::do.ccall(rep(list(what), length(aligned_args)), aligned_args, balance=balance)
+	chunks <- chunknet::do.ccall(rep(list(what), length(aligned_args)), aligned_args, balance=balance)
 	DistributedObject(chunks)
 }
 

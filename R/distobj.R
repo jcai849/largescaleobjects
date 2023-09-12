@@ -4,11 +4,11 @@ DistributedObject.ChunkReferenceArray <- function(chunks) {
 	chunks
 }
 DistributedObject.ChunkReference <- function(chunks) {
-	DistributedObject(largescalechunks::ChunkReferenceArray(chunks))
+	DistributedObject(chunknet::ChunkReferenceArray(chunks))
 }
 DistributedObject.list <- function(chunks) {
-	chunks <- lapply(chunks, function(x) if (largescalechunks::is.ChunkReference(x)) x else largescalechunks::push(x)[[1]])
-	DistributedObject(largescalechunks::ChunkReferenceArray(chunks))
+	chunks <- lapply(chunks, function(x) if (chunknet::is.ChunkReference(x)) x else chunknet::push(x)[[1]])
+	DistributedObject(chunknet::ChunkReferenceArray(chunks))
 }
 
 ChunkReferenceArray.DistributedObject <- function(chunkrefs, dim) {
@@ -38,7 +38,7 @@ as.list.DistributedObject <- function(x, ...) unclass(x)
 
 emerge <- function(x, combiner=TRUE, ...) UseMethod("emerge", x)
 emerge.DistributedObject <- function(x, combiner=TRUE, ...) {
-	data_chunks <- largescalechunks::pull(as.list(x))
+	data_chunks <- chunknet::pull(as.list(x))
 	dim(data_chunks) <- dim(materialise(x))
 	if (is.function(combiner)) {
 		combiner(data_chunks)
@@ -152,7 +152,7 @@ print.DistributedObject <- function(x, ...) {
 	cat("Consisting of", length(as.list(x)), "chunks\n")
 }
 
-t.ChunkReferenceArray <- function(x) t.default(largescalechunks::dapply(X, c(1,2), t))
+t.ChunkReferenceArray <- function(x) t.default(chunknet::dapply(X, c(1,2), t))
 
 dim.DistributedObject <- function(x) {
 	dims <- emerge(d(dim)(x), combiner=F)

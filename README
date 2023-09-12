@@ -44,9 +44,9 @@
 
 Demo (requires tmux, and ports 9000:9003 open):
 
-$ . `Rscript -e 'cat(system.file("exec", "demo-session.sh", package="largescaleobjects"))'`
-R> demo("init", package="largescaleobjects", echo=F)
-R> demo("populate", package="largescaleobjects", echo=F)
+$ . `Rscript -e 'cat(system.file("exec", "demo-session.sh", package="largescaler"))'`
+R> demo("init", package="largescaler", echo=F)
+R> demo("populate", package="largescaler", echo=F)
 R> small_ddf <- subset(ddf, ddf$Sepal.Length <= 5.8)  # subsetting
 R> table(small_ddf$Species, small_ddf$Petal.Width)    # table
 R> multishuff <- shuffle(ddf, ddf[,c("Sepal.Width", "Species")], 4) # shuffle

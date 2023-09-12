@@ -1,4 +1,4 @@
-importFrom(largescalechunks, ChunkReferenceArray)
+importFrom(chunknet, ChunkReferenceArray)
 
 export(
 	checkpoint,
