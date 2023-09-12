@@ -1,7 +1,7 @@
 .PHONY: tags install test
 all: install
-install: /usr/local/lib/R/library/largescaler/
-/usr/local/lib/R/library/largescaler/: R/* NAMESPACE DESCRIPTION
+install: /usr/local/lib/R/library/largescaleobjects/
+/usr/local/lib/R/library/largescaleobjects/: R/* NAMESPACE DESCRIPTION
 	R CMD INSTALL .
 tags:
 	uctags -R 

@@ -1,4 +1,4 @@
-library(largescaler)
+library(largescaleobjects)
 
 #init_locator("hadoop1", 9000L)
 #mapply(init_worker, hosts, locations$port)

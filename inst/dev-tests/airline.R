@@ -1,4 +1,4 @@
-library(largescaler)
+library(largescaleobjects)
 
 PATHS <- list.files("/course/data/airline/full", full.names=TRUE)
 

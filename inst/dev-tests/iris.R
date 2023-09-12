@@ -1,4 +1,4 @@
-library(largescaler)
+library(largescaleobjects)
 
 Sys.sleep(2)
 

@@ -1,4 +1,4 @@
-suppressPackageStartupMessages(library(largescaler))
+suppressPackageStartupMessages(library(largescaleobjects))
 
 LOC_HOST <- "localhost"
 LOC_PORT <- 9000L

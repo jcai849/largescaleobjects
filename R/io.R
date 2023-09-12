@@ -46,7 +46,7 @@ write.dcsv <- function(x, file="", sep=',', nsep='\t', col.names=colnames(x), fi
 	file
 }
 
-checkpoint <- function(x, pattern="largescaler", dir=tempdir(), ...) {
+checkpoint <- function(x, pattern="largescaleobjects", dir=tempdir(), ...) {
 	cp <- function(x, pattern, dir) {
 		fp <- tempfile(pattern, dir)
 		saveRDS(x, fp)
