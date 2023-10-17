@@ -1,4 +1,5 @@
 importFrom(chunknet, ChunkReferenceArray)
+importFrom(utils, head)
 
 export(
 	checkpoint,
