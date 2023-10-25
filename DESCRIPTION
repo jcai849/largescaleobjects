@@ -1,7 +1,7 @@
 Package: largescaleobjects
 Type: Package
 Title: Provides a Distributed Framework for Statistical Modelling
-Version: 0.6
+Version: 1.0
 Date: 2022-02-15
 Author: Jason Cairns [aut, cre]
 Maintainer: Jason Cairns <jcai849@aucklanduni.ac.nz>
