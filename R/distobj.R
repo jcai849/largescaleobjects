@@ -115,6 +115,8 @@ combine.list <- function(x, ...) {
 	combined
 }
 
+
+combine.matrix     <- function(x, ...) do.call(rbind, x)
 combine.data.frame <- function(x, ...) do.call(rbind, x)
 combine.table <- function(x, ...) {
 	chunknames <- lapply(x, dimnames)

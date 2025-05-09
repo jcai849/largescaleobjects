@@ -9,6 +9,7 @@ export(
 	distribute,
 	DistributedObject,
 	DistributedObjectReference,
+	d_matrix,
 	do.dcall,
 	dpath,
 	dReduce,
@@ -53,6 +54,7 @@ S3method(object.size, default)
 S3method(object.size, DistributedObject)
 
 S3method(combine, data.frame)
+S3method(combine, matrix)
 S3method(combine, default)
 S3method(combine, list)
 S3method(combine, table)
