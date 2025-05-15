@@ -7,3 +7,5 @@ a.out
 *.out
 symbols.rds
 R.core
+.direnv/bin
+.direnv
