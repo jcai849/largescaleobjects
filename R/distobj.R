@@ -63,6 +63,9 @@ emerge.default <- function(x, combiner, ...) x
 Math.DistributedObject <- function(x, ...) 
 	do.dcall(.Generic, c(list(x=x), list(...)))
 
+matrixOps.DistributedObject <- function(x, y)
+  do.dcall(.Generic, list(x=x, y=y))
+
 Ops.DistributedObject <- function(e1, e2) 
 	if (missing(e2)) { do.dcall(.Generic, list(e1=e1)) 
 	} else             do.dcall(.Generic, list(e1=e1, e2=e2))
