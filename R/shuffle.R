@@ -51,12 +51,19 @@ merge.Multiset <- function(x, y, ...) {
 c.Multiset <- function(...) as.multiset(do.call(c, lapply(list(...), unclass)))
 
 shuffle <- function(X, index, n.chunks) UseMethod("shuffle", X)
+# index is distributed object
 shuffle.DistributedObject <- function(X, index, n.chunks=length(as.list(X)), ...) {
+
+  # create even distribution of keys based on frequencies of index
 	tab <- table(index)
 	tnames <- expand.grid(dimnames(tab), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=FALSE)
 	keys <- lapply(partition(tab, n.chunks), function(i) tnames[i[tab[i] > 0],])
+
+  # for each key, partition each chunk by subsetting the chunks which correspond to the key
 	subsets <- lapply(keys, function(key) do.dcall(multimatch, list(X, index, key)))
 	partitioned <- ChunkReferenceArray(do.call(c, subsets), dim=c(length(as.list(subsets[[1]])), length(subsets)))
+
+	# combine partitions to single chunks using `combine`
 	DistributedObject(chunknet::dapply(partitioned, 2, function(...) combine(list(...)), balance=TRUE))
 }
 
